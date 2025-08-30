@@ -12,5 +12,5 @@ steps:
 #    args: ['app', 'deploy', '--project', 'CheckPlusManagement', '--logging=CLOUD_LOGGING_ONLY', '--no-promote']
     # 배포 파일이 있는 하위 디렉터리 지정
     dir: 'server/my-gae-app'
-#options:
-#  logging: CLOUD_LOGGING_ONLY # 이 부분을 추가합니다.
+options:
+  logging: CLOUD_LOGGING_ONLY # 이 부분을 추가합니다
