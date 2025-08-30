@@ -39,9 +39,13 @@ steps:
     entrypoint: 'mvn'
     args: ['package']
     dir: 'server/my-gae-app'
+options:
+  logging: CLOUD_LOGGING_ONLY # 이 부분을 추가합니다
 
   # 두 번째 단계에서 배포를 진행합니다.
   - name: 'gcr.io/cloud-builders/gcloud'
     entrypoint: 'mvn'
     args: ['appengine:deploy', '-Dapp.deploy.projectId=CheckPlusManagement', '--no-promote']
     dir: 'server/my-gae-app'
+options:
+  logging: CLOUD_LOGGING_ONLY # 이 부분을 추가합니다
