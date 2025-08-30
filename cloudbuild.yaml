@@ -1,4 +1,8 @@
 steps:
+  - name: 'gcr.io/cloud-builders/python'
+    entrypoint: 'python'
+    args: ['-c', 'print("Python build environment ready.")']
+
   # Maven 빌드를 수행하는 단계
   - name: 'gcr.io/cloud-builders/mvn'
     args: ['package']
