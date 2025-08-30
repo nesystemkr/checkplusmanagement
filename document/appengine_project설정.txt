@@ -1,0 +1,185 @@
+1. 개발환경설정
+    . Java JDK 8이상
+    . Eclipse IDE
+    . Google Cloud SDK (gcould CLI)
+    . Maven
+
+2. Google Cloud SDK 설치 및 설정
+    gcloud auth login
+    gcloud config set project YOUR_PROJECT_ID
+
+3. pom.xml
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.example.myapp</groupId>
+    <artifactId>my-gae-app</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>war</packaging>
+    
+    <properties>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <appengine.version>2.0.27</appengine.version>
+        <servlet.version>3.1.0</servlet.version>
+    </properties>
+    
+    <dependencies>
+        <!-- App Engine API -->
+        <dependency>
+            <groupId>com.google.appengine</groupId>
+            <artifactId>appengine-api-1.0-sdk</artifactId>
+            <version>2.0.27</version>
+        </dependency>
+        
+        <!-- Servlet API -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>${servlet.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        
+        <!-- JSP API -->
+        <dependency>
+            <groupId>javax.servlet.jsp</groupId>
+            <artifactId>jsp-api</artifactId>
+            <version>2.2</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+    
+    <build>
+        <plugins>
+            <!-- App Engine Maven Plugin -->
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>appengine-maven-plugin</artifactId>
+                <version>2.4.4</version>
+                <configuration>
+                    <projectId>YOUR_PROJECT_ID</projectId>
+                    <version>1</version>
+                </configuration>
+            </plugin>
+            
+            <!-- Maven Compiler Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
+                <configuration>
+                    <source>11</source>
+                    <target>11</target>
+                </configuration>
+            </plugin>
+            
+            <!-- Maven War Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.3.2</version>
+                <configuration>
+                    <webXml>src\main\webapp\WEB-INF\web.xml</webXml>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+
+4. 프로젝트 구조 설정
+src/
+  main/
+    java/
+      com/example/myapp/
+        HelloServlet.java
+    webapp/
+      WEB-INF/
+        web.xml
+        appengine-web.xml
+      index.jsp
+
+5. 설정 파일 작성
+web.xml(src/main/webapp/WEB-INF/web.xml)
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+         http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+         version="3.0">
+    
+    <servlet>
+        <servlet-name>hello</servlet-name>
+        <servlet-class>com.example.myapp.HelloServlet</servlet-class>
+    </servlet>
+    
+    <servlet-mapping>
+        <servlet-name>hello</servlet-name>
+        <url-pattern>/hello</url-pattern>
+    </servlet-mapping>
+    
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+    
+</web-app>
+
+appengine-web.xml (src/main/webapp/WEB-INF/appengine-web.xml)
+<?xml version="1.0" encoding="utf-8"?>
+<appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
+    <application>YOUR_PROJECT_ID</application>
+    <version>1</version>
+    <threadsafe>true</threadsafe>
+    
+    <runtime>java11</runtime>
+    
+    <sessions-enabled>true</sessions-enabled>
+    
+</appengine-web-app>
+
+6. 샘플코드작성
+HelloServlet.java
+package com.example.myapp;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class HelloServlet extends HttpServlet {
+    
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+        resp.setContentType("text/html; charset=UTF-8");
+        resp.getWriter().println("<h1>Hello, Google App Engine!</h1>");
+    }
+}
+
+index.jsp
+<%@ page contentType="text/html; charset=UTF-8" %>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My GAE App</title>
+</head>
+<body>
+    <h1>Welcome to Google App Engine</h1>
+    <p><a href="/hello">Hello Servlet</a></p>
+</body>
+</html>
+
+7. 로컬실행 및 배포
+mvn clean package
+mvn appengine:run
+
+App Engine에 배포
+mvn clean package appengine:deploy
+
+
+
