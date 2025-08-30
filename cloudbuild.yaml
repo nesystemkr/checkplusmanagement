@@ -1,12 +1,12 @@
 steps:
   # Maven 빌드를 수행하는 단계
-  - name: 'gcr.io/cloud-builders/mvn'
-    args: ['package']
-    # pom.xml이 있는 하위 디렉터리 지정
-    dir: 'server/my-gae-app'
+#  - name: 'gcr.io/cloud-builders/mvn'
+#    args: ['package']
+#    # pom.xml이 있는 하위 디렉터리 지정
+#    dir: 'server/my-gae-app'
 
   # 빌드된 애플리케이션을 배포하는 단계 (예시)
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    args: ['gcloud', 'app', 'deploy']
+    args: ['gcloud', 'app', 'deploy', '--logging=CLOUD_LOGGING_ONLY']
     # 배포 파일이 있는 하위 디렉터리 지정
     dir: 'server/my-gae-app'
