@@ -1,33 +1,47 @@
 steps:
-#  - name: 'gcr.io/cloud-builders/python'
-#    entrypoint: 'python'
-#    args: ['-c', 'print("Python build environment ready.")']
+##  - name: 'gcr.io/cloud-builders/python'
+##    entrypoint: 'python'
+##    args: ['-c', 'print("Python build environment ready.")']
+#
+#  # Maven 빌드를 수행하는 단계
+#  - name: 'gcr.io/cloud-builders/mvn'
+##    args: ['package']
+#    entrypoint: 'bash'
+#    args: 
+#      - '-c'
+#      - |
+#        # 먼저 Cloud SDK가 필요로 하는 Python 환경을 확인합니다.
+#        # 대부분의 빌드 환경에는 python3가 설치되어 있습니다.
+#        python3 --version
+#        
+#        # Maven package 목표를 실행합니다.
+#    # pom.xml이 있는 하위 디렉터리 지정
+#    dir: 'server/my-gae-app'
+#
+#  # 빌드된 애플리케이션을 배포하는 단계 (예시)
+#  - name: 'gcr.io/cloud-builders/mvn'
+#    args: ['appengine:deploy', '-Dapp.deploy.projectId=CheckPlusManagement']
+#    # pom.xml이 있는 하위 디렉터리 지정
+#    dir: 'server/my-gae-app'
+##  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+##    args: ['gcloud', 'app', 'deploy']
+##  - name: 'gcr.io/cloud-builders/gcloud'
+##    args: ['app', 'deploy', '--project', 'CheckPlusManagement', '--logging=CLOUD_LOGGING_ONLY', '--no-promote']
+#    # 배포 파일이 있는 하위 디렉터리 지정
+#    dir: 'server/my-gae-app'
+#options:
+#  logging: CLOUD_LOGGING_ONLY # 이 부분을 추가합니다
 
-  # Maven 빌드를 수행하는 단계
-  - name: 'gcr.io/cloud-builders/mvn'
-#    args: ['package']
-    entrypoint: 'bash'
-    args: 
-      - '-c'
-      - |
-        # 먼저 Cloud SDK가 필요로 하는 Python 환경을 확인합니다.
-        # 대부분의 빌드 환경에는 python3가 설치되어 있습니다.
-        python3 --version
-        
-        # Maven package 목표를 실행합니다.
-    # pom.xml이 있는 하위 디렉터리 지정
+steps:
+  # 'gcloud' 빌더를 사용하여 Maven 명령어를 실행합니다.
+  # 이 빌더는 Cloud SDK와 Maven을 모두 포함하고 있습니다.
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'mvn'
+    args: ['package']
     dir: 'server/my-gae-app'
 
-  # 빌드된 애플리케이션을 배포하는 단계 (예시)
-  - name: 'gcr.io/cloud-builders/mvn'
-    args: ['appengine:deploy', '-Dapp.deploy.projectId=CheckPlusManagement']
-    # pom.xml이 있는 하위 디렉터리 지정
+  # 두 번째 단계에서 배포를 진행합니다.
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'mvn'
+    args: ['appengine:deploy', '-Dapp.deploy.projectId=CheckPlusManagement', '--no-promote']
     dir: 'server/my-gae-app'
-#  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-#    args: ['gcloud', 'app', 'deploy']
-#  - name: 'gcr.io/cloud-builders/gcloud'
-#    args: ['app', 'deploy', '--project', 'CheckPlusManagement', '--logging=CLOUD_LOGGING_ONLY', '--no-promote']
-    # 배포 파일이 있는 하위 디렉터리 지정
-    dir: 'server/my-gae-app'
-options:
-  logging: CLOUD_LOGGING_ONLY # 이 부분을 추가합니다
