@@ -6,7 +6,7 @@ steps:
     dir: 'server/my-gae-app'
 
   # 빌드된 애플리케이션을 배포하는 단계 (예시)
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    args: ['gcloud', 'app', 'deploy']
-    # 배포 파일이 있는 하위 디렉터리 지정
-    dir: 'server/my-gae-app'
+  #- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  #  args: ['gcloud', 'app', 'deploy']
+  #  # 배포 파일이 있는 하위 디렉터리 지정
+  #  dir: 'server/my-gae-app'
