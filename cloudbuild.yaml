@@ -58,5 +58,5 @@ steps:
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     args: ['gcloud', 'app', 'deploy']
     dir: 'server/my-gae-app'
-    options:
-      logging: CLOUD_LOGGING_ONLY # 이 부분을 추가합니다
+options:
+  logging: CLOUD_LOGGING_ONLY # 이 부분을 추가합니다
