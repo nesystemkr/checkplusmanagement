@@ -1,0 +1,107 @@
+1. AppEngine을 사용할 계정을 생성한다.
+2. AppEngine을 사용할 결제수단을 입력한다.
+3. 프로젝트를 생성한다.
+4. ... 메뉴에서 프로젝트설정을 선택한다.
+5. IAM 및 관리자에서 서비스 계정을 선택한다.
+6. 서비스 계정 만들기를 선택한다.
+  서비스계정이름: AppEngineDeployer
+  서비스계정ID:  appenginedeployer
+  서비스계정설명: App Engine 배포자
+7. 권한을 선택한다.
+  App Engine배포자를 선택한다.
+  Cloud빌드 서비스 계정을 선택한다.
+8. 액세스권한이 있는 주 구성권
+  은 일단 건너뛴다.
+9. 완료를 눌러서 완료한다.
+10. 워크로드 아이덴티티 제휴를 선택한다.
+11. 시작하기를 선택한다.
+12. ID풀 만들기
+  이름: CheckPlusManagementPool
+  ID: checkplusmanagementpool
+  설명: 체크플러스관리툴용풀
+13. 풀에 공급업체 추가
+  공급업체선택: OpenID Connect(OIDC)
+  제공자이름: GitHub
+  제공업체ID: github
+  발급자(URL): https://token.actions.githubusercontent.com
+
+  기본잠재고객을 선택하고 
+https://iam.googleapis.com/projects/692616027760/locations/global/workloadIdentityPools/checkplusmanagementpool/providers/github
+  해당 URL을 복사해둔다.
+
+14. 공급업체 속성구성
+  Google1: google.subject
+  OIDC1: repo:nesystemkr/checkplusmanagement:ref:refs/heads/main
+  repo:사용자명/저장소명:ref:refs/heads/main
+
+  attribute.repository: nesystemkr/checkplusmanagement
+  attribute.ref: refs/heads/main
+
+
+15. 저장을 눌러서 저장한다.
+
+1. 애플리케이션배폰 / Cloud Run을 선택한다.
+2. 저장소에서 지속적 배포를 선택한다.
+3. Cloud Build로 설정을 선택한다.
+4. 소스 저장서에서 GitHub선택
+5. 저장소: nesystemkr/checkplusmanagement
+6. 빌드유형: Google Cloud빌드팩을 통한 Go, Node.js. Python, 자바, NET Core, Ruby또는 PHP 선택
+  빌드 컨텍스트 디렉터리: /
+  진입점:
+  함수대상:
+  저장으로 선택한다.
+7. 구성: 서비스이름 : checkplusmanagement
+   리전: asia-northeast3(서울)
+8. 엔드포인트 URL을 복사해둔다.
+  https://checkplusmanagement-692616027760.asia-northeast3.run.app
+9. 인증 / 공개액세스허용
+10. 결제
+   요청기반
+11. 서비스확장
+   인스턴스의 최대 갯수 1
+12. 인그레스
+   전체
+13. 만들기 선택
+
+14. Project의 root디렉토리에 cloudbuild.yaml파일을 성생한다.
+steps:
+  # Maven 빌드를 수행하는 단계
+  - name: 'gcr.io/cloud-builders/mvn'
+    args: ['package']
+    # pom.xml이 있는 하위 디렉터리 지정
+    dir: 'server/my-gae-app'
+
+  # 빌드된 애플리케이션을 배포하는 단계 (예시)
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    args: ['gcloud', 'app', 'deploy']
+    # 배포 파일이 있는 하위 디렉터리 지정
+    dir: 'server/my-gae-app'
+
+입력한다. Server/my-gae-app은 적절하게 입력한다.
+
+15. 빌드트리거에서 CloudBuild구성파일 위치를 저장소로 변경한다.
+
+
+
+
+1. AppEngine을 생성한다.
+
+2. Console웹에서 AppEngine으로 검색한다.
+
+3. Application만들기를 선택한다.
+
+4. Region을 선택한다. Asia-northeast3
+
+5. 서비스 계정을 선택한다.
+
+6. 애플리케이션을 생성한다.
+
+
+
+1. gcloud init
+
+2. gcloud config set project checkplusmanagement v프로젝트 설정
+
+3. pom.xml내에 있는 것을 다시 변경한다.
+
+4. mvn package appengine:deploy -Dapp.deploy.projectId=CheckPlusManagement 로 빌드와 디플로이까지 한번에 한다.

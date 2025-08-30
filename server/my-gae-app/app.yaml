@@ -1,7 +1,0 @@
-runtime: java11
-env: flex
-service: default
-
-handlers:
-- url: /.*
-  script: auto

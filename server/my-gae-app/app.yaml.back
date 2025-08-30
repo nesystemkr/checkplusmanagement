@@ -1,0 +1,7 @@
+runtime: java21
+env: standard
+service: default
+
+handlers:
+- url: /.*
+  script: auto
