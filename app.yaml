@@ -1,0 +1,7 @@
+runtime: java21
+env: flex
+service: default
+
+handlers:
+- url: /.*
+  script: auto
