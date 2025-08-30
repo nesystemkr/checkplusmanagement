@@ -1,4 +1,4 @@
-runtime: java22
+runtime: java
 env: flex
 service: default
 
