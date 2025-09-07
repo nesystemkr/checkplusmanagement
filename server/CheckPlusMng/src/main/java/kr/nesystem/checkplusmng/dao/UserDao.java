@@ -7,8 +7,8 @@ import java.util.Map;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 
+import kr.nesystem.checkplusmng.model.CM_User;
 import kr.nesystem.model.CM_Paging;
-import kr.nesystem.model.CM_User;
 import kr.nesystem.util.MySqlSessionFactory;
 
 public class UserDao {

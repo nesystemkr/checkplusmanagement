@@ -105,3 +105,5 @@ steps:
 3. pom.xml내에 있는 것을 다시 변경한다.
 
 4. mvn package appengine:deploy -Dapp.deploy.projectId=checkplusmanagement 로 빌드와 디플로이까지 한번에 한다.
+
+https://checkplusmanagement.du.r.appspot.com

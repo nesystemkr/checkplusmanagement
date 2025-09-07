@@ -6,7 +6,7 @@ import java.util.List;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 
-import kr.nesystem.model.CM_CodeType;
+import kr.nesystem.checkplusmng.model.CM_CodeType;
 import kr.nesystem.model.CM_Paging;
 import kr.nesystem.util.MySqlSessionFactory;
 
