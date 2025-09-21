@@ -15,20 +15,20 @@ public class ModelHandler<T> {
 	
 	public T convertFromJson(String json) throws Exception {
 		ObjectMapper mapper = new ObjectMapper();
-		mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+		mapper.setDefaultPropertyInclusion(JsonInclude.Include.NON_NULL);
 		return mapper.readValue(json, modelClass);
 	}
 	
 	public String convertToJson(T data) throws Exception {
 		ObjectMapper mapper = new ObjectMapper();
-		mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+		mapper.setDefaultPropertyInclusion(JsonInclude.Include.NON_NULL);
 		return mapper.writeValueAsString(data);
 	}
 	
 	public CM_PagingList<T> convertPagingFromJson(String json) {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
-			mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+			mapper.setDefaultPropertyInclusion(JsonInclude.Include.NON_NULL);
 			JavaType type = mapper.getTypeFactory().constructParametricType(CM_PagingList.class, this.modelClass);
 			return mapper.readValue(json, type);
 		} catch (Exception e) {
@@ -40,7 +40,7 @@ public class ModelHandler<T> {
 	public List<T> convertListFromJson(String json) {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
-			mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+			mapper.setDefaultPropertyInclusion(JsonInclude.Include.NON_NULL);
 			JavaType type = mapper.getTypeFactory().constructCollectionType(List.class, this.modelClass);
 			return mapper.readValue(json, type);
 		} catch (Exception e) {
@@ -52,7 +52,7 @@ public class ModelHandler<T> {
 	public String convertListToJson(List<T> list) {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
-			mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+			mapper.setDefaultPropertyInclusion(JsonInclude.Include.NON_NULL);
 			return mapper.writeValueAsString(list);
 		} catch (Exception e) {
 			e.printStackTrace();

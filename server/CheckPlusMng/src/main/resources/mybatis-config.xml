@@ -17,8 +17,26 @@
 		</environment>
 	</environments>
 	<mappers>
-		<mapper resource="mapper/codeMapper.xml"/>
-		<mapper resource="mapper/codetypeMapper.xml"/>
-		<mapper resource="mapper/userMapper.xml"/>
+		<mapper resource="common/initMapper.xml"/>
+		<mapper resource="common/initFragmentMapper.xml"/>
+		<mapper resource="common/codetypeMapper.xml"/>
+		<mapper resource="common/codeMapper.xml"/>
+		<mapper resource="common/userMapper.xml"/>
+		<mapper resource="common/menuMapper.xml"/>
+		<mapper resource="common/deviceMapper.xml"/>
+		<mapper resource="common/l10nMapper.xml"/>
+		<mapper resource="common/daemonMapper.xml"/>
+		<mapper resource="common/pushmsgMapper.xml"/>
+		<mapper resource="common/attachmentMapper.xml"/>
+		<mapper resource="common/boardMapper.xml"/>
+		<mapper resource="common/socketlogMapper.xml"/>
+		<!--mapper resource="common/versionMapper.xml"/-->
+		<mapper resource="fragment/fragmentMapper.xml"/>
+		<mapper resource="fragment/fragmentCachedJsonMapper.xml"/>
+		<mapper resource="fragment/gridFragmentMapper.xml"/>
+		<mapper resource="fragment/gridColModelMapper.xml"/>
+		<mapper resource="fragment/gridColButtonMapper.xml"/>
+		<mapper resource="fragment/popupFragmentMapper.xml"/>
+		<mapper resource="fragment/popupRowMapper.xml"/>
 	</mappers>
 </configuration>

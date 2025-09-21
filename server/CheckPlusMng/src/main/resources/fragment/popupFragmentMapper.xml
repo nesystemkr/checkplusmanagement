@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.peelknight.fragment.mybatis.popupfragmentMapper">
+	<select id="selectPopupFragment" resultType="kr.peelknight.fragment.model.CM_PopupFragment"
+			statementType="PREPARED" parameterType="java.util.Map">
+		SELECT fragmentIdKey, width, height, selectTitle, selectUrl,
+			   prevUrl, nextUrl, selectErrorMsg, insertTitle, insertUrl,
+			   insertMethod, insertErrorMsg, updateTitle, updateUrl, updateMethod,
+			   updateErrorMsg, deleteConfirm, deleteUrl, deleteMethod, deleteErrorMsg,
+			   confirmButton, cancelButton, gridFragmentId
+		  FROM CM_PopupFragment
+		 WHERE fragmentIdKey <![CDATA[ > ]]> 0
+		<if test="fragmentIdKey != null">
+		   AND fragmentIdKey = #{fragmentIdKey}
+		</if>
+		<if test="offset != null and size != null">
+		 LIMIT ${offset}, ${size}
+		</if>
+	</select>
+
+	<select id="selectPopupFragmentPaging" resultType="kr.peelknight.common.model.CM_Paging"
+			statementType="PREPARED" parameterType="java.util.Map">
+		SELECT COUNT(fragmentIdKey) as totalCount
+		  FROM CM_PopupFragment
+		 WHERE fragmentIdKey <![CDATA[ > ]]> 0
+		<if test="fragmentIdKey != null">
+		   AND fragmentIdKey = #{fragmentIdKey}
+		</if>
+	</select>
+
+	<insert id="insertPopupFragment" parameterType="kr.peelknight.fragment.model.CM_PopupFragment"
+		statementType="PREPARED">
+		INSERT INTO CM_PopupFragment (
+			fragmentIdKey, width, height, selectTitle, selectUrl,
+			prevUrl, nextUrl, selectErrorMsg, insertTitle, insertUrl,
+			insertMethod, insertErrorMsg, updateTitle, updateUrl, updateMethod,
+			updateErrorMsg, deleteConfirm, deleteUrl, deleteMethod, deleteErrorMsg,
+			confirmButton, cancelButton, gridFragmentId
+		) VALUES (
+			#{fragmentIdKey}, #{width}, #{height}, #{selectTitle}, #{selectUrl},
+			#{prevUrl}, #{nextUrl}, #{selectErrorMsg}, #{insertTitle}, #{insertUrl},
+			#{insertMethod}, #{insertErrorMsg}, #{updateTitle}, #{updateUrl},#{updateMethod},
+			#{updateErrorMsg}, #{deleteConfirm}, #{deleteUrl}, #{deleteMethod},#{deleteErrorMsg},
+			#{confirmButton}, #{cancelButton}, #{gridFragmentId}
+		)
+	</insert>
+
+	<update id="updatePopupFragment" parameterType="kr.peelknight.fragment.model.CM_PopupFragment">
+		UPDATE CM_PopupFragment SET
+			   width = #{width},
+			   height = #{height},
+			   selectTitle = #{selectTitle},
+			   selectUrl = #{selectUrl},
+			   prevUrl = #{prevUrl},
+			   nextUrl = #{nextUrl},
+			   selectErrorMsg = #{selectErrorMsg},
+			   insertTitle = #{insertTitle},
+			   insertUrl = #{insertUrl},
+			   insertMethod = #{insertMethod},
+			   insertErrorMsg = #{insertErrorMsg},
+			   updateTitle = #{updateTitle},
+			   updateUrl = #{updateUrl},
+			   updateMethod = #{updateMethod},
+			   updateErrorMsg = #{updateErrorMsg},
+			   deleteConfirm = #{deleteConfirm},
+			   deleteUrl = #{deleteUrl},
+			   deleteMethod = #{deleteMethod},
+			   deleteErrorMsg = #{deleteErrorMsg},
+			   confirmButton = #{confirmButton},
+			   cancelButton = #{cancelButton},
+			   gridFragmentId = #{gridFragmentId}
+		 WHERE fragmentIdKey = #{fragmentIdKey}
+	</update>
+
+	<delete id="deletePopupFragment" parameterType="kr.peelknight.fragment.model.CM_Fragment">
+		DELETE FROM CM_PopupFragment
+		 WHERE fragmentIdKey = #{idKey}
+	</delete>
+</mapper>

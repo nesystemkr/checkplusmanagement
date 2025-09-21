@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.peelknight.mybatis.menuMapper">
+	<select id="selectMenu" resultType="kr.peelknight.common.model.CM_Menu"
+			statementType="PREPARED" parameterType="java.util.Map">
+		SELECT A.idKey   , A.menuName   , A.menuUrl, A.comment, A.status,
+			   A.orderSeq, A.parentIdKey,
+			   B.codeName statusName
+		  FROM CM_Menu A,
+			   CM_Code B
+		 WHERE A.idKey <![CDATA[ > ]]> 0
+		   AND A.status = B.code
+		   AND B.type = 'MENUSTATUS'
+		<if test="idKey != null">
+		   AND A.idKey = #{idKey}
+		</if>
+		<if test="parentIdKey != null">
+		   AND A.parentIdKey = #{parentIdKey}
+		</if>
+		 ORDER BY A.orderSeq ASC
+		<if test="offset != null and size != null">
+		 LIMIT ${offset}, ${size}
+		</if>
+	</select>
+
+	<select id="selectMenuWithUserType" resultType="kr.peelknight.common.model.CM_Menu"
+			statementType="PREPARED" parameterType="java.util.Map">
+		SELECT A.idKey   , A.menuName   , A.menuUrl, A.comment, A.status,
+			   A.orderSeq, A.parentIdKey,
+			   C.codeName statusName
+		  FROM CM_Menu A, CM_Code C
+		<if test="userType != null">
+			  , CM_MenuAuth B
+		</if>
+		 WHERE A.idKey <![CDATA[ > ]]> 0
+		   AND A.status = C.code
+		   AND C.type = 'MENUSTATUS'
+		<if test="userType != null">
+		   AND A.idKey = B.menuIdKey
+		   AND B.allowYN = 'Y'
+		</if>
+		<if test="userType != null">
+		   AND B.userType = #{userType}
+		</if>
+		<if test="status != null">
+		   AND A.status = #{status}
+		</if>
+		<if test="parentIdKey != null">
+		   AND A.parentIdKey = #{parentIdKey}
+		</if>
+		 ORDER BY A.parentIdKey, A.orderSeq ASC
+	</select>
+
+	<select id="selectMenuPaging" resultType="kr.peelknight.common.model.CM_Paging"
+			statementType="PREPARED" parameterType="java.util.Map">
+		SELECT COUNT(idKey) as totalCount
+		  FROM CM_Menu
+		 WHERE idKey <![CDATA[ > ]]> 0
+		<if test="idKey != null">
+		   AND idKey = #{idKey}
+		</if>
+		<if test="parentIdKey != null">
+		   AND A.parentIdKey = #{parentIdKey}
+		</if>
+	</select>
+
+	<insert id="insertMenu" parameterType="kr.peelknight.common.model.CM_Menu"
+		statementType="PREPARED" useGeneratedKeys="true" keyProperty="idKey">
+		INSERT INTO CM_Menu (
+			menuName, menuUrl, comment, status, orderSeq,
+			parentIdKey
+		) VALUES (
+			#{menuName}, #{menuUrl}, #{comment}, #{status}, #{orderSeq},
+			#{parentIdKey}
+		)
+	</insert>
+
+	<update id="updateMenu" parameterType="kr.peelknight.common.model.CM_Menu">
+		UPDATE CM_Menu SET
+			   parentIdKey = #{parentIdKey},
+			   menuName = #{menuName},
+			   menuUrl = #{menuUrl},
+			   comment = #{comment},
+			   status = #{status},
+			   orderSeq = #{orderSeq}
+		 WHERE idKey = #{idKey}
+	</update>
+
+	<delete id="deleteMenu" parameterType="kr.peelknight.common.model.CM_Menu">
+		DELETE FROM CM_Menu
+		 WHERE idKey = #{idKey}
+	</delete>
+	
+	<select id="selectMenuAuthWithMenu" resultType="kr.peelknight.common.model.CM_MenuAuth"
+			statementType="PREPARED" parameterType="kr.peelknight.common.model.CM_Menu">
+		SELECT A.code userType, A.codeName userTypeName,
+			   B.idKey, B.menuIdKey, B.allowYN
+		  FROM CM_Code A LEFT OUTER JOIN CM_MenuAuth B
+											 ON A.code = B.userType
+											AND B.menuIdKey = #{idKey}
+		 WHERE A.type = 'USERTYPE'
+	</select>
+
+	<select id="selectMenuAuth" resultType="kr.peelknight.common.model.CM_MenuAuth"
+			statementType="PREPARED" parameterType="java.util.Map">
+		SELECT idKey, userType, menuIdKey, allowYN
+		  FROM CM_MenuAuth
+		 WHERE idKey <![CDATA[ > ]]> 0
+		<if test="idKey != null">
+		   AND idKey = #{idKey}
+		</if>
+		<if test="menuIdKey != null">
+		   AND menuIdKey = #{menuIdKey}
+		</if>
+		<if test="userType != null">
+		   AND userType = #{userType}
+		</if>
+		<if test="offset != null and size != null">
+		 LIMIT ${offset}, ${size}
+		</if>
+	</select>
+
+	<insert id="insertMenuAuth" parameterType="kr.peelknight.common.model.CM_MenuAuth"
+		statementType="PREPARED" useGeneratedKeys="true" keyProperty="idKey">
+		INSERT INTO CM_MenuAuth (
+			userType, menuIdKey, allowYN
+		) VALUES (
+			#{userType}, #{menuIdKey}, #{allowYN}
+		)
+	</insert>
+
+	<update id="updateMenuAuth" parameterType="kr.peelknight.common.model.CM_MenuAuth">
+		UPDATE CM_MenuAuth SET
+			   userType = #{userType},
+			   menuIdKey = #{menuIdKey},
+			   allowYN = #{allowYN}
+		 WHERE idKey = #{idKey}
+	</update>
+
+	<update id="updateMenuAuthWidthUserType" parameterType="kr.peelknight.common.model.CM_MenuAuth">
+		UPDATE CM_MenuAuth SET
+			   allowYN = #{allowYN}
+		 WHERE userType = #{userType}
+		   AND menuIdKey = #{menuIdKey}
+	</update>
+
+	<delete id="deleteMenuAuth" parameterType="kr.peelknight.common.model.CM_Menu">
+		DELETE FROM CM_MenuAuth
+		 WHERE menuIdKey = #{idKey}
+	</delete>
+	
+	<select id="selectMaxOrderSeqWithMenu"  resultType="kr.peelknight.common.model.CM_Paging"
+		statementType="PREPARED" parameterType="kr.peelknight.common.model.CM_Menu">
+		SELECT MAX(orderSeq) as totalCount
+		  FROM CM_Menu
+		 WHERE parentIdKey = #{parentIdKey}
+	</select>
+</mapper>

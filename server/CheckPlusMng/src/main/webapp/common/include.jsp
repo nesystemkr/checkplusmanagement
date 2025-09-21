@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import = "kr.peelknight.util.L10N" %>
 <%
 response.setHeader("Cache-Control", "no-cache"); //HTTP 1.1
 response.setHeader("Pragma", "no-cache"); //HTTP 1.0
@@ -19,6 +20,8 @@ if (session.getAttribute("L10N") == null ||
 	session.getAttribute("Locale") == null ||
 	!(session.getAttribute("Locale").equals(lang))) {
 	session.setAttribute("Locale", lang);
+	L10N sessionL10N = new L10N(session);
+	session.setAttribute("L10N", sessionL10N);
 }
 %>
 <!DOCTYPE HTML>

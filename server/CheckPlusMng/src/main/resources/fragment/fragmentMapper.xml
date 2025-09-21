@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.peelknight.fragment.mybatis.fragmentMapper">
+	<select id="selectFragment" resultType="kr.peelknight.fragment.model.CM_Fragment"
+			statementType="PREPARED" parameterType="java.util.Map">
+		SELECT a.idKey, a.fragmentId, a.fragmentType, a.comment, a.createDate,
+			   b.codeName as fragmentTypeName
+		  FROM CM_Fragment a INNER JOIN CM_Code b
+									 ON a.fragmentType = b.code
+									AND b.type = 'FRAGMENTTYPE'
+		 WHERE a.idKey <![CDATA[ > ]]> 0
+		<if test="idKey != null">
+		   AND a.idKey = #{idKey}
+		</if>
+		<if test="fragmentId != null">
+		   AND a.fragmentId = #{fragmentId}
+		</if>
+		<if test="offset != null and size != null">
+		 LIMIT ${offset}, ${size}
+		</if>
+	</select>
+
+	<select id="selectFragmentPaging" resultType="kr.peelknight.common.model.CM_Paging"
+			statementType="PREPARED" parameterType="java.util.Map">
+		SELECT COUNT(idKey) as totalCount
+		  FROM CM_Fragment
+		 WHERE idKey <![CDATA[ > ]]> 0
+		<if test="idKey != null">
+		   AND idKey = #{idKey}
+		</if>
+		<if test="fragmentId != null">
+		   AND fragmentId = #{fragmentId}
+		</if>
+	</select>
+
+	<insert id="insertFragment" parameterType="kr.peelknight.fragment.model.CM_Fragment"
+		statementType="PREPARED" useGeneratedKeys="true" keyProperty="idKey">
+		INSERT INTO CM_Fragment (
+			fragmentId, fragmentType, comment, createDate
+		) VALUES (
+			#{fragmentId}, #{fragmentType}, #{comment}, #{createDate}
+		)
+	</insert>
+
+	<update id="updateFragment" parameterType="kr.peelknight.fragment.model.CM_Fragment">
+		UPDATE CM_Fragment SET
+			   fragmentId = #{fragmentId},
+			   fragmentType = #{fragmentType},
+			   comment = #{comment},
+			   createDate = #{createDate}
+		 WHERE idKey = #{idKey}
+	</update>
+
+	<update id="updateFragmentCachedJson" parameterType="java.util.Map">
+		UPDATE CM_Fragment SET
+			   cachedJson = #{cachedJson}
+		 WHERE fragmentId = #{fragmentId}
+	</update>
+
+	<delete id="deleteFragment" parameterType="kr.peelknight.fragment.model.CM_Fragment">
+		DELETE FROM CM_Fragment
+		 WHERE idKey = #{idKey}
+	</delete>
+</mapper>

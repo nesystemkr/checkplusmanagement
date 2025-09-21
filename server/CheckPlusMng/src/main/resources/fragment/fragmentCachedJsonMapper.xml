@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.peelknight.fragment.mybatis.fragmentcachedjsonMapper">
+	<select id="selectFragmentCachedJson" resultType="kr.peelknight.fragment.model.CM_FragmentCachedJson"
+			statementType="PREPARED" parameterType="java.util.Map">
+		SELECT fragmentIdKey, locale, cachedJson
+		  FROM CM_FragmentCachedJson
+		 WHERE fragmentIdKey <![CDATA[ > ]]> 0
+		<if test="fragmentIdKey != null">
+		   AND fragmentIdKey = #{fragmentIdKey}
+		</if>
+		<if test="locale != null">
+		   AND locale = #{locale}
+		</if>
+		<if test="offset != null and size != null">
+		 LIMIT ${offset}, ${size}
+		</if>
+	</select>
+
+	<select id="selectFragmentCachedJsonPaging" resultType="kr.peelknight.common.model.CM_Paging"
+			statementType="PREPARED" parameterType="java.util.Map">
+		SELECT COUNT(fragmentIdKey) as totalCount
+		  FROM CM_FragmentCachedJson
+		 WHERE fragmentIdKey <![CDATA[ > ]]> 0
+		<if test="fragmentIdKey != null">
+		   AND fragmentIdKey = #{fragmentIdKey}
+		</if>
+		<if test="locale != null">
+		   AND locale = #{locale}
+		</if>
+	</select>
+
+	<insert id="insertFragmentCachedJson" parameterType="kr.peelknight.fragment.model.CM_FragmentCachedJson"
+		statementType="PREPARED" useGeneratedKeys="true" keyProperty="idKey">
+		INSERT INTO CM_FragmentCachedJson (
+			fragmentIdKey, locale, cachedJson
+		) VALUES (
+			#{fragmentIdKey}, #{locale}, #{cachedJson}
+		)
+	</insert>
+
+	<update id="updateFragmentCachedJson" parameterType="kr.peelknight.fragment.model.CM_FragmentCachedJson">
+		UPDATE CM_FragmentCachedJson SET
+			   cachedJson = #{cachedJson}
+		 WHERE fragmentIdKey = #{fragmentIdKey}
+		   AND locale = #{locale}
+	</update>
+
+	<delete id="deleteFragmentCachedJson" parameterType="kr.peelknight.fragment.model.CM_FragmentCachedJson">
+		DELETE FROM CM_FragmentCachedJson
+		 WHERE fragmentIdKey = #{fragmentIdKey}
+	</delete>
+
+	<delete id="deleteFragmentCachedJsonByGrid" parameterType="kr.peelknight.fragment.model.CM_GridFragment">
+		DELETE FROM CM_FragmentCachedJson
+		 WHERE fragmentIdKey = #{fragmentIdKey}
+	</delete>
+
+	<delete id="deleteFragmentCachedJsonByPopup" parameterType="kr.peelknight.fragment.model.CM_PopupFragment">
+		DELETE FROM CM_FragmentCachedJson
+		 WHERE fragmentIdKey = #{fragmentIdKey}
+	</delete>
+</mapper>

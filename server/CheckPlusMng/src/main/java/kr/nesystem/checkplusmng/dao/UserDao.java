@@ -9,7 +9,7 @@ import org.apache.ibatis.session.SqlSessionFactory;
 
 import kr.nesystem.checkplusmng.model.CM_User;
 import kr.nesystem.model.CM_Paging;
-import kr.nesystem.util.MySqlSessionFactory;
+import kr.peelknight.mybatis.MySqlSessionFactory;
 
 public class UserDao {
 	public SqlSessionFactory factory =  null;

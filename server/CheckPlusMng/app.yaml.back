@@ -1,0 +1,2 @@
+runtime: java21
+service_account_token_in_auth_context: true

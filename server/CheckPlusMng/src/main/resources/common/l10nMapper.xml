@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.peelknight.common.mybatis.l10nMapper">
+	<select id="selectL10N" resultType="kr.peelknight.common.model.CM_L10N"
+			statementType="PREPARED" parameterType="java.util.Map">
+		SELECT idKey, idString, defaultString
+		  FROM CM_L10N
+		 WHERE idKey <![CDATA[ > ]]> 0
+		<if test="idKey != null">
+		   AND idKey = #{idKey}
+		</if>
+		<if test="search != null">
+		   AND (idString LIKE '${search}%'
+			 OR defaultString LIKE '${search}%')
+		</if>
+		 ORDER BY idString
+		<if test="offset != null and size != null">
+		 LIMIT ${offset}, ${size}
+		</if>
+	</select>
+
+	<select id="selectL10NPaging" resultType="kr.peelknight.common.model.CM_Paging"
+			statementType="PREPARED" parameterType="java.util.Map">
+		SELECT COUNT(idKey) as totalCount
+		  FROM CM_L10N
+		 WHERE idKey <![CDATA[ > ]]> 0
+		<if test="idKey != null">
+		   AND idKey = #{idKey}
+		</if>
+		<if test="search != null">
+		   AND (idString LIKE '${search}%'
+			 OR defaultString LIKE '${search}%')
+		</if>
+	</select>
+
+	<insert id="insertL10N" parameterType="kr.peelknight.common.model.CM_L10N"
+		statementType="PREPARED" useGeneratedKeys="true" keyProperty="idKey">
+		INSERT INTO CM_L10N (
+			idString, defaultString
+		) VALUES (
+			#{idString}, #{defaultString}
+		)
+	</insert>
+
+	<update id="updateL10N" parameterType="kr.peelknight.common.model.CM_L10N">
+		UPDATE CM_L10N SET
+			   idString = #{idString},
+			   defaultString = #{defaultString}
+		 WHERE idKey = #{idKey}
+	</update>
+
+	<delete id="deleteL10N" parameterType="kr.peelknight.common.model.CM_L10N">
+		DELETE FROM CM_L10N
+		 WHERE idKey = #{idKey}
+	</delete>
+	
+	<select id="selectL10NLocale" resultType="kr.peelknight.common.model.CM_L10NLocale"
+			statementType="PREPARED" parameterType="java.util.Map">
+		SELECT idKey, idString, locale, localeString
+		  FROM CM_L10NLocale
+		 WHERE idKey <![CDATA[ > ]]> 0
+		<if test="idKey != null">
+		   AND idKey = #{idKey}
+		</if>
+		<if test="idString != null">
+		   AND idString = #{idString}
+		</if>
+		<if test="locale != null">
+		   AND locale = #{locale}
+		</if>
+		 ORDER BY idString, locale
+		<if test="offset != null and size != null">
+		 LIMIT ${offset}, ${size}
+		</if>
+	</select>
+
+	<select id="selectL10NLocalePaging" resultType="kr.peelknight.common.model.CM_Paging"
+			statementType="PREPARED" parameterType="java.util.Map">
+		SELECT COUNT(idKey) as totalCount
+		  FROM CM_L10NLocale
+		 WHERE idKey <![CDATA[ > ]]> 0
+		<if test="idKey != null">
+		   AND idKey = #{idKey}
+		</if>
+		<if test="idString != null">
+		   AND idString = #{idString}
+		</if>
+		<if test="locale != null">
+		   AND locale = #{locale}
+		</if>
+	</select>
+
+	<insert id="insertL10NLocale" parameterType="kr.peelknight.common.model.CM_L10NLocale"
+		statementType="PREPARED" useGeneratedKeys="true" keyProperty="idKey">
+		INSERT INTO CM_L10NLocale (
+			idString, locale, localeString
+		) VALUES (
+			#{idString}, #{locale}, #{localeString}
+		)
+	</insert>
+
+	<update id="updateL10NLocale" parameterType="kr.peelknight.common.model.CM_L10NLocale">
+		UPDATE CM_L10NLocale SET
+			   idString = #{idString},
+			   locale = #{locale},
+			   localeString = #{localeString}
+		 WHERE idKey = #{idKey}
+	</update>
+
+	<delete id="deleteL10NLocale" parameterType="kr.peelknight.common.model.CM_L10NLocale">
+		DELETE FROM CM_L10NLocale
+		 WHERE idKey = #{idKey}
+	</delete>
+	
+	<delete id="deleteL10NLocalByIdString" parameterType="kr.peelknight.common.model.CM_L10N">
+		DELETE FROM CM_L10NLocale
+		 WHERE idString = #{idString}
+	</delete>
+</mapper>

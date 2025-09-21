@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.peelknight.fragment.mybatis.gridfragmentMapper">
+	<select id="selectGridFragment" resultType="kr.peelknight.fragment.model.CM_GridFragment"
+			statementType="PREPARED" parameterType="java.util.Map">
+		SELECT fragmentIdKey, serviceUrl, needAuth, jqGrid, showCheckBox,
+			   stretchColumn, paging, popupFragmentId, gridAddButton, gridDelButton,
+			   gridSaveButton, gridSaveUrl, gridRefreshButton, searchArea
+		  FROM CM_GridFragment
+		 WHERE fragmentIdKey <![CDATA[ > ]]> 0
+		<if test="fragmentIdKey != null">
+		   AND fragmentIdKey = #{fragmentIdKey}
+		</if>
+		<if test="offset != null and size != null">
+		 LIMIT ${offset}, ${size}
+		</if>
+	</select>
+
+	<select id="selectGridFragmentPaging" resultType="kr.peelknight.common.model.CM_Paging"
+			statementType="PREPARED" parameterType="java.util.Map">
+		SELECT COUNT(fragmentIdKey) as totalCount
+		  FROM CM_GridFragment
+		 WHERE fragmentIdKey <![CDATA[ > ]]> 0
+		<if test="fragmentIdKey != null">
+		   AND fragmentIdKey = #{fragmentIdKey}
+		</if>
+	</select>
+
+	<insert id="insertGridFragment" parameterType="kr.peelknight.fragment.model.CM_GridFragment"
+		statementType="PREPARED">
+		INSERT INTO CM_GridFragment (
+			fragmentIdKey, serviceUrl, needAuth, jqGrid, showCheckBox,
+			stretchColumn, paging, popupFragmentId, gridAddButton, gridDelButton,
+			gridSaveButton, gridSaveUrl, gridRefreshButton, searchArea
+		) VALUES (
+			#{fragmentIdKey}, #{serviceUrl}, #{needAuth}, #{jqGrid}, #{showCheckBox},
+			#{stretchColumn}, #{paging}, #{popupFragmentId}, #{gridAddButton}, #{gridDelButton},
+			#{gridSaveButton}, #{gridSaveUrl}, #{gridRefreshButton}, #{searchArea}
+		)
+	</insert>
+
+	<update id="updateGridFragment" parameterType="kr.peelknight.fragment.model.CM_GridFragment">
+		UPDATE CM_GridFragment SET
+			   serviceUrl = #{serviceUrl},
+			   needAuth = #{needAuth},
+			   jqGrid = #{jqGrid},
+			   showCheckBox = #{showCheckBox},
+			   stretchColumn = #{stretchColumn},
+			   paging = #{paging},
+			   popupFragmentId = #{popupFragmentId},
+			   gridAddButton = #{gridAddButton},
+			   gridDelButton = #{gridDelButton},
+			   gridSaveButton =  #{gridSaveButton},
+			   gridSaveUrl =  #{gridSaveUrl},
+			   gridRefreshButton = #{gridRefreshButton},
+			   searchArea = #{searchArea}
+		 WHERE fragmentIdKey = #{fragmentIdKey}
+	</update>
+
+	<delete id="deleteGridFragment" parameterType="kr.peelknight.fragment.model.CM_Fragment">
+		DELETE FROM CM_GridFragment
+		 WHERE fragmentIdKey = #{idKey}
+	</delete>
+</mapper>

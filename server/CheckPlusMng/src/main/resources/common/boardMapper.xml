@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.peelknight.mybatis.boardMapper">
+	<select id="selectBoard" resultType="kr.peelknight.common.model.CM_Board"
+			statementType="PREPARED" parameterType="java.util.Map">
+		SELECT A.idKey   , A.boardType, A.boardId, A.boardName  , A.attachmentYN,
+			   A.answerYN, A.replyYN  , A.topYN  , A.loginViewYN, A.secretYN    ,
+			   A.status  ,
+			   B.codeName statusName
+		  FROM CM_Board A,
+			   CM_Code B
+		 WHERE A.idKey <![CDATA[ > ]]> 0
+		   AND A.status = B.code
+		   AND B.type = 'BOARDSTATUS'
+		<if test="idKey != null">
+		   AND A.idKey = #{idKey}
+		</if>
+		<if test="boardId != null">
+		   AND A.boardId = #{boardId}
+		</if>
+		<if test="offset != null and size != null">
+		 LIMIT ${offset}, ${size}
+		</if>
+	</select>
+
+	<select id="selectBoardPaging" resultType="kr.peelknight.common.model.CM_Paging"
+			statementType="PREPARED" parameterType="java.util.Map">
+		SELECT COUNT(idKey) as totalCount
+		  FROM CM_Board
+		 WHERE idKey <![CDATA[ > ]]> 0
+		<if test="idKey != null">
+		   AND idKey = #{idKey}
+		</if>
+		<if test="boardId != null">
+		   AND boardId = #{boardId}
+		</if>
+	</select>
+
+	<insert id="insertBoard" parameterType="kr.peelknight.common.model.CM_Board"
+		statementType="PREPARED" useGeneratedKeys="true" keyProperty="idKey">
+		INSERT INTO CM_Board (
+			boardType, boardId, boardName  , attachmentYN, answerYN,
+			replyYN  , topYN  , loginViewYN, secretYN    , status
+		) VALUES (
+			#{boardType}, #{boardId}, #{boardName}  , #{attachmentYN}, #{answerYN},
+			#{replyYN}  , #{topYN}  , #{loginViewYN}, #{secretYN}    , #{status}
+		)
+	</insert>
+
+	<update id="updateBoard" parameterType="kr.peelknight.common.model.CM_Board">
+		UPDATE CM_Board SET
+			   boardType = #{boardType},
+			   boardId = #{boardId},
+			   boardName = #{boardName},
+			   attachmentYN = #{attachmentYN},
+			   answerYN = #{answerYN},
+			   replyYN = #{replyYN},
+			   topYN = #{topYN},
+			   loginViewYN = #{loginViewYN},
+			   secretYN = #{secretYN},
+			   status = #{status}
+		 WHERE idKey = #{idKey}
+	</update>
+	
+	<select id="selectBoardAuthWithBoard" resultType="kr.peelknight.common.model.CM_BoardAuth"
+			statementType="PREPARED" parameterType="kr.peelknight.common.model.CM_Board">
+		SELECT A.code userType, A.codeName userTypeName,
+			   B.idKey, B.boardIdKey,
+			   B.allowPrivateViewYN, B.allowUpdateYN, B.allowUpdateOthersYN
+		  FROM CM_Code A LEFT OUTER JOIN CM_BoardAuth B
+									  ON A.code = B.userType
+									 AND B.boardIdKey = #{idKey}
+		 WHERE A.type = 'USERTYPE'
+		 ORDER BY userType
+	</select>
+	
+	<select id="selectBoardAuth" resultType="kr.peelknight.common.model.CM_BoardAuth"
+			statementType="PREPARED" parameterType="java.util.Map">
+		SELECT idKey, boardIdKey, userType, allowPrivateViewYN, allowUpdateYN, allowUpdateOthersYN
+		  FROM CM_BoardAuth
+		 WHERE idKey <![CDATA[ > ]]> 0
+		<if test="idKey != null">
+		   AND idKey = #{idKey}
+		</if>
+		<if test="boardIdKey != null">
+		   AND boardIdKey = #{boardIdKey}
+		</if>
+		<if test="userType != null">
+		   AND userType = #{userType}
+		</if>
+		<if test="offset != null and size != null">
+		 LIMIT ${offset}, ${size}
+		</if>
+	</select>
+	
+	<insert id="insertBoardAuth" parameterType="kr.peelknight.common.model.CM_BoardAuth"
+		statementType="PREPARED" useGeneratedKeys="true" keyProperty="idKey">
+		INSERT INTO CM_BoardAuth (
+			boardIdKey, userType, allowPrivateViewYN, allowUpdateYN, allowUpdateOthersYN
+		) VALUES (
+			#{boardIdKey}, #{userType}, #{allowPrivateViewYN}, #{allowUpdateYN}, #{allowUpdateOthersYN}
+		)
+	</insert>
+
+	<update id="updateBoardAuth" parameterType="kr.peelknight.common.model.CM_BoardAuth"
+		statementType="PREPARED">
+		UPDATE CM_BoardAuth SET
+			   boardIdKey = #{boardIdKey},
+			   userType = #{userType},
+			   allowPrivateViewYN = #{allowPrivateViewYN},
+			   allowUpdateYN = #{allowUpdateYN},
+			   allowUpdateOthersYN = #{allowUpdateOthersYN}
+		 WHERE idKey = #{idKey}
+	</update>
+	
+	<delete id="deleteBoardAuth" parameterType="kr.peelknight.common.model.CM_Board"
+		statementType="PREPARED">
+		DELETE FROM CM_BoardAuth
+		 WHERE boardIdKey = #{idKey}
+	</delete>
+	
+	<select id="selectBoardContent" resultType="kr.peelknight.common.model.CM_BoardContent"
+			statementType="PREPARED" parameterType="java.util.Map">
+		SELECT A.idKey     , A.boardIdKey, A.title    , A.attachGroupIdKey, A.parentIdKey,
+			   A.privateYN , A.topYN     , A.viewCount, A.replyCount      , A.status     ,
+			   A.creator   , A.createDate, A.modifier , A.modifiedDate    ,
+			   B.userName creatorName,
+			   C.userName modifierName,
+			   D.codeName statusName
+		  FROM CM_BoardContent A LEFT OUTER JOIN CM_User B
+											  ON A.creator = B.idKey
+								 LEFT OUTER JOIN CM_User C
+											  ON A.modifier = C.idKey
+								 INNER JOIN CM_Code D
+										 ON D.type = 'BOARDCONTENTSTATUS'
+										AND A.status = D.code
+		 WHERE A.idKey <![CDATA[ > ]]> 0
+		<if test="status != null">
+		   AND A.status = '1'
+		</if>
+		<if test="idKey != null">
+		   AND A.idKey = #{idKey}
+		</if>
+		<if test="boardIdKey != null">
+		   AND A.boardIdKey = #{boardIdKey}
+		</if>
+		<if test="topYN != null">
+		   AND A.topYN = #{topYN}
+		</if>
+		<if test="topYN == null">
+		   AND A.topYN = 'N'
+		</if>
+		<if test="parentIdKeys != null">
+		   AND A.parentIdKey IN
+			<foreach item="item" index="index" collection="parentIdKeys" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="parentIdKeys == null">
+		   AND A.parentIdKey = 0
+		</if>
+		ORDER BY A.createDate DESC
+		<if test="offset != null and size != null">
+		 LIMIT ${offset}, ${size}
+		</if>
+	</select>
+
+	<select id="selectBoardContentFull" resultType="kr.peelknight.common.model.CM_BoardContent"
+			statementType="PREPARED" parameterType="java.util.Map">
+		SELECT A.idKey      , A.boardIdKey, A.title     , A.content  , A.attachGroupIdKey,
+			   A.parentIdKey, A.privateYN , A.topYN     , A.viewCount, A.replyCount      ,
+			   A.status     , A.creator   , A.createDate, A.modifier , A.modifiedDate    ,
+			   B.userName creatorName,
+			   C.userName modifierName,
+			   D.codeName statusName
+		  FROM CM_BoardContent A LEFT OUTER JOIN CM_User B
+											  ON A.creator = B.idKey
+								 LEFT OUTER JOIN CM_User C
+											  ON A.modifier = C.idKey
+								 INNER JOIN CM_Code D
+										 ON D.type = 'BOARDCONTENTSTATUS'
+										AND A.status = D.code
+		 WHERE A.idKey <![CDATA[ > ]]> 0
+		<if test="status != null">
+		   AND A.status = '1'
+		</if>
+		<if test="idKey != null">
+		   AND A.idKey = #{idKey}
+		</if>
+		<if test="boardIdKey != null">
+		   AND A.boardIdKey = #{boardIdKey}
+		</if>
+		ORDER BY A.createDate DESC
+		<if test="offset != null and size != null">
+		 LIMIT ${offset}, ${size}
+		</if>
+	</select>
+
+	<select id="selectBoardContentPaging" resultType="kr.peelknight.common.model.CM_Paging"
+			statementType="PREPARED" parameterType="java.util.Map">
+		SELECT COUNT(idKey) as totalCount
+		  FROM CM_BoardContent
+		 WHERE idKey <![CDATA[ > ]]> 0
+		<if test="idKey != null">
+		   AND idKey = #{idKey}
+		</if>
+		<if test="boardIdKey != null">
+		   AND boardIdKey = #{boardIdKey}
+		</if>
+		<if test="parentIdKeys != null">
+		   AND parentIdKey IN
+			<foreach item="item" index="index" collection="parentIdKeys" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="parentIdKeys == null">
+		   AND parentIdKey = 0
+		</if>
+	</select>
+
+	<insert id="insertBoardContent" parameterType="kr.peelknight.common.model.CM_BoardContent"
+		statementType="PREPARED" useGeneratedKeys="true" keyProperty="idKey">
+		INSERT INTO CM_BoardContent (
+			boardIdKey, title, content, attachGroupIdKey, parentIdKey,
+			privateYN, topYN, viewCount, replyCount, status,
+			creator, createDate, modifier, modifiedDate
+		) VALUES (
+			#{boardIdKey}, #{title}, #{content}, #{attachGroupIdKey}, #{parentIdKey},
+			#{privateYN}, #{topYN}, #{viewCount}, #{replyCount}, #{status},
+			#{creator}, #{createDate}, #{modifier}, #{modifiedDate}
+		)
+	</insert>
+
+	<update id="updateBoardContent" parameterType="kr.peelknight.common.model.CM_BoardContent">
+		UPDATE CM_BoardContent SET
+			   boardIdKey = #{boardIdKey},
+			   title = #{title},
+			   content = #{content},
+			   attachGroupIdKey = #{attachGroupIdKey},
+			   parentIdKey = #{parentIdKey},
+			   privateYN = #{privateYN},
+			   topYN = #{topYN},
+			   viewCount = #{viewCount},
+			   replyCount = #{replyCount},
+			   status = #{status},
+			   modifier = #{modifier},
+			   modifiedDate = #{modifiedDate}
+		 WHERE idKey = #{idKey}
+	</update>
+
+	<delete id="deleteBoardContent" parameterType="kr.peelknight.common.model.CM_BoardContent">
+		DELETE FROM CM_BoardContent
+		 WHERE idKey = #{idKey}
+	</delete>
+	
+	<select id="selectBoardContentReply" resultType="kr.peelknight.common.model.CM_BoardContentReply"
+			statementType="PREPARED" parameterType="java.util.Map">
+		SELECT A.idKey , A.boardContentIdKey, A.parentIdKey, A.reply   , A.attachGroupIdKey, 
+			   A.status, A.creator          , A.createDate , A.modifier, A.modifiedDate    ,
+			   B.userName creatorName,
+			   C.userName modifierName
+		  FROM CM_BoardContentReply A LEFT OUTER JOIN CM_User B
+												   ON A.creator = B.idKey
+									  LEFT OUTER JOIN CM_User C
+												   ON A.modifier = C.idKey
+		 WHERE A.idKey <![CDATA[ > ]]> 0
+		   AND A.status = '1'
+		<if test="idKey != null">
+		   AND A.idKey = #{idKey}
+		</if>
+		<if test="boardContentIdKey != null">
+		   AND A.boardContentIdKey = #{boardContentIdKey}
+		</if>
+		<if test="parentIdKey != null">
+		   AND A.parentIdKey = #{parentIdKey}
+		</if>
+		<if test="offset != null and size != null">
+		 LIMIT ${offset}, ${size}
+		</if>
+	</select>
+
+	<select id="selectBoardContentReplyPaging" resultType="kr.peelknight.common.model.CM_Paging"
+			statementType="PREPARED" parameterType="java.util.Map">
+		SELECT COUNT(idKey) as totalCount
+		  FROM CM_BoardContentReply
+		 WHERE idKey <![CDATA[ > ]]> 0
+		<if test="idKey != null">
+		   AND idKey = #{idKey}
+		</if>
+		<if test="boardContentIdKey != null">
+		   AND A.boardContentIdKey = #{boardContentIdKey}
+		</if>
+		<if test="parentIdKey != null">
+		   AND A.parentIdKey = #{parentIdKey}
+		</if>
+	</select>
+	
+	<insert id="insertBoardContentReply" parameterType="kr.peelknight.common.model.CM_BoardContentReply"
+		statementType="PREPARED" useGeneratedKeys="true" keyProperty="idKey">
+		INSERT INTO CM_BoardContentReply (
+			boardContentIdKey, parentIdKey, reply, attachGroupIdKey, status,
+			creator, createDate, modifier, modifiedDate
+		) VALUES (
+			#{boardContentIdKey}, #{parentIdKey}, #{reply}   , #{attachGroupIdKey}, #{status},
+			#{creator}          , #{createDate} , #{modifier}, #{modifiedDate}
+		)
+	</insert>
+
+	<update id="updateBoardContentReply" parameterType="kr.peelknight.common.model.CM_BoardContentReply">
+		UPDATE CM_BoardContentReply SET
+			   boardContentIdKey = #{boardContentIdKey},
+			   parentIdKey = #{parentIdKey},
+			   reply = #{reply},
+			   attachGroupIdKey = #{attachGroupIdKey},
+			   status = #{status},
+			   modifier = #{modifier},
+			   modifiedDate = #{modifiedDate}
+		 WHERE idKey = #{idKey}
+	</update>
+	
+	<update id="updateBoardContentReplyCount" parameterType="kr.peelknight.common.model.CM_BoardContentReply">
+		UPDATE CM_BoardContent SET
+				replyCount = (SELECT COUNT(*)
+								FROM CM_BoardContentReply
+							   WHERE boardContentIdKey = #{boardContentIdKey}
+								 AND status = '1')
+		 WHERE idKey = #{boardContentIdKey}
+	</update>
+</mapper>
