@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="checkplusmng.codetypeMapper">
+
+<mapper namespace="kr.peelknight.mybatis.codetypeMapper">
 	<select id="selectCodeType" resultType="kr.peelknight.common.model.CM_CodeType"
 			statementType="PREPARED" parameterType="java.util.Map">
 		SELECT type, typeName
 		  FROM CM_CodeType
-		 WHERE type is not null
+		 WHERE 1 = 1
 		<if test="type != null">
 		   AND type = #{type}
 		</if>
@@ -19,7 +20,7 @@
 			statementType="PREPARED" parameterType="java.util.Map">
 		SELECT COUNT(type) as totalCount
 		  FROM CM_CodeType
-		 WHERE type is not null
+		 WHERE 1 = 1
 		<if test="type != null">
 		   AND type = #{type}
 		</if>
