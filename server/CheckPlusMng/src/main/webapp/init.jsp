@@ -5,16 +5,16 @@ function initServer() {
 	if (false == confirm("초기화하시겠습니까?")) {
 		return
 	}
-	var url = "${contextPath}/svc/v1/init/serverbase"
-		nesAjax(url, null,
-			function(data) {
-				alert("기본설정되었습니다.")
-				document.location = "${contextPath}/"
-			},
-			function(data) {
-				alert("기본설정에 실패했습니다.")
-			},
-			"POST")
+	var url = "${contextPath}/svc/gae/init/server"
+	nesAjax(url, null,
+		function(data) {
+			alert("기본설정되었습니다.")
+			document.location = "${contextPath}/"
+		},
+		function(data) {
+			alert("기본설정에 실패했습니다.")
+		},
+		"POST")
 }
 </script>
 <div>

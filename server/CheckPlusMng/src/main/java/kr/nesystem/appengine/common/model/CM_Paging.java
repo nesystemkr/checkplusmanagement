@@ -1,12 +1,6 @@
-package kr.nesystem.model;
+package kr.nesystem.appengine.common.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-
-@SuppressWarnings("serial")
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_DEFAULT)
-public class CM_Paging extends Model {
+public class CM_Paging {
 	private long totalCount;
 	private long page;
 	public CM_Paging() {

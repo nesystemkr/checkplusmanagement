@@ -1,14 +1,12 @@
-package kr.nesystem.model;
+package kr.nesystem.appengine.common.model;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.servlet.http.HttpSession;
+import kr.peelknight.common.model.CM_Paging;
+import kr.peelknight.common.model.Model;
 
-@SuppressWarnings("serial")
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_DEFAULT)
-public class CM_PagingList<T> extends Model {
+public class CM_PagingList<T>  {
 	private CM_Paging paging;
 	private List<T> list;
 	public CM_Paging getPaging() {
@@ -65,6 +63,16 @@ public class CM_PagingList<T> extends Model {
 				item = (Model)list.get(ii);
 				item.setNo(paging.getTotalCount() - ii - idx);
 			}
+		}
+	}
+	public void l10n(HttpSession session) {
+		if (list == null) {
+			return;
+		}
+		Model item;
+		for (int ii=0; ii<list.size(); ii++) {
+			item = (Model)list.get(ii);
+			item.l10n(session);
 		}
 	}
 }

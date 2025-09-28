@@ -1,17 +1,16 @@
-package kr.nesystem.checkplusmng.model;
+package kr.nesystem.appengine.common.model;
 
 import java.util.Date;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.googlecode.objectify.annotation.Entity;
+import com.googlecode.objectify.annotation.Id;
 
-import kr.nesystem.model.Model;
+import jakarta.servlet.http.HttpSession;
+import kr.peelknight.util.L10N;
 
-@SuppressWarnings("serial")
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_DEFAULT)
-public class CM_User extends Model {
-	private long idKey;
+@Entity
+public class CM_User {
+	@Id private long idKey;
 	private String userId;
 	private String password;
 	private String userType;
@@ -101,5 +100,9 @@ public class CM_User extends Model {
 	}
 	public void setUserTypeName(String userTypeName) {
 		this.userTypeName = userTypeName;
+	}
+	public void l10n(HttpSession session) {
+		userTypeName = L10N.get(userTypeName, session);
+		statusName = L10N.get(statusName, session);
 	}
 }

@@ -1,6 +1,0 @@
-Google Cloud SQL설정
-먼저, Google Cloud SQL 인스턴스를 생성해야 한다. MySQL를 선택한다.
-인스턴스 생성: Google Cloud Console에서 Cloud SQL인스턴스를 만든다.
-데이터베이스 생성: 인스턴스 내에 table1을 저장할 데이터 베이스를 생성한다.
-연결 설정: App Engine애플리케이션이 Cloud SQL인스턴스에 접근할 수 있도록 네트워크 설정을 구성합니다.
-         App Engine 유연한 환경은 VPC커넥터나 내부 IP를 통해 Cloud SQL에 연결할 수 있습니다.
