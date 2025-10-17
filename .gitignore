@@ -2,3 +2,4 @@ server/helloworld_v8/target
 server/my-gae-app/.settings
 server/my-gae-app/target
 server/CheckPlusMng/.settings
+server/DataStoreTest/datastore/.settings

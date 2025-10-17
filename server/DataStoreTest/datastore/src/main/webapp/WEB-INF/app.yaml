@@ -1,0 +1,4 @@
+runtime: java21
+service: default
+application: checkplusmng
+instance_class: F1

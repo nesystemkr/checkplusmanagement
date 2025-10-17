@@ -1,0 +1,50 @@
+<html>
+<head>
+<script src="/jquery.js"></script>
+<script>
+function nesAjax($url, $data, $func, $error, $method, $timeout) {
+	$.ajax({
+		type: $method,
+		url: $url ,
+		timeout: $timeout ? $timeout : (600 * 1000),
+		data: $data ,
+		contentType:"application/json; charset=utf-8",
+		dataType:"json",
+		xhrFields: {
+			withCredentials: true
+		},
+		success: function(data) {
+			$func(data);
+		},
+		error : function(data) {
+			try {
+				$error(data);
+			} catch(e) {
+			}
+		}
+	});
+}
+
+function insertData() {
+	var url = "/rest/codes"
+	var data = {}
+	data.code = $('#code').val()
+	data.codeName = $('#name').val()
+	nesAjax(url,
+			JSON.stringify(data),
+			function(data) {
+				alert('ok')
+			},
+			function(data) {
+				alert('error')
+			},
+			"POST")
+}
+</script>
+</head>
+<body>
+code <input type="text" id="code" value=""><br>
+name <input type="text" id="name" value=""><br>
+<button onclick="insertData()">insert</button>
+</body>
+</html>

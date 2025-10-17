@@ -1,0 +1,71 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>kr.nesystem.datastoreTest</groupId>
+	<artifactId>datastoreTest</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>war</packaging>
+	<properties>
+		<maven.compiler.target>21</maven.compiler.target>
+		<maven.compiler.source>21</maven.compiler.source>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<failOnMissingWebXml>false</failOnMissingWebXml>
+	</properties>
+
+	<dependencies>
+		<!-- Google Cloud Datastore Client Library -->
+		<dependency>
+			<groupId>com.google.cloud</groupId>
+			<artifactId>google-cloud-datastore</artifactId>
+			<version>2.31.4</version>
+		</dependency>
+
+		<!-- Jakarta Servlet API for App Engine Standard (Java 17) -->
+		<dependency>
+			<groupId>jakarta.servlet</groupId>
+			<artifactId>jakarta.servlet-api</artifactId>
+			<version>6.1.0</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- Jackson for JSON processing (Serialization/Deserialization) -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.20.0</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<!-- Compile plugin (using Java 17) -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.11.0</version>
+			</plugin>
+
+			<!-- WAR plugin configuration -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>3.4.0</version>
+			</plugin>
+
+			<!-- Google App Engine Maven Plugin: For local development and deployment -->
+			<!-- Eclipse에서 Run As -> Maven Build (goal: appengine:run)으로 테스트 가능합니다. -->
+			<plugin>
+				<groupId>com.google.cloud.tools</groupId>
+				<artifactId>appengine-maven-plugin</artifactId>
+				<version>2.8.3</version>
+				<configuration>
+					<projectId>checkplusmng</projectId> <!-- 로컬 실행 시 자동 감지 또는 기본 프로젝트 사용 -->
+					<version>1</version>
+					<jvm_flag>--add-opens=java.base/java.lang=ALL-UNNAMED</jvm_flag>
+					<jvm_flag>--add-opens=java.base/java.util=ALL-UNNAMED</jvm_flag>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
