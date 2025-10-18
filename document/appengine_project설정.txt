@@ -182,4 +182,7 @@ App Engine에 배포
 mvn clean package appengine:deploy
 
 
-
+8. 로컬에서 DataStore에 입력하는 테스트를 위해서는 인증을 받아야 한다.
+gcloud auth application-default login
+인증을 받으면 
+~/.config/gcloud/application_default_credentials.json 에 해당 정보가 들어 있고 실행시 이를 자동으로 찾아서 실행된다.
