@@ -2,15 +2,14 @@ package kr.nesystem.appengine.common.model;
 
 import java.util.Date;
 
-import com.googlecode.objectify.annotation.Entity;
-import com.googlecode.objectify.annotation.Id;
+import com.google.cloud.datastore.Entity;
+import com.google.cloud.datastore.FullEntity;
+import com.google.cloud.datastore.IncompleteKey;
+import com.google.cloud.datastore.Key;
+import com.google.cloud.datastore.KeyFactory;
 
-import jakarta.servlet.http.HttpSession;
-import kr.peelknight.util.L10N;
-
-@Entity
-public class CM_User {
-	@Id private long idKey;
+public class CM_User extends Model {
+	private long idKey;
 	private String userId;
 	private String password;
 	private String userType;
@@ -22,6 +21,10 @@ public class CM_User {
 	private Date createDate;
 	private String statusName;
 	private String userTypeName;
+	public CM_User() {
+		super();
+		hasIdKey = true;
+	}
 	public long getIdKey() {
 		return idKey;
 	}
@@ -101,8 +104,53 @@ public class CM_User {
 	public void setUserTypeName(String userTypeName) {
 		this.userTypeName = userTypeName;
 	}
-	public void l10n(HttpSession session) {
-		userTypeName = L10N.get(userTypeName, session);
-		statusName = L10N.get(statusName, session);
+	@Override
+	public String key() {
+		return String.valueOf(idKey);
+	}
+	@Override
+	public FullEntity<IncompleteKey> toEntityAutoInc(KeyFactory keyFactory) {
+		return Entity.newBuilder(keyFactory.newKey())
+				.set("userId", N2Z(userId))
+				.set("password", N2Z(password))
+				.set("userType", N2Z(userType))
+				.set("userName", N2Z(userName))
+				.set("status", N2Z(status))
+				.set("loginFailCount", loginFailCount)
+				.set("lastLoginDate", D2Z(lastLoginDate))
+				.set("lastLoginSeq", lastLoginSeq)
+				.set("createDate", D2Z(createDate))
+				.build();
+	}
+	@Override
+	public Entity toEntity(KeyFactory keyFactory) {
+		return null;
+	}
+	@Override
+	public Entity toEntity(Key key, Entity existOne) {
+		return Entity.newBuilder(key, existOne)
+				.set("userId", N2Z(userId))
+				.set("password", N2Z(password))
+				.set("userType", N2Z(userType))
+				.set("userName", N2Z(userName))
+				.set("status", N2Z(status))
+				.set("loginFailCount", loginFailCount)
+				.set("lastLoginDate", D2Z(lastLoginDate))
+				.set("lastLoginSeq", lastLoginSeq)
+				.build();
+	}
+	@Override
+	public CM_User fromEntity(Entity entity) {
+		setIdKey(entity.getKey().getId());
+		setUserId(entity.getString("userId"));
+		setPassword(entity.getString("password"));
+		setUserType(entity.getString("userType"));
+		setUserName(entity.getString("userName"));
+		setStatus(entity.getString("status"));
+		setLoginFailCount((int)entity.getLong("loginFailCount"));
+		setLastLoginDate(TS2D(entity.getTimestamp("lastLoginDate")));
+		setLastLoginSeq((int)entity.getLong("lastLoginSeq"));
+		setCreateDate(TS2D(entity.getTimestamp("createDate")));
+		return this;
 	}
 }

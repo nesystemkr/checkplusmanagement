@@ -5,18 +5,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import jakarta.servlet.http.HttpSession;
-import kr.nesystem.appengine.common.dao.CodeDao;
-import kr.nesystem.appengine.common.dao.L10NDao;
-import kr.nesystem.appengine.common.model.CM_Code;
-import kr.nesystem.appengine.common.model.CM_L10N;
-import kr.nesystem.appengine.common.model.CM_L10NLocale;
+import kr.peelknight.common.dao.CodeDao;
+import kr.peelknight.common.dao.L10NDao;
+import kr.peelknight.common.model.CM_Code;
+import kr.peelknight.common.model.CM_L10N;
+import kr.peelknight.common.model.CM_L10NLocale;
 
 public class L10N implements Serializable {
 	private static final long serialVersionUID = 1L; 
 	static Map<String, Map<String, String>> localeStringsMap;
 	static Map<String, String> defaultStrings;
 	static {
-		loadResource();
+//		loadResource();
 	};
 	
 	public static void loadResource() {

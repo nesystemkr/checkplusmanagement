@@ -2,8 +2,11 @@ package kr.nesystem.appengine.common.model;
 
 import java.util.List;
 
-import com.google.cloud.datastore.Datastore;
 import com.google.cloud.datastore.Entity;
+import com.google.cloud.datastore.FullEntity;
+import com.google.cloud.datastore.IncompleteKey;
+import com.google.cloud.datastore.Key;
+import com.google.cloud.datastore.KeyFactory;
 import jakarta.servlet.http.HttpSession;
 import kr.peelknight.common.model.CM_Code;
 import kr.peelknight.util.L10N;
@@ -45,11 +48,22 @@ public class CM_CodeType extends Model {
 		return type;
 	}
 	@Override
-	public Entity toEntity(Datastore datastore) {
-		return Entity.newBuilder(toKey(datastore))
+	public FullEntity<IncompleteKey> toEntityAutoInc(KeyFactory keyFactory) {
+		return null;
+	}
+	@Override
+	public Entity toEntity(KeyFactory keyFactory) {
+		return Entity.newBuilder(toKey(keyFactory))
 				.set("type", type)
-				.set("typeName", typeName)
-				.set("typeNameLocale", typeNameLocale)
+				.set("typeName", N2Z(typeName))
+				.set("typeNameLocale", N2Z(typeNameLocale))
+				.build();
+	}
+	@Override
+	public Entity toEntity(Key key, Entity existOne) {
+		return Entity.newBuilder(key, existOne)
+				.set("typeName", N2Z(typeName))
+				.set("typeNameLocale", N2Z(typeNameLocale))
 				.build();
 	}
 	@Override

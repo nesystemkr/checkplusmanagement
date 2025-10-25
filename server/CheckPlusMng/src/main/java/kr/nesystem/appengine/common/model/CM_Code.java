@@ -1,7 +1,11 @@
 package kr.nesystem.appengine.common.model;
 
-import com.google.cloud.datastore.Datastore;
 import com.google.cloud.datastore.Entity;
+import com.google.cloud.datastore.FullEntity;
+import com.google.cloud.datastore.IncompleteKey;
+import com.google.cloud.datastore.Key;
+import com.google.cloud.datastore.KeyFactory;
+
 import jakarta.servlet.http.HttpSession;
 import kr.peelknight.util.L10N;
 
@@ -56,14 +60,27 @@ public class CM_Code extends Model {
 		return type + "__" + code;
 	}
 	@Override
-	public Entity toEntity(Datastore datastore) {
-		return Entity.newBuilder(toKey(datastore))
+	public FullEntity<IncompleteKey> toEntityAutoInc(KeyFactory keyFactory) {
+		return null;
+	}
+	@Override
+	public Entity toEntity(KeyFactory keyFactory) {
+		return Entity.newBuilder(toKey(keyFactory))
 				.set("typeCode", key())
 				.set("type", type)
 				.set("code", code)
-				.set("codeName", codeName)
-				.set("codeNameLocale", codeNameLocale)
-				.set("comment", comment)
+				.set("codeName", N2Z(codeName))
+				.set("codeNameLocale", N2Z(codeNameLocale))
+				.set("comment", N2Z(comment))
+				.set("orderSeq", orderSeq)
+				.build();
+	}
+	@Override
+	public Entity toEntity(Key key, Entity existOne) {
+		return Entity.newBuilder(key, existOne)
+				.set("codeName", N2Z(codeName))
+				.set("codeNameLocale", N2Z(codeNameLocale))
+				.set("comment", N2Z(comment))
 				.set("orderSeq", orderSeq)
 				.build();
 	}

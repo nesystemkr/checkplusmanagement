@@ -2,9 +2,7 @@ package kr.nesystem.appengine.common.model;
 
 import java.util.List;
 
-import jakarta.servlet.http.HttpSession;
 import kr.peelknight.common.model.CM_Paging;
-import kr.peelknight.common.model.Model;
 
 public class CM_PagingList<T>  {
 	private CM_Paging paging;
@@ -63,16 +61,6 @@ public class CM_PagingList<T>  {
 				item = (Model)list.get(ii);
 				item.setNo(paging.getTotalCount() - ii - idx);
 			}
-		}
-	}
-	public void l10n(HttpSession session) {
-		if (list == null) {
-			return;
-		}
-		Model item;
-		for (int ii=0; ii<list.size(); ii++) {
-			item = (Model)list.get(ii);
-			item.l10n(session);
 		}
 	}
 }

@@ -1,12 +1,19 @@
 package kr.nesystem.appengine.common.model;
 
-import com.google.cloud.datastore.Datastore;
 import com.google.cloud.datastore.Entity;
+import com.google.cloud.datastore.FullEntity;
+import com.google.cloud.datastore.IncompleteKey;
+import com.google.cloud.datastore.Key;
+import com.google.cloud.datastore.KeyFactory;
 
 public class CM_L10N extends Model {
 	private long idKey;
 	private String idString;
 	private String defaultString;
+	public CM_L10N() {
+		super();
+		hasIdKey = true;
+	}
 	public long getIdKey() {
 		return idKey;
 	}
@@ -30,15 +37,28 @@ public class CM_L10N extends Model {
 		return String.valueOf(idKey);
 	}
 	@Override
-	public Entity toEntity(Datastore datastore) {
-		return Entity.newBuilder(toKey(datastore))
-				.set("idKey", idKey)
+	public FullEntity<IncompleteKey> toEntityAutoInc(KeyFactory keyFactory) {
+		return Entity.newBuilder(keyFactory.newKey())
+				.set("idString", idString)
+				.set("defaultString", defaultString)
+				.build();
+	}
+	@Override
+	public Entity toEntity(KeyFactory keyfactory) {
+		return null;
+	}
+	@Override
+	public Entity toEntity(Key key, Entity existOne) {
+		return Entity.newBuilder(key, existOne)
 				.set("idString", idString)
 				.set("defaultString", defaultString)
 				.build();
 	}
 	@Override
 	public CM_L10N fromEntity(Entity entity) {
+		setIdKey(entity.getKey().getId());
+		setIdString(entity.getString("idString"));
+		setDefaultString(entity.getString("defaultString"));
 		return null;
 	}
 }
