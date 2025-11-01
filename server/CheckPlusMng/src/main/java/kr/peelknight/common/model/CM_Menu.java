@@ -5,7 +5,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import kr.peelknight.util.L10N;
+//import kr.peelknight.util.L10N;
 
 @SuppressWarnings("serial")
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -88,8 +88,8 @@ public class CM_Menu extends Model {
 	public void setSubMenus(List<CM_Menu> subMenus) {
 		this.subMenus = subMenus;
 	}
-	public void l10n(String lang) {
-		menuLocale = L10N.get(menuName, lang);
-		statusName = L10N.get(statusName, lang);
-	}
+//	public void l10n(String lang) {
+//		menuLocale = L10N.get(menuName, lang);
+//		statusName = L10N.get(statusName, lang);
+//	}
 }

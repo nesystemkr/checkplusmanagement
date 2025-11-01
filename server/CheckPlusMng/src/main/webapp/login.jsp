@@ -99,7 +99,7 @@ function signup() {
 
 <div class="login_area">
 	<div class="login_box">
-		<h2>PeelknightServerBase</h2>
+		<h2>NESystem AppEngine Base</h2>
 		<ul>
 			<li>
 				<span>${L10N.get("SIGNIN_LOGINID")}</span>

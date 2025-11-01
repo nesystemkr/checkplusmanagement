@@ -15,8 +15,8 @@ public class MenuDao extends BaseDao<CM_Menu> {
 		return super.pagingList(null, offset, size);
 	}
 
-	public CM_PagingList<CM_Menu> selectCodeByType(String type) throws Exception {
-		PropertyFilter filter = StructuredQuery.PropertyFilter.eq("type", type);
+	public CM_PagingList<CM_Menu> selectMenusWithUserType(String userType) throws Exception {
+		PropertyFilter filter = StructuredQuery.PropertyFilter.eq("userType", userType);
 		return super.pagingList(filter, -1, 0);
 	}
 }

@@ -45,7 +45,7 @@ import kr.peelknight.common.model.CM_PagingList;
 import kr.peelknight.common.model.Model;
 import kr.peelknight.common.model.ModelHandler;
 import kr.peelknight.util.AuthToken;
-import kr.peelknight.util.L10N;
+//import kr.peelknight.util.L10N;
 import kr.peelknight.util.ResponseUtil;
 
 @Path("/{version}/fragment")
@@ -134,12 +134,12 @@ public class FragmentService {
 			}
 			String ret = null;
 			if (Constant.FRAGMENT_CACHED == true) {
-				CM_FragmentCachedJson cached = cacheDao.selectFragmentCachedJsonByIdKey(existFragment.getIdKey(), L10N.getLang(request.getSession()));
-				if (cached != null) {
-					if (cached.getCachedJson() != null && cached.getCachedJson().length() > 0) {
-						ret = cached.getCachedJson();
-					}
-				}
+//				CM_FragmentCachedJson cached = cacheDao.selectFragmentCachedJsonByIdKey(existFragment.getIdKey(), L10N.getLang(request.getSession()));
+//				if (cached != null) {
+//					if (cached.getCachedJson() != null && cached.getCachedJson().length() > 0) {
+//						ret = cached.getCachedJson();
+//					}
+//				}
 			}
 			if (ret == null || ret.length() == 0) {
 				Model existOne = selectProperFragment(existFragment, request.getSession());
@@ -148,7 +148,7 @@ public class FragmentService {
 				}
 				existOne.l10n(request.getSession());
 				ret = (new ModelHandler<Model>(Model.class)).convertToJson(existOne);
-				cacheDao.insertOrUpdateFragmentCachedJson(existFragment.getIdKey(), L10N.getLang(request.getSession()), ret);
+//				cacheDao.insertOrUpdateFragmentCachedJson(existFragment.getIdKey(), L10N.getLang(request.getSession()), ret);
 			}
 			return ResponseUtil.getResponse(ret);
 			

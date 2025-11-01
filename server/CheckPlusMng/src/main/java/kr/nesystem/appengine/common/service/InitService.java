@@ -8,6 +8,10 @@ import java.util.Set;
 
 import org.apache.ibatis.io.Resources;
 
+import com.google.cloud.datastore.Entity;
+import com.google.cloud.datastore.FullEntity;
+import com.google.cloud.datastore.IncompleteKey;
+
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -92,7 +96,7 @@ public class InitService {
 		UserDao userDao = new UserDao();
 		CM_User existUser = null;
 		try {
-			existUser = userDao.selectUserByUserId("admin");
+			existUser = userDao.selectByUserId("admin");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -172,8 +176,11 @@ public class InitService {
 		MenuDao menuDao = new MenuDao();
 		CM_Menu menuSiteMng = getMenuModel(0, "MENU_SITEMNG", null, 1);
 		CM_Menu menuSetup = getMenuModel(0, "MENU_SITESETUP", null, 2);
-		menuDao.insert(menuSiteMng);
-		menuDao.insert(menuSetup);
+		Entity entity;
+		entity = menuDao.insert(menuSiteMng);
+		menuSiteMng.setIdKey(entity.getKey().getId());
+		entity = menuDao.insert(menuSetup);
+		menuSetup.setIdKey(entity.getKey().getId());
 		CM_Menu menuUser = getMenuModel(menuSiteMng.getIdKey(), "MENU_USERMNG", "/sitemng/user.jsp", 1);
 		CM_Menu menuMenu   = getMenuModel(menuSetup.getIdKey(), "MENU_MENUMNG"  , "/sitesetup/menu.jsp"  , 1);
 		CM_Menu menuCmCode = getMenuModel(menuSetup.getIdKey(), "MENU_CMCODEMNG", "/sitesetup/cmcode.jsp", 2);

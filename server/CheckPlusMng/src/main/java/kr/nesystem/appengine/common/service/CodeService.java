@@ -1,4 +1,4 @@
-package kr.peelknight.common.service;
+package kr.nesystem.appengine.common.service;
 
 import java.util.HashMap;
 import java.util.List;
@@ -18,18 +18,15 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
-
+import kr.nesystem.appengine.common.dao.CodeDao;
+import kr.nesystem.appengine.common.model.CM_Code;
+import kr.nesystem.appengine.common.model.CM_PagingList;
 import kr.peelknight.common.Constant;
-import kr.peelknight.common.dao.CodeDao;
-import kr.peelknight.common.model.CM_Code;
-import kr.peelknight.common.model.CM_Paging;
-import kr.peelknight.common.model.CM_PagingList;
 import kr.peelknight.common.model.ModelHandler;
-import kr.peelknight.common.service.CodeService;
 import kr.peelknight.util.AuthToken;
 import kr.peelknight.util.ResponseUtil;
 
-//@Path("/{version}/code")
+@Path("/{version}/code")
 public class CodeService {
 	CodeDao dao = new CodeDao();
 	
@@ -45,11 +42,7 @@ public class CodeService {
 				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
 			}
 			int offset = (page - 1) * Constant.DEFAULT_SIZE;
-			CM_PagingList<CM_Code> paging = new CM_PagingList<CM_Code>();
-			paging.setList(dao.selectCodes(offset, Constant.DEFAULT_SIZE));
-			paging.setPaging(dao.selectCodePaging());
-			paging.numbering(offset);
-			paging.l10n(request.getSession());
+			CM_PagingList<CM_Code> paging = dao.selectCodes(offset, Constant.DEFAULT_SIZE);
 			return ResponseUtil.getResponse((new ModelHandler<CM_PagingList>(CM_PagingList.class)).convertToJson(paging));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -72,7 +65,6 @@ public class CodeService {
 			if (existOne == null) {
 				return ResponseUtil.getResponse(Status.NOT_FOUND);
 			}
-			existOne.l10n(request.getSession());
 			return ResponseUtil.getResponse((new ModelHandler<CM_Code>(CM_Code.class)).convertToJson(existOne));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -91,11 +83,7 @@ public class CodeService {
 //			if (AuthToken.isValidToken(authToken) == false) {
 //				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
 //			}
-			CM_PagingList<CM_Code> paging = new CM_PagingList<CM_Code>();
-			paging.setList(dao.selectCodeByType(typeParam));
-			paging.setPaging(new CM_Paging());
-			paging.numbering(0);
-			paging.l10n(request.getSession());
+			CM_PagingList<CM_Code> paging = dao.selectCodeByType(typeParam);
 			return ResponseUtil.getResponse((new ModelHandler<CM_PagingList>(CM_PagingList.class)).convertToJson(paging));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -108,10 +96,10 @@ public class CodeService {
 	@Produces({MediaType.APPLICATION_JSON})
 	public Response insertCode(CM_Code code) throws Exception {
 		try {
-			if (AuthToken.isValidToken(code.getReqToken()) == false) {
+			if (AuthToken.isValidToken(code.getAuthToken()) == false) {
 				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
 			}
-			dao.insertCode(code);
+			dao.insert(code);
 			return ResponseUtil.getResponse((new ModelHandler<CM_Code>(CM_Code.class)).convertToJson(code));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -127,7 +115,7 @@ public class CodeService {
 							   @PathParam("typeParam") String typeParam,
 							   @PathParam("codeParam") String codeParam) throws Exception {
 		try {
-			if (AuthToken.isValidToken(code.getReqToken()) == false) {
+			if (AuthToken.isValidToken(code.getAuthToken()) == false) {
 				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
 			}
 			CM_Code existOne = dao.selectCodeByTypeNCode(typeParam, codeParam);
@@ -137,7 +125,7 @@ public class CodeService {
 			existOne.setCodeName(code.getCodeName());
 			existOne.setComment(code.getComment());
 			existOne.setOrderSeq(code.getOrderSeq());
-			dao.updateCode(existOne);
+			dao.update(existOne);
 			return ResponseUtil.getResponse((new ModelHandler<CM_Code>(CM_Code.class)).convertToJson(existOne));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -159,7 +147,7 @@ public class CodeService {
 			if (existOne == null) {
 				return ResponseUtil.getResponse(Status.NOT_FOUND);
 			}
-			dao.deleteCode(existOne);
+			dao.delete(existOne);
 			return ResponseUtil.getResponse((new ModelHandler<CM_Code>(CM_Code.class)).convertToJson(existOne));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -174,13 +162,13 @@ public class CodeService {
 	@Path("/list")
 	public Response insertOrUpdateCodes(CM_PagingList<CM_Code> paging) throws Exception {
 		try {
-			if (AuthToken.isValidToken(paging.getReqToken()) == false) {
+			if (AuthToken.isValidToken(paging.getAuthToken()) == false) {
 				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
 			}
 			if (paging.getList() == null || paging.getList().size() == 0) {
 				return ResponseUtil.getResponse(Status.BAD_REQUEST);
 			}
-			dao.insertOrUpdateCodes(paging.getList());
+			dao.insertOrUpdate(paging.getList());
 			return ResponseUtil.getResponse((new ModelHandler<CM_PagingList>(CM_PagingList.class)).convertToJson(paging));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -194,13 +182,13 @@ public class CodeService {
 	@Path("/list/delete")
 	public Response deleteCodes(CM_PagingList<CM_Code> paging) {
 		try {
-			if (AuthToken.isValidToken(paging.getReqToken()) == false) {
+			if (AuthToken.isValidToken(paging.getAuthToken()) == false) {
 				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
 			}
 			if (paging.getList() == null || paging.getList().size() == 0) {
 				return ResponseUtil.getResponse(Status.BAD_REQUEST);
 			}
-			dao.deleteCodes(paging.getList());
+			dao.delete(paging.getList());
 			return ResponseUtil.getResponse((new ModelHandler<CM_PagingList>(CM_PagingList.class)).convertToJson(paging));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -222,10 +210,9 @@ public class CodeService {
 			Map<String, List<CM_Code>> retMap = new HashMap<>();
 			if (paging.getList() != null) {
 				CM_Code item;
-				for (int ii=0; ii<paging.getList().size(); ii++) {
+				for (int ii = 0; ii < paging.getList().size(); ii++) {
 					item = paging.getList().get(ii);
-					item.l10n(request.getSession());
-					retMap.put(item.getType(), dao.selectCodeByType(item.getType()));
+					retMap.put(item.getType(), dao.selectCodeByType(item.getType()).getList());
 				}
 			}
 			return ResponseUtil.getResponse((new ModelHandler<Map>(Map.class)).convertToJson(retMap));
@@ -250,13 +237,12 @@ public class CodeService {
 			CM_Code item;
 			for (int ii=0; ii<paging.getList().size(); ii++) {
 				item = paging.getList().get(ii);
-				List<CM_Code> codes = dao.selectCodeByType(item.getType());
+				List<CM_Code> codes = dao.selectCodeByType(item.getType()).getList();
 				Map<String, String> tmpMap = new HashMap<>();
 				if (codes != null) {
 					CM_Code code;
-					for (int jj=0; jj<codes.size(); jj++) {
+					for (int jj = 0; jj < codes.size(); jj++) {
 						code = codes.get(jj);
-						code.l10n(request.getSession());
 						tmpMap.put(code.getCode(), code.getCodeName());
 					}
 				}

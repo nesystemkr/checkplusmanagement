@@ -5,7 +5,7 @@ import jakarta.servlet.http.HttpSession;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import kr.peelknight.util.L10N;
+//import kr.peelknight.util.L10N;
 
 @SuppressWarnings("serial")
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -53,7 +53,7 @@ public class CM_Code extends Model {
 	public void setOrderSeq(int orderSeq) {
 		this.orderSeq = orderSeq;
 	}
-	public void l10n(HttpSession session) {
-		codeNameLocale = L10N.get(codeName, session);
-	}
+//	public void l10n(HttpSession session) {
+//		codeNameLocale = L10N.get(codeName, session);
+//	}
 }

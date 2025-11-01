@@ -12,7 +12,7 @@ import jakarta.ws.rs.core.Response.Status;
 import kr.peelknight.common.dao.MenuDao;
 import kr.peelknight.common.func.InitBaseFunctions;
 import kr.peelknight.common.model.CM_Menu;
-import kr.peelknight.util.L10N;
+//import kr.peelknight.util.L10N;
 import kr.peelknight.util.ResponseUtil;
 
 @Path("/{version}/init")
@@ -58,7 +58,7 @@ public class InitService extends InitBaseFunctions {
 	public void insertServerBaseL10Ns() {
 		insertL10Ns_default("lang.properties");
 		insertL10Ns_locale("lang_en.properties", "en_US");
-		L10N.loadResource();
+//		L10N.loadResource();
 	}
 	
 	public void insertServerBaseMenus() {

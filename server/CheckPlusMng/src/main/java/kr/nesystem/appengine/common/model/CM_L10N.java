@@ -3,10 +3,9 @@ package kr.nesystem.appengine.common.model;
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.FullEntity;
 import com.google.cloud.datastore.IncompleteKey;
-import com.google.cloud.datastore.Key;
 import com.google.cloud.datastore.KeyFactory;
 
-public class CM_L10N extends Model {
+public class CM_L10N extends GAEModel {
 	private long idKey;
 	private String idString;
 	private String defaultString;
@@ -33,8 +32,8 @@ public class CM_L10N extends Model {
 		this.defaultString = defaultString;
 	}
 	@Override
-	public String key() {
-		return String.valueOf(idKey);
+	public Object key() {
+		return Long.valueOf(idKey);
 	}
 	@Override
 	public FullEntity<IncompleteKey> toEntityAutoInc(KeyFactory keyFactory) {
@@ -48,8 +47,8 @@ public class CM_L10N extends Model {
 		return null;
 	}
 	@Override
-	public Entity toEntity(Key key, Entity existOne) {
-		return Entity.newBuilder(key, existOne)
+	public Entity toEntity(Entity existOne) {
+		return Entity.newBuilder(existOne.getKey(), existOne)
 				.set("idString", idString)
 				.set("defaultString", defaultString)
 				.build();
@@ -59,6 +58,6 @@ public class CM_L10N extends Model {
 		setIdKey(entity.getKey().getId());
 		setIdString(entity.getString("idString"));
 		setDefaultString(entity.getString("defaultString"));
-		return null;
+		return this;
 	}
 }

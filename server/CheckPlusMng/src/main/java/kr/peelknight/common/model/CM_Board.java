@@ -7,7 +7,7 @@ import jakarta.servlet.http.HttpSession;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import kr.peelknight.util.L10N;
+//import kr.peelknight.util.L10N;
 
 @SuppressWarnings("serial")
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -125,7 +125,7 @@ public class CM_Board extends Model {
 	public void setAllowUpdateOthersYN(boolean allowUpdateOthersYN) {
 		this.allowUpdateOthersYN = allowUpdateOthersYN;
 	}
-	public void l10n(HttpSession session) {
-		statusName = L10N.get(statusName, session);
-	}
+//	public void l10n(HttpSession session) {
+//		statusName = L10N.get(statusName, session);
+//	}
 }

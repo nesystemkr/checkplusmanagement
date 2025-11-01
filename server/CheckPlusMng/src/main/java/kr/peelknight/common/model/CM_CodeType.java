@@ -7,7 +7,7 @@ import jakarta.servlet.http.HttpSession;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import kr.peelknight.util.L10N;
+//import kr.peelknight.util.L10N;
 
 @SuppressWarnings("serial")
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -41,7 +41,7 @@ public class CM_CodeType extends Model {
 	public void setCodes(List<CM_Code> codes) {
 		this.codes = codes;
 	}
-	public void l10n(HttpSession session) {
-		typeName = L10N.get(typeName, session);
-	}
+//	public void l10n(HttpSession session) {
+//		typeName = L10N.get(typeName, session);
+//	}
 }

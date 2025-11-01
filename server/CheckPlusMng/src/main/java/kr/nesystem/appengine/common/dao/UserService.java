@@ -1,8 +1,6 @@
-package kr.peelknight.common.service;
+package kr.nesystem.appengine.common.dao;
 
 import java.util.Date;
-import java.util.List;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -17,17 +15,15 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
-
+import kr.nesystem.appengine.common.model.CM_PagingList;
+import kr.nesystem.appengine.common.model.CM_User;
 import kr.peelknight.common.Constant;
-import kr.peelknight.common.dao.UserDao;
-import kr.peelknight.common.model.CM_PagingList;
-import kr.peelknight.common.model.CM_User;
 import kr.peelknight.common.model.ModelHandler;
 import kr.peelknight.util.AuthToken;
 import kr.peelknight.util.CommonFunc;
 import kr.peelknight.util.ResponseUtil;
 
-//@Path("/{version}/user")
+@Path("/{version}/user")
 public class UserService {
 	UserDao dao = new UserDao();
 	
@@ -37,14 +33,8 @@ public class UserService {
 	@Produces({MediaType.APPLICATION_JSON})
 	public Response insertUser(CM_User user) throws Exception {
 		try {
-			if (user.getReqToken() == null || !user.getReqToken().equals("signupbyuser")) {
-				if (AuthToken.isValidToken(user.getReqToken()) == false) {
-					//최초 admin은 생성할 수 있도록 예외 처리한다.
-					List<CM_User> list = dao.selectUsers(0, 1);
-					if (list != null && list.size() > 0) {
-						return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
-					}
-				}
+			if (user.getAuthToken() == null || !user.getAuthToken().equals("signupbyuser")) {
+				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
 			}
 			
 			if (user.getUserId() == null || user.getUserId().length() == 0 ||
@@ -55,7 +45,7 @@ public class UserService {
 			if (user.getUserId().equals("admin")) {
 				user.setUserType("1");
 			}
-			CM_User existUser = dao.selectUserByUserId(user.getUserId());
+			CM_User existUser = dao.selectByUserId(user.getUserId());
 			if (existUser != null) {
 				return ResponseUtil.getResponse(Status.CONFLICT);
 			}
@@ -65,7 +55,7 @@ public class UserService {
 			user.setLastLoginDate(new Date());
 			user.setLastLoginSeq(0);
 			user.setCreateDate(new Date());
-			dao.insertUser(user);
+			dao.insert(user);
 			return ResponseUtil.getResponse((new ModelHandler<CM_User>(CM_User.class)).convertToJson(user));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -81,12 +71,12 @@ public class UserService {
 	public Response updateUser(@PathParam("userIdKey") long userIdKey,
 							   CM_User user) {
 		try {
-			if (AuthToken.isValidToken(user.getReqToken()) == false) {
+			if (AuthToken.isValidToken(user.getAuthToken()) == false) {
 				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
 			}
-			String authUserType = AuthToken.getUserType(user.getReqToken());
+			String authUserType = AuthToken.getUserType(user.getAuthToken());
 			if (authUserType.equals("1") == false && authUserType.equals("2") == false) {
-				long authUserIdKey = AuthToken.getIdKey(user.getReqToken());
+				long authUserIdKey = AuthToken.getIdKey(user.getAuthToken());
 				if (authUserIdKey != userIdKey) {
 					return ResponseUtil.getResponse(Status.FORBIDDEN);
 				}
@@ -94,7 +84,7 @@ public class UserService {
 			if (userIdKey != user.getIdKey()) {
 				return ResponseUtil.getResponse(Status.BAD_REQUEST);
 			}
-			CM_User existUser = dao.selectUserByIdKey(user.getIdKey());
+			CM_User existUser = dao.selectByIdKey(user.getIdKey());
 			if (existUser == null) {
 				return ResponseUtil.getResponse(Status.NOT_FOUND);
 			}
@@ -104,7 +94,7 @@ public class UserService {
 			existUser.setUserType(user.getUserType());
 			existUser.setUserName(user.getUserName());
 			existUser.setStatus(user.getStatus());
-			dao.updateUser(existUser);
+			dao.update(existUser);
 			return ResponseUtil.getResponse((new ModelHandler<CM_User>(CM_User.class)).convertToJson(existUser));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -129,11 +119,11 @@ public class UserService {
 					return ResponseUtil.getResponse(Status.FORBIDDEN);
 				}
 			}
-			CM_User existUser = dao.selectUserByIdKey(userIdKey);
+			CM_User existUser = dao.selectByIdKey(userIdKey);
 			if (existUser == null) {
 				return ResponseUtil.getResponse(Status.NOT_FOUND);
 			}
-			dao.deleteUser(existUser);
+			dao.delete(existUser);
 			return ResponseUtil.getResponse((new ModelHandler<CM_User>(CM_User.class)).convertToJson(existUser));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -149,12 +139,12 @@ public class UserService {
 									   @QueryParam("q") String authToken,
 									   CM_User user) {
 		try {
-			if (AuthToken.isValidToken(user.getReqToken(), authToken) == false) {
+			if (AuthToken.isValidToken(user.getAuthToken(), authToken) == false) {
 				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
 			}
-			String authUserType = AuthToken.getUserType(user.getReqToken(), authToken);
+			String authUserType = AuthToken.getUserType(user.getAuthToken(), authToken);
 			if (authUserType.equals("1") == false && authUserType.equals("2") == false) {
-				long authUserIdKey = AuthToken.getIdKey(user.getReqToken(), authToken);
+				long authUserIdKey = AuthToken.getIdKey(user.getAuthToken(), authToken);
 				if (authUserIdKey != userIdKey) {
 					return ResponseUtil.getResponse(Status.FORBIDDEN);
 				}
@@ -162,12 +152,12 @@ public class UserService {
 			if (userIdKey != user.getIdKey()) {
 				return ResponseUtil.getResponse(Status.BAD_REQUEST);
 			}
-			CM_User existUser = dao.selectUserByIdKey(user.getIdKey());
+			CM_User existUser = dao.selectByIdKey(user.getIdKey());
 			if (existUser == null) {
 				return ResponseUtil.getResponse(Status.NOT_FOUND);
 			}
 			existUser.setLoginFailCount(0);
-			dao.updateUser(existUser);
+			dao.update(existUser);
 			return ResponseUtil.getResponse((new ModelHandler<CM_User>(CM_User.class)).convertToJson(existUser));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -183,7 +173,7 @@ public class UserService {
 								   @QueryParam("q") String authToken,
 								   CM_User user) throws Exception {
 		try {
-			if (AuthToken.isValidToken(user.getReqToken(), authToken) == false) {
+			if (AuthToken.isValidToken(user.getAuthToken(), authToken) == false) {
 				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
 			}
 			if (user.getIdKey() == 0 ||
@@ -192,8 +182,8 @@ public class UserService {
 				return ResponseUtil.getResponse(Status.BAD_REQUEST);
 			}
 				
-			String authUserType = AuthToken.getUserType(user.getReqToken(), authToken);
-			long authUserIdKey = AuthToken.getIdKey(user.getReqToken(), authToken);
+			String authUserType = AuthToken.getUserType(user.getAuthToken(), authToken);
+			long authUserIdKey = AuthToken.getIdKey(user.getAuthToken(), authToken);
 			if (authUserType.equals("1") == false && authUserType.equals("2") == false) {
 				if (authUserIdKey == userIdKey) {
 					if (user.getUserName() == null || user.getUserName().length() == 0) {
@@ -204,7 +194,7 @@ public class UserService {
 				}
 			}
 			
-			CM_User existUser = dao.selectUserByIdKey(user.getIdKey());
+			CM_User existUser = dao.selectByIdKey(user.getIdKey());
 			if (existUser == null) {
 				return ResponseUtil.getResponse(Status.NOT_FOUND);
 			}
@@ -215,7 +205,7 @@ public class UserService {
 			}
 			existUser.setPassword(CommonFunc.getHashedPassword(user.getPassword(), user.getUserId()));
 			existUser.setLoginFailCount(0);
-			dao.updateUser(existUser);
+			dao.update(existUser);
 			return ResponseUtil.getResponse((new ModelHandler<CM_User>(CM_User.class)).convertToJson(user));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -236,16 +226,12 @@ public class UserService {
 				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
 			}
 			int offset = (page - 1) * Constant.DEFAULT_SIZE;
-			CM_PagingList<CM_User> paging = new CM_PagingList<CM_User>();
-			paging.setList(dao.selectUsers(userType, offset, Constant.DEFAULT_SIZE));
-			paging.setPaging(dao.selectUserPaging(userType));
-			paging.numbering(offset);
+			CM_PagingList<CM_User> paging = dao.selectByType(userType, offset, Constant.DEFAULT_SIZE);
 			if (paging.getList() != null) {
 				CM_User item;
 				for (int ii=0; ii<paging.getList().size(); ii++) {
 					item = paging.getList().get(ii);
 					item.setPassword(null);
-					item.l10n(request.getSession());
 				}
 			}
 			return ResponseUtil.getResponse((new ModelHandler<CM_PagingList>(CM_PagingList.class)).convertToJson(paging));
@@ -266,12 +252,11 @@ public class UserService {
 			if (AuthToken.isValidToken(authToken) == false) {
 				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
 			}
-			CM_User existUser = dao.selectUserByIdKey(userIdKey);
+			CM_User existUser = dao.selectByIdKey(userIdKey);
 			if (existUser == null) {
 				return ResponseUtil.getResponse(Status.NOT_FOUND);
 			}
 			existUser.setPassword(null);
-			existUser.l10n(request.getSession());
 			return ResponseUtil.getResponse((new ModelHandler<CM_User>(CM_User.class)).convertToJson(existUser));
 		} catch (Exception e) {
 			e.printStackTrace();

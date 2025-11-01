@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import kr.peelknight.common.model.Model;
-import kr.peelknight.util.L10N;
+//import kr.peelknight.util.L10N;
 
 @SuppressWarnings("serial")
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -67,7 +67,7 @@ public class CM_Fragment extends Model {
 	public void setFragmentTypeName(String fragmentTypeName) {
 		this.fragmentTypeName = fragmentTypeName;
 	}
-	public void l10n(HttpSession session) {
-		fragmentTypeName = L10N.get(fragmentTypeName, session);
-	}
+//	public void l10n(HttpSession session) {
+//		fragmentTypeName = L10N.get(fragmentTypeName, session);
+//	}
 }

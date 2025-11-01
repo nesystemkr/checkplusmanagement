@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import kr.peelknight.common.model.Model;
-import kr.peelknight.util.L10N;
+//import kr.peelknight.util.L10N;
 
 @SuppressWarnings("serial")
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -212,16 +212,16 @@ public class CM_PopupFragment extends Model {
 		this.gridFragment = gridFragment;
 	}
 	public void l10n(HttpSession session) {
-		selectTitle = L10N.get(selectTitle, session);
-		selectErrorMsg = L10N.get(selectErrorMsg, session);
-		insertTitle = L10N.get(insertTitle, session);
-		insertErrorMsg = L10N.get(insertErrorMsg, session);
-		updateTitle = L10N.get(updateTitle, session);
-		updateErrorMsg = L10N.get(updateErrorMsg, session);
-		deleteConfirm = L10N.get(deleteConfirm, session);
-		deleteErrorMsg = L10N.get(deleteErrorMsg, session);
-		confirmButton = L10N.get(confirmButton, session);
-		cancelButton = L10N.get(cancelButton, session);
+//		selectTitle = L10N.get(selectTitle, session);
+//		selectErrorMsg = L10N.get(selectErrorMsg, session);
+//		insertTitle = L10N.get(insertTitle, session);
+//		insertErrorMsg = L10N.get(insertErrorMsg, session);
+//		updateTitle = L10N.get(updateTitle, session);
+//		updateErrorMsg = L10N.get(updateErrorMsg, session);
+//		deleteConfirm = L10N.get(deleteConfirm, session);
+//		deleteErrorMsg = L10N.get(deleteErrorMsg, session);
+//		confirmButton = L10N.get(confirmButton, session);
+//		cancelButton = L10N.get(cancelButton, session);
 		if (rows != null) {
 			for (int ii=0; ii<rows.size(); ii++) {
 				rows.get(ii).l10n(session);

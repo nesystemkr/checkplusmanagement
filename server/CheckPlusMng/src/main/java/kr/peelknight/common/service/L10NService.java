@@ -22,7 +22,7 @@ import kr.peelknight.common.model.CM_Paging;
 import kr.peelknight.common.model.CM_PagingList;
 import kr.peelknight.common.model.ModelHandler;
 import kr.peelknight.util.AuthToken;
-import kr.peelknight.util.L10N;
+//import kr.peelknight.util.L10N;
 import kr.peelknight.util.ResponseUtil;
 
 @Path("/{version}/l10n")
@@ -293,7 +293,7 @@ public class L10NService {
 			if (AuthToken.isValidToken(authToken) == false) {
 				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
 			}
-			L10N.loadResource();
+//			L10N.loadResource();
 			return ResponseUtil.getResponse(Status.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -313,7 +313,7 @@ public class L10NService {
 			initFunc.recreateL10NTable();
 			initFunc.insertL10Ns_default("lang.properties");
 			initFunc.insertL10Ns_locale("lang_en.properties", "en_US");
-			L10N.loadResource();
+//			L10N.loadResource();
 			return ResponseUtil.getResponse(Status.OK);
 		} catch (Exception e) {
 			e.printStackTrace();

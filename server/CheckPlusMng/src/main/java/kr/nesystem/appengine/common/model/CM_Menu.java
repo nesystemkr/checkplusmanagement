@@ -5,10 +5,9 @@ import java.util.List;
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.FullEntity;
 import com.google.cloud.datastore.IncompleteKey;
-import com.google.cloud.datastore.Key;
 import com.google.cloud.datastore.KeyFactory;
 
-public class CM_Menu extends Model {
+public class CM_Menu extends GAEModel {
 	private long idKey;
 	private long parentIdKey;
 	private String menuName;
@@ -84,15 +83,14 @@ public class CM_Menu extends Model {
 		this.subMenus = subMenus;
 	}
 	@Override
-	public String key() {
-		return String.valueOf(idKey);
+	public Object key() {
+		return Long.valueOf(idKey);
 	}
 	@Override
 	public FullEntity<IncompleteKey> toEntityAutoInc(KeyFactory keyFactory) {
 		return Entity.newBuilder(keyFactory.newKey())
 				.set("parentIdKey", parentIdKey)
 				.set("menuName", N2Z(menuName))
-				.set("menuLocale", N2Z(menuLocale))
 				.set("menuUrl", N2Z(menuUrl))
 				.set("comment", N2Z(comment))
 				.set("status", N2Z(status))
@@ -104,11 +102,10 @@ public class CM_Menu extends Model {
 		return null;
 	}
 	@Override
-	public Entity toEntity(Key key, Entity existOne) {
-		return Entity.newBuilder(key, existOne)
+	public Entity toEntity(Entity existOne) {
+		return Entity.newBuilder(existOne.getKey(), existOne)
 				.set("parentIdKey", parentIdKey)
 				.set("menuName", N2Z(menuName))
-				.set("menuLocale", N2Z(menuLocale))
 				.set("menuUrl", N2Z(menuUrl))
 				.set("comment", N2Z(comment))
 				.set("status", N2Z(status))
@@ -116,11 +113,10 @@ public class CM_Menu extends Model {
 				.build();
 	}
 	@Override
-	public Model fromEntity(Entity entity) {
+	public CM_Menu fromEntity(Entity entity) {
 		setIdKey(entity.getKey().getId());
 		setParentIdKey(entity.getLong("parentIdKey"));
 		setMenuName(entity.getString("menuName"));
-		setMenuLocale(entity.getString("menuLocale"));
 		setMenuUrl(entity.getString("menuUrl"));
 		setComment(entity.getString("comment"));
 		setStatus(entity.getString("status"));

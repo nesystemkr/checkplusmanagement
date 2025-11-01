@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 import kr.peelknight.common.model.CM_Code;
 import kr.peelknight.common.model.Model;
-import kr.peelknight.util.L10N;
+//import kr.peelknight.util.L10N;
 
 @SuppressWarnings("serial")
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -225,7 +225,7 @@ public class CM_PopupRow extends Model {
 		this.codes = codes;
 	}
 	public void l10n(HttpSession session) {
-		title = L10N.get(title, session);
+//		title = L10N.get(title, session);
 		if (codes != null) {
 			for (int ii=0; ii<codes.size(); ii++) {
 				codes.get(ii).l10n(session);;

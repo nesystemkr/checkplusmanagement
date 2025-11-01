@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import kr.peelknight.common.model.Model;
-import kr.peelknight.util.L10N;
+//import kr.peelknight.util.L10N;
 
 @SuppressWarnings("serial")
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -187,7 +187,7 @@ public class CM_GridColModel extends Model {
 		this.list = list;
 	}
 	public void l10n(HttpSession session) {
-		this.label = L10N.get(label, session);
+//		this.label = L10N.get(label, session);
 		if (buttons != null) {
 			for (int ii=0; ii<buttons.size(); ii++) {
 				buttons.get(ii).l10n(session);

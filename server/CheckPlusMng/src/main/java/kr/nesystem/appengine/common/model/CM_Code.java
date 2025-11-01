@@ -3,13 +3,11 @@ package kr.nesystem.appengine.common.model;
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.FullEntity;
 import com.google.cloud.datastore.IncompleteKey;
-import com.google.cloud.datastore.Key;
 import com.google.cloud.datastore.KeyFactory;
 
 import jakarta.servlet.http.HttpSession;
-import kr.peelknight.util.L10N;
 
-public class CM_Code extends Model {
+public class CM_Code extends GAEModel {
 	private String type;
 	private String code;
 	private String codeName;
@@ -52,11 +50,8 @@ public class CM_Code extends Model {
 	public void setOrderSeq(int orderSeq) {
 		this.orderSeq = orderSeq;
 	}
-	public void l10n(HttpSession session) {
-		codeNameLocale = L10N.get(codeName, session);
-	}
 	@Override
-	public String key() {
+	public Object key() {
 		return type + "__" + code;
 	}
 	@Override
@@ -66,7 +61,7 @@ public class CM_Code extends Model {
 	@Override
 	public Entity toEntity(KeyFactory keyFactory) {
 		return Entity.newBuilder(toKey(keyFactory))
-				.set("typeCode", key())
+				.set("typeCode", (String)key())
 				.set("type", type)
 				.set("code", code)
 				.set("codeName", N2Z(codeName))
@@ -76,8 +71,8 @@ public class CM_Code extends Model {
 				.build();
 	}
 	@Override
-	public Entity toEntity(Key key, Entity existOne) {
-		return Entity.newBuilder(key, existOne)
+	public Entity toEntity(Entity existOne) {
+		return Entity.newBuilder(existOne.getKey(), existOne)
 				.set("codeName", N2Z(codeName))
 				.set("codeNameLocale", N2Z(codeNameLocale))
 				.set("comment", N2Z(comment))

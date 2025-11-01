@@ -7,7 +7,7 @@ import jakarta.servlet.http.HttpSession;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import kr.peelknight.util.L10N;
+//import kr.peelknight.util.L10N;
 
 @SuppressWarnings("serial")
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -104,8 +104,8 @@ public class CM_User extends Model {
 	public void setUserTypeName(String userTypeName) {
 		this.userTypeName = userTypeName;
 	}
-	public void l10n(HttpSession session) {
-		userTypeName = L10N.get(userTypeName, session);
-		statusName = L10N.get(statusName, session);
-	}
+//	public void l10n(HttpSession session) {
+//		userTypeName = L10N.get(userTypeName, session);
+//		statusName = L10N.get(statusName, session);
+//	}
 }

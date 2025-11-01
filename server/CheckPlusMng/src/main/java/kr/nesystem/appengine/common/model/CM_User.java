@@ -5,10 +5,9 @@ import java.util.Date;
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.FullEntity;
 import com.google.cloud.datastore.IncompleteKey;
-import com.google.cloud.datastore.Key;
 import com.google.cloud.datastore.KeyFactory;
 
-public class CM_User extends Model {
+public class CM_User extends GAEModel {
 	private long idKey;
 	private String userId;
 	private String password;
@@ -105,8 +104,8 @@ public class CM_User extends Model {
 		this.userTypeName = userTypeName;
 	}
 	@Override
-	public String key() {
-		return String.valueOf(idKey);
+	public Object key() {
+		return Long.valueOf(idKey);
 	}
 	@Override
 	public FullEntity<IncompleteKey> toEntityAutoInc(KeyFactory keyFactory) {
@@ -127,8 +126,8 @@ public class CM_User extends Model {
 		return null;
 	}
 	@Override
-	public Entity toEntity(Key key, Entity existOne) {
-		return Entity.newBuilder(key, existOne)
+	public Entity toEntity(Entity existOne) {
+		return Entity.newBuilder(existOne.getKey(), existOne)
 				.set("userId", N2Z(userId))
 				.set("password", N2Z(password))
 				.set("userType", N2Z(userType))
@@ -148,9 +147,9 @@ public class CM_User extends Model {
 		setUserName(entity.getString("userName"));
 		setStatus(entity.getString("status"));
 		setLoginFailCount((int)entity.getLong("loginFailCount"));
-		setLastLoginDate(TS2D(entity.getTimestamp("lastLoginDate")));
+		setLastLoginDate(L2D(entity.getLong("lastLoginDate")));
 		setLastLoginSeq((int)entity.getLong("lastLoginSeq"));
-		setCreateDate(TS2D(entity.getTimestamp("createDate")));
+		setCreateDate(L2D(entity.getLong("createDate")));
 		return this;
 	}
 }

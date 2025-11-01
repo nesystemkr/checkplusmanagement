@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import kr.peelknight.common.model.Model;
-import kr.peelknight.util.L10N;
+//import kr.peelknight.util.L10N;
 
 @SuppressWarnings("serial")
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -82,8 +82,8 @@ public class CM_Daemon extends Model {
 	public void setRunningName(String runningName) {
 		this.runningName = runningName;
 	}
-	public void l10n(HttpSession session) {
-		statusName = L10N.get(statusName, session);
-		autoStartNm = L10N.get(autoStartNm, session);
-	}
+//	public void l10n(HttpSession session) {
+//		statusName = L10N.get(statusName, session);
+//		autoStartNm = L10N.get(autoStartNm, session);
+//	}
 }

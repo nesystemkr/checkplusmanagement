@@ -5,13 +5,12 @@ import java.util.List;
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.FullEntity;
 import com.google.cloud.datastore.IncompleteKey;
-import com.google.cloud.datastore.Key;
 import com.google.cloud.datastore.KeyFactory;
 import jakarta.servlet.http.HttpSession;
+import kr.nesystem.appengine.common.util.L10N;
 import kr.peelknight.common.model.CM_Code;
-import kr.peelknight.util.L10N;
 
-public class CM_CodeType extends Model {
+public class CM_CodeType extends GAEModel {
 	private String type;
 	private String typeName;
 	private String typeNameLocale;
@@ -40,11 +39,8 @@ public class CM_CodeType extends Model {
 	public void setCodes(List<CM_Code> codes) {
 		this.codes = codes;
 	}
-	public void l10n(HttpSession session) {
-		typeName = L10N.get(typeName, session);
-	}
 	@Override
-	public String key() {
+	public Object key() {
 		return type;
 	}
 	@Override
@@ -60,8 +56,8 @@ public class CM_CodeType extends Model {
 				.build();
 	}
 	@Override
-	public Entity toEntity(Key key, Entity existOne) {
-		return Entity.newBuilder(key, existOne)
+	public Entity toEntity(Entity existOne) {
+		return Entity.newBuilder(existOne.getKey(), existOne)
 				.set("typeName", N2Z(typeName))
 				.set("typeNameLocale", N2Z(typeNameLocale))
 				.build();

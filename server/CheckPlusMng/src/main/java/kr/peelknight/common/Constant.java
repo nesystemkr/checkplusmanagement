@@ -10,7 +10,7 @@ import kr.peelknight.util.CommonFunc;
 public class Constant {
 	public static int DEFAULT_SIZE = 10;
 	public static String ATTACHMENT_BASE_DIR = "/var/attachments";
-	public static String LOGININFO_IMPL_CLASS = "kr.peelknight.common.impl.LoginInfoImplement";
+	public static String LOGININFO_IMPL_CLASS = "kr.nesystem.appengine.common.impl.LoginInfoImplement";
 	public static boolean MODE_OFFLINE = false;
 	public static String FCM_PUSH_PROJECTID = "rentalwelderandroid";
 	public static String FCM_PUSH_CREDENTIALS_PATH = "/var/lib/tomcat/webapps/ROOT/WEB-INF/classes/fcmcredentials.json";

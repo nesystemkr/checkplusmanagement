@@ -9,6 +9,8 @@ import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.datastore.Datastore;
 import com.google.cloud.datastore.DatastoreOptions;
 import com.google.cloud.datastore.Entity;
+import com.google.cloud.datastore.FullEntity;
+import com.google.cloud.datastore.IncompleteKey;
 import com.google.cloud.datastore.Key;
 import com.google.cloud.datastore.KeyFactory;
 import com.google.cloud.datastore.Query;
@@ -17,10 +19,10 @@ import com.google.cloud.datastore.StructuredQuery.PropertyFilter;
 import com.google.cloud.datastore.Transaction;
 import com.google.cloud.datastore.EntityQuery.Builder;
 import kr.nesystem.appengine.common.model.CM_PagingList;
-import kr.nesystem.appengine.common.model.Model;
+import kr.nesystem.appengine.common.model.GAEModel;
 import kr.peelknight.common.model.CM_Paging;
 
-public class BaseDao<T extends Model> {
+public class BaseDao<T extends GAEModel> {
 	protected Datastore datastore;
 	protected KeyFactory keyFactory;
 	protected String tableName;
@@ -79,49 +81,96 @@ public class BaseDao<T extends Model> {
 		Entity entity = datastore.get(key);
 		if (entity != null) {
 			Constructor<?> constructor = clazz.getDeclaredConstructor();
-			Model model = (Model)constructor.newInstance();
+			GAEModel model = (GAEModel)constructor.newInstance();
 			return (T)model.fromEntity(entity);
 		}
 		return null;
 	}
 	
-	public void insert(Model model) throws Exception {
+	@SuppressWarnings("unchecked")
+	public T select(long val) throws Exception {
+		Key key = keyFactory.newKey(val);
+		Entity entity = datastore.get(key);
+		if (entity != null) {
+			Constructor<?> constructor = clazz.getDeclaredConstructor();
+			GAEModel model = (GAEModel)constructor.newInstance();
+			return (T)model.fromEntity(entity);
+		}
+		return null;
+	}
+	
+	public Entity insert(GAEModel model) throws Exception {
 		Transaction txn = datastore.newTransaction();
-		
-		if (model.hasIdKey() == false) {
-			Key key = keyFactory.newKey(model.key());
-			if (txn.get(key) != null) {
-				txn.rollback();
-				throw new Exception("Already exists: " + model.key());
+		Entity ret = null;
+		try {
+			if (model.hasIdKey() == false) {
+				Key key = model.toKey(keyFactory);
+				if (txn.get(key) != null) {
+					throw new Exception("Already exists: " + model.key());
+				}
+				ret = txn.add(model.toEntity(keyFactory));
+			} else {
+				ret = txn.add(model.toEntityAutoInc(keyFactory));
 			}
-			txn.add(model.toEntity(keyFactory));
-		} else {
-			txn.add(model.toEntityAutoInc(keyFactory));
-		}
-		txn.commit();
+			txn.commit();
+			return ret; 
+		} finally {
+			if (txn.isActive()) {
+				txn.rollback();
+			}
+		} 
 	}
 	
-	public void update(Model model) throws Exception {
+	public void update(GAEModel model) throws Exception {
 		Transaction txn = datastore.newTransaction();
-		Key key = keyFactory.newKey(model.key());
-		Entity existOne = txn.get(key);
-		if (existOne == null) {
-			txn.rollback();
-			throw new Exception("Not found: " + model.key());
-		}
-		txn.update(model.toEntity(key, existOne));
-		txn.commit();
+		try {
+			Key key = model.toKey(keyFactory);
+			Entity existOne = txn.get(key);
+			if (existOne == null) {
+				throw new Exception("Not found: " + model.key());
+			}
+			txn.update(model.toEntity(existOne));
+			txn.commit();
+		} finally {
+			if (txn.isActive()) {
+				txn.rollback();
+			}
+		} 
 	}
 	
-	public void delete(Model model) throws Exception {
+	public void delete(GAEModel model) throws Exception {
 		Transaction txn = datastore.newTransaction();
-		Key key = keyFactory.newKey(model.key());
-		Entity existOne = txn.get(key);
-		if (existOne == null) {
-			txn.rollback();
-			throw new Exception("Not found: " + model.key());
-		}
-		txn.delete(key);
-		txn.commit();
+		try {
+			Entity existOne = txn.get(model.toKey(keyFactory));
+			if (existOne == null) {
+				throw new Exception("Not found: " + model.key());
+			}
+			txn.delete(existOne.getKey());
+			txn.commit();
+		} finally {
+			if (txn.isActive()) {
+				txn.rollback();
+			}
+		} 
+	}
+
+	
+	public void delete(List<T> list) throws Exception {
+		Transaction txn = datastore.newTransaction();
+		try {
+			for (int ii = 0; ii < list.size(); ii++) {
+				T model = list.get(ii);
+				Entity existOne = txn.get(model.toKey(keyFactory));
+				if (existOne == null) {
+					throw new Exception("Not found: " + model.key());
+				}
+				txn.delete(existOne.getKey());
+			}
+			txn.commit();
+		} finally {
+			if (txn.isActive()) {
+				txn.rollback();
+			}
+		} 
 	}
 }

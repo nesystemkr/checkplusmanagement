@@ -1,4 +1,4 @@
-package kr.peelknight.common.service;
+package kr.nesystem.appengine.common.service;
 
 import java.lang.reflect.Constructor;
 import java.util.Date;
@@ -14,25 +14,24 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
-
+import kr.nesystem.appengine.common.dao.DeviceDao;
+import kr.nesystem.appengine.common.dao.MenuDao;
+import kr.nesystem.appengine.common.dao.UserDao;
+import kr.nesystem.appengine.common.interf.LoginInfoInterface;
+import kr.nesystem.appengine.common.model.CM_Login;
+import kr.nesystem.appengine.common.model.CM_User;
+import kr.nesystem.appengine.common.util.L10N;
 import kr.peelknight.common.Constant;
-import kr.peelknight.common.dao.DeviceDao;
-import kr.peelknight.common.dao.MenuDao;
-import kr.peelknight.common.dao.UserDao;
-import kr.peelknight.common.interf.LoginInfoInterface;
-import kr.peelknight.common.model.CM_Login;
-import kr.peelknight.common.model.CM_User;
 import kr.peelknight.common.model.ModelHandler;
 import kr.peelknight.util.AuthToken;
 import kr.peelknight.util.CommonFunc;
-import kr.peelknight.util.L10N;
 import kr.peelknight.util.ResponseUtil;
 
 @Path("/{version}/login")
 public class LoginService {
 	UserDao userDao = new UserDao();
-	DeviceDao deviceDao = new DeviceDao();
 	MenuDao menuDao = new MenuDao();
+	DeviceDao deviceDao = new DeviceDao();
 	
 	// SignIn
 	@POST
@@ -52,14 +51,14 @@ public class LoginService {
 				}
 			}
 			
-			CM_User existUser = userDao.selectUserByUserId(login.getUserId());
+			CM_User existUser = userDao.selectByUserId(login.getUserId());
 			if (existUser == null) {
 				return ResponseUtil.getResponse(Status.NOT_FOUND);
 			}
 			if (existUser.getPassword() != null) {
 				if (!existUser.getPassword().equals(CommonFunc.getHashedPassword(login.getPassword(), login.getUserId()))) {
 					existUser.setLoginFailCount(existUser.getLoginFailCount() + 1);
-					userDao.updateUser(existUser);
+					userDao.update(existUser);
 					return ResponseUtil.getResponse(Status.NOT_ACCEPTABLE);
 				}
 			} else {
@@ -90,7 +89,7 @@ public class LoginService {
 			existUser.setLoginFailCount(0);
 			existUser.setLastLoginDate(new Date());
 			existUser.setLastLoginSeq(lastSeq);
-			userDao.updateUser(existUser);
+			userDao.update(existUser);
 			
 			//사용자 정보를 인터페이스를 통해서 가져온다.
 			//메뉴정보를 인터페이스를 통해서 가져온다.
@@ -124,7 +123,7 @@ public class LoginService {
 				}
 			}
 			
-			CM_User existUser = userDao.selectUserByIdKey(AuthToken.getIdKey(login.getAuthToken(), null));
+			CM_User existUser = userDao.selectByIdKey(AuthToken.getIdKey(login.getAuthToken(), null));
 			if (existUser.getStatus() != null) {
 				if (existUser.getStatus().equals("9")) {
 					return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
@@ -143,7 +142,7 @@ public class LoginService {
 			result.setUserType(existUser.getUserType());
 			
 			existUser.setLastLoginSeq(lastSeq);
-			userDao.updateUser(existUser);
+			userDao.update(existUser);
 			
 			return ResponseUtil.getResponse((new ModelHandler<CM_Login>(CM_Login.class)).convertToJson(result));
 		} catch (Exception e) {
@@ -161,7 +160,7 @@ public class LoginService {
 			if (AuthToken.isValidToken(login.getAuthToken(), null) == false) {
 				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
 			}
-			CM_User existUser = userDao.selectUserByIdKey(AuthToken.getIdKey(login.getAuthToken(), null));
+			CM_User existUser = userDao.selectByIdKey(AuthToken.getIdKey(login.getAuthToken(), null));
 			if (existUser.getStatus() != null) {
 				if (existUser.getStatus().equals("9")) {
 					return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
@@ -190,7 +189,7 @@ public class LoginService {
 				ResponseUtil.getResponse(Status.BAD_REQUEST);
 			}
 			long userIdKey = AuthToken.getIdKey(authToken);
-			CM_User existUser = userDao.selectUserByIdKey(userIdKey);
+			CM_User existUser = userDao.selectByIdKey(userIdKey);
 			if (existUser == null) {
 				return ResponseUtil.getResponse(Status.NOT_FOUND);
 			}

@@ -25,7 +25,7 @@ import kr.peelknight.common.model.CM_Code;
 import kr.peelknight.common.model.CM_PagingList;
 import kr.peelknight.common.model.ModelHandler;
 import kr.peelknight.util.AuthToken;
-import kr.peelknight.util.L10N;
+//import kr.peelknight.util.L10N;
 import kr.peelknight.util.ResponseUtil;
 
 @Path("/{version}/daemon")
@@ -59,7 +59,7 @@ public class DaemonService {
 					if (listCode != null) {
 						for (int jj=0; jj<listCode.size(); jj++) {
 							if (listCode.get(jj).getCode().equals(item.getRunning())) {
-								item.setRunningName(L10N.get(listCode.get(jj).getCodeName(), request.getSession()));
+//								item.setRunningName(L10N.get(listCode.get(jj).getCodeName(), request.getSession()));
 							}
 						}
 					}
@@ -92,7 +92,7 @@ public class DaemonService {
 			if (listCode != null) {
 				for (int jj=0; jj<listCode.size(); jj++) {
 					if (listCode.get(jj).getCode().equals(existOne.getRunning())) {
-						existOne.setRunningName(L10N.get(listCode.get(jj).getCodeName(), request.getSession()));
+//						existOne.setRunningName(L10N.get(listCode.get(jj).getCodeName(), request.getSession()));
 					}
 				}
 			}
