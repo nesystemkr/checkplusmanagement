@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.FullEntity;
-import com.google.cloud.datastore.IncompleteKey;
 import com.google.cloud.datastore.KeyFactory;
 
 public class CM_Login extends GAEModel {
@@ -111,11 +110,7 @@ public class CM_Login extends GAEModel {
 		return userId;
 	}
 	@Override
-	public FullEntity<IncompleteKey> toEntityAutoInc(KeyFactory keyFactory) {
-		return null;
-	}
-	@Override
-	public Entity toEntity(KeyFactory keyFactory) {
+	public FullEntity<?> toEntity(KeyFactory keyFactory) {
 		return Entity.newBuilder(toKey(keyFactory))
 				.set("userId", userId)
 				.set("password", password)

@@ -1,5 +1,7 @@
 package kr.nesystem.appengine.common.model;
 
+import jakarta.servlet.http.HttpSession;
+
 public abstract class Model {
 	private Long no;
 	private String authToken;
@@ -14,5 +16,7 @@ public abstract class Model {
 	}
 	public void setAuthToken(String authToken) {
 		this.authToken = authToken;
+	}
+	public void l10n(HttpSession session) {
 	}
 }

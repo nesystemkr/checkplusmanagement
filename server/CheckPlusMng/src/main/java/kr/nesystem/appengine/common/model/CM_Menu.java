@@ -4,11 +4,12 @@ import java.util.List;
 
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.FullEntity;
-import com.google.cloud.datastore.IncompleteKey;
 import com.google.cloud.datastore.KeyFactory;
 
-public class CM_Menu extends GAEModel {
-	private long idKey;
+import jakarta.servlet.http.HttpSession;
+import kr.nesystem.appengine.common.util.L10N;
+
+public class CM_Menu extends GAEAutoIncModel {
 	private long parentIdKey;
 	private String menuName;
 	private String menuLocale;
@@ -17,17 +18,8 @@ public class CM_Menu extends GAEModel {
 	private String status;
 	private String statusName;
 	private int orderSeq;
+	private List<CM_MenuAuth> menuAuths;
 	private List<CM_Menu> subMenus;
-	public CM_Menu() {
-		super();
-		hasIdKey = true;
-	}
-	public long getIdKey() {
-		return idKey;
-	}
-	public void setIdKey(long idKey) {
-		this.idKey = idKey;
-	}
 	public long getParentIdKey() {
 		return parentIdKey;
 	}
@@ -76,6 +68,12 @@ public class CM_Menu extends GAEModel {
 	public void setOrderSeq(int orderSeq) {
 		this.orderSeq = orderSeq;
 	}
+	public List<CM_MenuAuth> getMenuAuths() {
+		return menuAuths;
+	}
+	public void setMenuAuths(List<CM_MenuAuth> menuAuths) {
+		this.menuAuths = menuAuths;
+	}
 	public List<CM_Menu> getSubMenus() {
 		return subMenus;
 	}
@@ -83,11 +81,12 @@ public class CM_Menu extends GAEModel {
 		this.subMenus = subMenus;
 	}
 	@Override
-	public Object key() {
-		return Long.valueOf(idKey);
+	public void l10n(HttpSession session) {
+		menuLocale = L10N.get(menuName, session);
+		statusName = L10N.get(statusName, session);
 	}
 	@Override
-	public FullEntity<IncompleteKey> toEntityAutoInc(KeyFactory keyFactory) {
+	public FullEntity<?> toEntity(KeyFactory keyFactory) {
 		return Entity.newBuilder(keyFactory.newKey())
 				.set("parentIdKey", parentIdKey)
 				.set("menuName", N2Z(menuName))
@@ -96,10 +95,6 @@ public class CM_Menu extends GAEModel {
 				.set("status", N2Z(status))
 				.set("orderSeq", orderSeq)
 				.build();
-	}
-	@Override
-	public Entity toEntity(KeyFactory keyfactory) {
-		return null;
 	}
 	@Override
 	public Entity toEntity(Entity existOne) {
@@ -114,7 +109,7 @@ public class CM_Menu extends GAEModel {
 	}
 	@Override
 	public CM_Menu fromEntity(Entity entity) {
-		setIdKey(entity.getKey().getId());
+		super.fromEntity(entity);
 		setParentIdKey(entity.getLong("parentIdKey"));
 		setMenuName(entity.getString("menuName"));
 		setMenuUrl(entity.getString("menuUrl"));

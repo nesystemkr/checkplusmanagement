@@ -1,5 +1,7 @@
 package kr.nesystem.appengine.common.dao;
 
+import java.util.List;
+
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.Query;
 import com.google.cloud.datastore.QueryResults;
@@ -67,7 +69,7 @@ public class DeviceDao  extends BaseDao<CM_Device> {
 					device.setUserIdKey(userIdKey);
 					device.setUniqueId(uniqueId);
 					device.setPushKey(pushKey);
-					txn.add( device.toEntityAutoInc(keyFactory));
+					txn.add(device.toEntity(keyFactory));
 				}
 			}
 			txn.commit();
@@ -102,5 +104,10 @@ public class DeviceDao  extends BaseDao<CM_Device> {
 				txn.rollback();
 			}
 		}
+	}
+	
+	public List<CM_Device> selectDevicesByUserIdKey(long userIdKey) throws Exception {
+		PropertyFilter filter = PropertyFilter.eq("userIdKey", userIdKey);
+		return super.list(null, filter, -1, 0);
 	}
 }

@@ -2,10 +2,10 @@ package kr.nesystem.appengine.common.model;
 
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.FullEntity;
-import com.google.cloud.datastore.IncompleteKey;
 import com.google.cloud.datastore.KeyFactory;
 
 import jakarta.servlet.http.HttpSession;
+import kr.nesystem.appengine.common.util.L10N;
 
 public class CM_Code extends GAEModel {
 	private String type;
@@ -51,15 +51,15 @@ public class CM_Code extends GAEModel {
 		this.orderSeq = orderSeq;
 	}
 	@Override
+	public void l10n(HttpSession session) {
+		codeNameLocale = L10N.get(codeName, session);
+	}
+	@Override
 	public Object key() {
 		return type + "__" + code;
 	}
 	@Override
-	public FullEntity<IncompleteKey> toEntityAutoInc(KeyFactory keyFactory) {
-		return null;
-	}
-	@Override
-	public Entity toEntity(KeyFactory keyFactory) {
+	public FullEntity<?> toEntity(KeyFactory keyFactory) {
 		return Entity.newBuilder(toKey(keyFactory))
 				.set("typeCode", (String)key())
 				.set("type", type)

@@ -14,18 +14,18 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
+import kr.nesystem.appengine.common.Constant;
 import kr.nesystem.appengine.common.dao.DeviceDao;
 import kr.nesystem.appengine.common.dao.MenuDao;
 import kr.nesystem.appengine.common.dao.UserDao;
 import kr.nesystem.appengine.common.interf.LoginInfoInterface;
 import kr.nesystem.appengine.common.model.CM_Login;
 import kr.nesystem.appengine.common.model.CM_User;
+import kr.nesystem.appengine.common.model.ModelHandler;
+import kr.nesystem.appengine.common.util.AuthToken;
+import kr.nesystem.appengine.common.util.CommonFunc;
 import kr.nesystem.appengine.common.util.L10N;
-import kr.peelknight.common.Constant;
-import kr.peelknight.common.model.ModelHandler;
-import kr.peelknight.util.AuthToken;
-import kr.peelknight.util.CommonFunc;
-import kr.peelknight.util.ResponseUtil;
+import kr.nesystem.appengine.common.util.ResponseUtil;
 
 @Path("/{version}/login")
 public class LoginService {
@@ -51,7 +51,7 @@ public class LoginService {
 				}
 			}
 			
-			CM_User existUser = userDao.selectByUserId(login.getUserId());
+			CM_User existUser = userDao.selectByUserId(request.getSession(), login.getUserId());
 			if (existUser == null) {
 				return ResponseUtil.getResponse(Status.NOT_FOUND);
 			}
@@ -97,7 +97,7 @@ public class LoginService {
 //System.out.println(Constant.LOGININFO_IMPL_CLASS);
 			Constructor<?> ctor = clazz.getConstructor();
 			Object object = ctor.newInstance();
-			result.setMenus(((LoginInfoInterface)object).getMenus(existUser.getUserType(), existUser.getIdKey(), L10N.getLang(request.getSession())));
+			result.setMenus(((LoginInfoInterface)object).getMenus(request.getSession(), existUser.getUserType(), existUser.getIdKey(), L10N.getLang(request.getSession())));
 			
 			return ResponseUtil.getResponse((new ModelHandler<CM_Login>(CM_Login.class)).convertToJson(result));
 		} catch (Exception e) {
@@ -123,7 +123,7 @@ public class LoginService {
 				}
 			}
 			
-			CM_User existUser = userDao.selectByIdKey(AuthToken.getIdKey(login.getAuthToken(), null));
+			CM_User existUser = userDao.select(request.getSession(), AuthToken.getIdKey(login.getAuthToken(), null));
 			if (existUser.getStatus() != null) {
 				if (existUser.getStatus().equals("9")) {
 					return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
@@ -160,7 +160,7 @@ public class LoginService {
 			if (AuthToken.isValidToken(login.getAuthToken(), null) == false) {
 				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
 			}
-			CM_User existUser = userDao.selectByIdKey(AuthToken.getIdKey(login.getAuthToken(), null));
+			CM_User existUser = userDao.select(null, AuthToken.getIdKey(login.getAuthToken(), null));
 			if (existUser.getStatus() != null) {
 				if (existUser.getStatus().equals("9")) {
 					return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
@@ -189,7 +189,7 @@ public class LoginService {
 				ResponseUtil.getResponse(Status.BAD_REQUEST);
 			}
 			long userIdKey = AuthToken.getIdKey(authToken);
-			CM_User existUser = userDao.selectByIdKey(userIdKey);
+			CM_User existUser = userDao.select(request.getSession(), userIdKey);
 			if (existUser == null) {
 				return ResponseUtil.getResponse(Status.NOT_FOUND);
 			}
@@ -197,7 +197,7 @@ public class LoginService {
 			Class<?> clazz = Class.forName(Constant.LOGININFO_IMPL_CLASS);
 			Constructor<?> ctor = clazz.getConstructor();
 			Object object = ctor.newInstance();
-			result.setMenus(((LoginInfoInterface)object).getMenus(existUser.getUserType(), existUser.getIdKey(), lang));
+			result.setMenus(((LoginInfoInterface)object).getMenus(request.getSession(), existUser.getUserType(), existUser.getIdKey(), lang));
 			return ResponseUtil.getResponse((new ModelHandler<CM_Login>(CM_Login.class)).convertToJson(result));
 		} catch (Exception e) {
 			e.printStackTrace();

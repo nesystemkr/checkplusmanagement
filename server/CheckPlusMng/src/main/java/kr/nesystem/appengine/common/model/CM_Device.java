@@ -2,25 +2,13 @@ package kr.nesystem.appengine.common.model;
 
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.FullEntity;
-import com.google.cloud.datastore.IncompleteKey;
 import com.google.cloud.datastore.KeyFactory;
 
-public class CM_Device extends GAEModel {
-	private long idKey;
+public class CM_Device extends GAEAutoIncModel {
 	private long userIdKey;
 	private String uniqueId;
 	private String pushKey;
 	private String deviceType;
-	public CM_Device() {
-		super();
-		hasIdKey = true;
-	}
-	public long getIdKey() {
-		return idKey;
-	}
-	public void setIdKey(long idKey) {
-		this.idKey = idKey;
-	}
 	public long getUserIdKey() {
 		return userIdKey;
 	}
@@ -46,21 +34,13 @@ public class CM_Device extends GAEModel {
 		this.deviceType = deviceType;
 	}
 	@Override
-	public Object key() {
-		return Long.valueOf(idKey);
-	}
-	@Override
-	public FullEntity<IncompleteKey> toEntityAutoInc(KeyFactory keyFactory) {
+	public FullEntity<?> toEntity(KeyFactory keyFactory) {
 		return Entity.newBuilder(keyFactory.newKey())
 				.set("userIdKey", userIdKey)
 				.set("uniqueId", N2Z(uniqueId))
 				.set("pushKey", N2Z(pushKey))
 				.set("deviceType", N2Z(deviceType))
 				.build();
-	}
-	@Override
-	public Entity toEntity(KeyFactory keyFactory) {
-		return null;
 	}
 	@Override
 	public Entity toEntity(Entity existOne) {
@@ -72,7 +52,7 @@ public class CM_Device extends GAEModel {
 	}
 	@Override
 	public CM_Device fromEntity(Entity entity) {
-		setIdKey(entity.getKey().getId());
+		super.fromEntity(entity);
 		setUserIdKey(entity.getLong("userIdKey"));
 		setUniqueId(entity.getString("uniqueId"));
 		setPushKey(entity.getString("pushKey"));

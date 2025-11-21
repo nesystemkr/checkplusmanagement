@@ -9,9 +9,6 @@ import java.util.Set;
 import org.apache.ibatis.io.Resources;
 
 import com.google.cloud.datastore.Entity;
-import com.google.cloud.datastore.FullEntity;
-import com.google.cloud.datastore.IncompleteKey;
-
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -29,11 +26,11 @@ import kr.nesystem.appengine.common.model.CM_CodeType;
 import kr.nesystem.appengine.common.model.CM_L10N;
 import kr.nesystem.appengine.common.model.CM_Menu;
 import kr.nesystem.appengine.common.model.CM_User;
+import kr.nesystem.appengine.common.util.CommonFunc;
 import kr.nesystem.appengine.common.util.L10N;
-import kr.peelknight.util.CommonFunc;
-import kr.peelknight.util.ResponseUtil;
+import kr.nesystem.appengine.common.util.ResponseUtil;
 
-@Path("/gae/init")
+@Path("/{version}/init")
 public class InitService {
 	@POST
 	@Consumes({MediaType.APPLICATION_JSON})
@@ -96,7 +93,7 @@ public class InitService {
 		UserDao userDao = new UserDao();
 		CM_User existUser = null;
 		try {
-			existUser = userDao.selectByUserId("admin");
+			existUser = userDao.selectByUserId(null, "admin");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

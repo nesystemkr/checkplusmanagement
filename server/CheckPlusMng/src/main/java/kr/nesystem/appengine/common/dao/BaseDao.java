@@ -9,18 +9,20 @@ import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.datastore.Datastore;
 import com.google.cloud.datastore.DatastoreOptions;
 import com.google.cloud.datastore.Entity;
-import com.google.cloud.datastore.FullEntity;
-import com.google.cloud.datastore.IncompleteKey;
 import com.google.cloud.datastore.Key;
 import com.google.cloud.datastore.KeyFactory;
 import com.google.cloud.datastore.Query;
 import com.google.cloud.datastore.QueryResults;
-import com.google.cloud.datastore.StructuredQuery.PropertyFilter;
+import com.google.cloud.datastore.StructuredQuery.Filter;
 import com.google.cloud.datastore.Transaction;
+
+import jakarta.servlet.http.HttpSession;
+
 import com.google.cloud.datastore.EntityQuery.Builder;
+import kr.nesystem.appengine.common.model.CM_Paging;
 import kr.nesystem.appengine.common.model.CM_PagingList;
+import kr.nesystem.appengine.common.model.GAEAutoIncModel;
 import kr.nesystem.appengine.common.model.GAEModel;
-import kr.peelknight.common.model.CM_Paging;
 
 public class BaseDao<T extends GAEModel> {
 	protected Datastore datastore;
@@ -44,8 +46,8 @@ public class BaseDao<T extends GAEModel> {
 		}
 	}
 	
-	public CM_PagingList<T> pagingList(PropertyFilter filter,int offset, int size) throws Exception {
-		List<T> list = list(filter, offset, size);
+	public CM_PagingList<T> pagingList(HttpSession session, Filter filter,int offset, int size) throws Exception {
+		List<T> list = list(session, filter, offset, size);
 		CM_PagingList<T> ret = new CM_PagingList<>();
 		ret.setList(list);
 		CM_Paging paging = new CM_Paging();
@@ -54,7 +56,7 @@ public class BaseDao<T extends GAEModel> {
 		return ret;
 	}
 	
-	public List<T> list(PropertyFilter filter,int offset, int size) throws Exception {
+	public List<T> list(HttpSession session, Filter filter,int offset, int size) throws Exception {
 		List<T> ret = new ArrayList<>();
 		Builder builder = Query.newEntityQueryBuilder().setKind(tableName);
 		if (filter != null) {
@@ -70,31 +72,36 @@ public class BaseDao<T extends GAEModel> {
 			Constructor<T> constructor = clazz.getDeclaredConstructor();
 			T model = constructor.newInstance();
 			model.fromEntity(entity);
+			model.l10n(session);
 			ret.add(model);
 		}
 		return ret;
 	}
 	
 	@SuppressWarnings("unchecked")
-	public T select(String val) throws Exception {
+	public T select(HttpSession session, String val) throws Exception {
 		Key key = keyFactory.newKey(val);
 		Entity entity = datastore.get(key);
 		if (entity != null) {
 			Constructor<?> constructor = clazz.getDeclaredConstructor();
 			GAEModel model = (GAEModel)constructor.newInstance();
-			return (T)model.fromEntity(entity);
+			T ret = (T)model.fromEntity(entity);
+			ret.l10n(session);
+			return ret;
 		}
 		return null;
 	}
 	
 	@SuppressWarnings("unchecked")
-	public T select(long val) throws Exception {
+	public T select(HttpSession session, long val) throws Exception {
 		Key key = keyFactory.newKey(val);
 		Entity entity = datastore.get(key);
 		if (entity != null) {
 			Constructor<?> constructor = clazz.getDeclaredConstructor();
 			GAEModel model = (GAEModel)constructor.newInstance();
-			return (T)model.fromEntity(entity);
+			T ret = (T)model.fromEntity(entity);
+			ret.l10n(session);
+			return ret;
 		}
 		return null;
 	}
@@ -103,15 +110,13 @@ public class BaseDao<T extends GAEModel> {
 		Transaction txn = datastore.newTransaction();
 		Entity ret = null;
 		try {
-			if (model.hasIdKey() == false) {
+			if (!(model instanceof GAEAutoIncModel)) {
 				Key key = model.toKey(keyFactory);
 				if (txn.get(key) != null) {
 					throw new Exception("Already exists: " + model.key());
 				}
-				ret = txn.add(model.toEntity(keyFactory));
-			} else {
-				ret = txn.add(model.toEntityAutoInc(keyFactory));
 			}
+			ret = txn.add(model.toEntity(keyFactory));
 			txn.commit();
 			return ret; 
 		} finally {
@@ -138,6 +143,46 @@ public class BaseDao<T extends GAEModel> {
 		} 
 	}
 	
+	public void update(List<T> list) throws Exception {
+		Transaction txn = datastore.newTransaction();
+		try {
+			for (int ii = 0; ii < list.size(); ii++) {
+				T model = list.get(ii);
+				Entity existOne = txn.get(model.toKey(keyFactory));
+				if (existOne == null) {
+					throw new Exception("Not found: " + model.key());
+				}
+				txn.update(model.toEntity(existOne));
+			}
+			txn.commit();
+		} finally {
+			if (txn.isActive()) {
+				txn.rollback();
+			}
+		} 
+	}
+	
+	public void insertOrUpdate(List<T> list) throws Exception {
+		Transaction txn = datastore.newTransaction();
+		try {
+			for (int ii = 0; ii < list.size(); ii++) {
+				T code = list.get(ii);
+				Key key = code.toKey(keyFactory);
+				Entity existOne = txn.get(key);
+				if (existOne != null) {
+					txn.update(code.toEntity(existOne));
+				} else {
+					txn.add(code.toEntity(keyFactory));
+				}
+			}
+			txn.commit();
+		} finally {
+			if (txn.isActive()) {
+				txn.rollback();
+			}
+		} 
+	}
+	
 	public void delete(GAEModel model) throws Exception {
 		Transaction txn = datastore.newTransaction();
 		try {
@@ -153,7 +198,6 @@ public class BaseDao<T extends GAEModel> {
 			}
 		} 
 	}
-
 	
 	public void delete(List<T> list) throws Exception {
 		Transaction txn = datastore.newTransaction();

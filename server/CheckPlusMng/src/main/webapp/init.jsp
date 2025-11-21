@@ -5,7 +5,7 @@ function initServer() {
 	if (false == confirm("초기화하시겠습니까?")) {
 		return
 	}
-	var url = "${contextPath}/svc/gae/init/server"
+	var url = "${contextPath}/svc/v1/init/server"
 	nesAjax(url, null,
 		function(data) {
 			alert("기본설정되었습니다.")

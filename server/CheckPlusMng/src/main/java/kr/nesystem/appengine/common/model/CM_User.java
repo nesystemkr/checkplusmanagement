@@ -4,11 +4,9 @@ import java.util.Date;
 
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.FullEntity;
-import com.google.cloud.datastore.IncompleteKey;
 import com.google.cloud.datastore.KeyFactory;
 
-public class CM_User extends GAEModel {
-	private long idKey;
+public class CM_User extends GAEAutoIncModel {
 	private String userId;
 	private String password;
 	private String userType;
@@ -20,16 +18,6 @@ public class CM_User extends GAEModel {
 	private Date createDate;
 	private String statusName;
 	private String userTypeName;
-	public CM_User() {
-		super();
-		hasIdKey = true;
-	}
-	public long getIdKey() {
-		return idKey;
-	}
-	public void setIdKey(long idKey) {
-		this.idKey = idKey;
-	}
 	public String getUserId() {
 		if (userId != null) {
 			return userId.toLowerCase();
@@ -104,11 +92,7 @@ public class CM_User extends GAEModel {
 		this.userTypeName = userTypeName;
 	}
 	@Override
-	public Object key() {
-		return Long.valueOf(idKey);
-	}
-	@Override
-	public FullEntity<IncompleteKey> toEntityAutoInc(KeyFactory keyFactory) {
+	public FullEntity<?> toEntity(KeyFactory keyFactory) {
 		return Entity.newBuilder(keyFactory.newKey())
 				.set("userId", N2Z(userId))
 				.set("password", N2Z(password))
@@ -120,10 +104,6 @@ public class CM_User extends GAEModel {
 				.set("lastLoginSeq", lastLoginSeq)
 				.set("createDate", D2Z(createDate))
 				.build();
-	}
-	@Override
-	public Entity toEntity(KeyFactory keyFactory) {
-		return null;
 	}
 	@Override
 	public Entity toEntity(Entity existOne) {
@@ -140,7 +120,7 @@ public class CM_User extends GAEModel {
 	}
 	@Override
 	public CM_User fromEntity(Entity entity) {
-		setIdKey(entity.getKey().getId());
+		super.fromEntity(entity);
 		setUserId(entity.getString("userId"));
 		setPassword(entity.getString("password"));
 		setUserType(entity.getString("userType"));

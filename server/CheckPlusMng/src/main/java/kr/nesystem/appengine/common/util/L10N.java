@@ -23,7 +23,7 @@ public class L10N implements Serializable {
 		
 		try {
 			L10NDao dao = new L10NDao();
-			CM_PagingList<CM_L10N> l10ns = dao.selectL10Ns(-1, 0, null);
+			CM_PagingList<CM_L10N> l10ns = dao.selectL10Ns(null, -1, 0, null);
 			for (int ii=0; ii<l10ns.getList().size(); ii++) {
 				defaultStrings.put(l10ns.getList().get(ii).getIdString(), l10ns.getList().get(ii).getDefaultString());
 			}

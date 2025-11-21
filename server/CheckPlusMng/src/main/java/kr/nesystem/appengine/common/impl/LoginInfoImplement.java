@@ -3,6 +3,7 @@ package kr.nesystem.appengine.common.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.servlet.http.HttpSession;
 import kr.nesystem.appengine.common.dao.MenuDao;
 import kr.nesystem.appengine.common.interf.LoginInfoInterface;
 import kr.nesystem.appengine.common.model.CM_Menu;
@@ -11,9 +12,9 @@ import kr.nesystem.appengine.common.util.L10N;
 
 public class LoginInfoImplement implements LoginInfoInterface {
 	@Override
-	public List<CM_Menu> getMenus(String userType, long userIdKey, String lang) throws Exception {
+	public List<CM_Menu> getMenus(HttpSession session, String userType, long userIdKey, String lang) throws Exception {
 		MenuDao menuDao = new MenuDao();
-		CM_PagingList<CM_Menu> listMenu = menuDao.selectCodes(-1, 0);
+		CM_PagingList<CM_Menu> listMenu = menuDao.selectMenus(session, -1, 0);
 		return getHierachyMenus(listMenu.getList());
 	}
 	

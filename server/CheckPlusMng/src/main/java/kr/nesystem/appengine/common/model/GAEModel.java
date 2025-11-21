@@ -4,15 +4,12 @@ import java.util.Date;
 
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.FullEntity;
-import com.google.cloud.datastore.IncompleteKey;
 import com.google.cloud.datastore.Key;
 import com.google.cloud.datastore.KeyFactory;
 
 public abstract class GAEModel extends Model {
-	protected boolean hasIdKey = false;
 	public abstract Object key();
-	public abstract FullEntity<IncompleteKey> toEntityAutoInc(KeyFactory keyFactory);
-	public abstract Entity toEntity(KeyFactory keyFactory);
+	public abstract FullEntity<?> toEntity(KeyFactory keyFactory);
 	public abstract Entity toEntity(Entity existOne);
 	public abstract GAEModel fromEntity(Entity entity);
 	public Key toKey(KeyFactory keyFactory) {
@@ -43,9 +40,6 @@ public abstract class GAEModel extends Model {
 	}
 	public long D2Z(Date value) {
 		return value != null ? value.getTime() : 0;
-	}
-	public boolean hasIdKey() {
-		return this.hasIdKey;
 	}
 	public Date L2D(long value) {
 		if (value == 0) {

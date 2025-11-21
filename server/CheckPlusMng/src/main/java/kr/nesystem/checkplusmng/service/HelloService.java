@@ -7,7 +7,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import kr.peelknight.util.ResponseUtil;
+import kr.nesystem.appengine.common.util.ResponseUtil;
 
 @Path("/hello")
 public class HelloService {

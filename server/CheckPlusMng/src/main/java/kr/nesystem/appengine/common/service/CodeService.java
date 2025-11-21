@@ -18,13 +18,13 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
+import kr.nesystem.appengine.common.Constant;
 import kr.nesystem.appengine.common.dao.CodeDao;
 import kr.nesystem.appengine.common.model.CM_Code;
 import kr.nesystem.appengine.common.model.CM_PagingList;
-import kr.peelknight.common.Constant;
-import kr.peelknight.common.model.ModelHandler;
-import kr.peelknight.util.AuthToken;
-import kr.peelknight.util.ResponseUtil;
+import kr.nesystem.appengine.common.model.ModelHandler;
+import kr.nesystem.appengine.common.util.AuthToken;
+import kr.nesystem.appengine.common.util.ResponseUtil;
 
 @Path("/{version}/code")
 public class CodeService {
@@ -42,7 +42,7 @@ public class CodeService {
 				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
 			}
 			int offset = (page - 1) * Constant.DEFAULT_SIZE;
-			CM_PagingList<CM_Code> paging = dao.selectCodes(offset, Constant.DEFAULT_SIZE);
+			CM_PagingList<CM_Code> paging = dao.selectCodes(request.getSession(), offset, Constant.DEFAULT_SIZE);
 			return ResponseUtil.getResponse((new ModelHandler<CM_PagingList>(CM_PagingList.class)).convertToJson(paging));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -61,7 +61,7 @@ public class CodeService {
 			if (AuthToken.isValidToken(authToken) == false) {
 				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
 			}
-			CM_Code existOne = dao.selectCodeByTypeNCode(typeParam, codeParam); dao.selectCodeByTypeNCode(typeParam, codeParam);
+			CM_Code existOne = dao.selectCodeByTypeNCode(request.getSession(), typeParam, codeParam);
 			if (existOne == null) {
 				return ResponseUtil.getResponse(Status.NOT_FOUND);
 			}
@@ -80,10 +80,7 @@ public class CodeService {
 									   @PathParam("typeParam") String typeParam,
 									   @QueryParam("q") String authToken) {
 		try {
-//			if (AuthToken.isValidToken(authToken) == false) {
-//				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
-//			}
-			CM_PagingList<CM_Code> paging = dao.selectCodeByType(typeParam);
+			CM_PagingList<CM_Code> paging = dao.selectCodeByType(request.getSession(), typeParam);
 			return ResponseUtil.getResponse((new ModelHandler<CM_PagingList>(CM_PagingList.class)).convertToJson(paging));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -118,7 +115,7 @@ public class CodeService {
 			if (AuthToken.isValidToken(code.getAuthToken()) == false) {
 				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
 			}
-			CM_Code existOne = dao.selectCodeByTypeNCode(typeParam, codeParam);
+			CM_Code existOne = dao.selectCodeByTypeNCode(null, typeParam, codeParam);
 			if (existOne == null) {
 				return ResponseUtil.getResponse(Status.NOT_FOUND);
 			}
@@ -143,7 +140,7 @@ public class CodeService {
 			if (AuthToken.isValidToken(authToken) == false) {
 				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
 			}
-			CM_Code existOne = dao.selectCodeByTypeNCode(typeParam, codeParam);
+			CM_Code existOne = dao.selectCodeByTypeNCode(null, typeParam, codeParam);
 			if (existOne == null) {
 				return ResponseUtil.getResponse(Status.NOT_FOUND);
 			}
@@ -212,7 +209,7 @@ public class CodeService {
 				CM_Code item;
 				for (int ii = 0; ii < paging.getList().size(); ii++) {
 					item = paging.getList().get(ii);
-					retMap.put(item.getType(), dao.selectCodeByType(item.getType()).getList());
+					retMap.put(item.getType(), dao.selectCodeByType(request.getSession(), item.getType()).getList());
 				}
 			}
 			return ResponseUtil.getResponse((new ModelHandler<Map>(Map.class)).convertToJson(retMap));
@@ -237,7 +234,7 @@ public class CodeService {
 			CM_Code item;
 			for (int ii=0; ii<paging.getList().size(); ii++) {
 				item = paging.getList().get(ii);
-				List<CM_Code> codes = dao.selectCodeByType(item.getType()).getList();
+				List<CM_Code> codes = dao.selectCodeByType(request.getSession(), item.getType()).getList();
 				Map<String, String> tmpMap = new HashMap<>();
 				if (codes != null) {
 					CM_Code code;

@@ -2,8 +2,6 @@ package kr.nesystem.appengine.common.model;
 
 import java.util.List;
 
-import kr.peelknight.common.model.CM_Paging;
-
 public class CM_PagingList<T> extends Model {
 	private CM_Paging paging;
 	private List<T> list;
