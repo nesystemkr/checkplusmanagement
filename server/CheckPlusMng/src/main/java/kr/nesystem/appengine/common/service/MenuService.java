@@ -101,24 +101,22 @@ public class MenuService {
 	@SuppressWarnings("rawtypes")
 	public Response selectMenusByUsertype(HttpSession session, String userType, String authToken) {
 		try {
+System.out.println("OJKIMOJKIMOJKIM 0001  " + userType);
 			if (AuthToken.isValidToken(authToken) == false) {
 				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
 			}
-			CM_PagingList<CM_Menu> paging = dao.selectMenusWithUserType(session, userType);
-			if (paging.getList() != null) {
-				for (int ii=0; ii<paging.getList().size(); ii++) {
-					CM_Menu menu = paging.getList().get(ii);
-					menu.l10n(session);
+			List<CM_Menu> list = new ArrayList<>();
+			List<CM_MenuAuth> menuAuthList = authDao.selectMenuAuthWithUserType(session, userType);
+			for (int ii = 0; ii < menuAuthList.size(); ii++) {
+				CM_MenuAuth menuAuth = menuAuthList.get(ii);
+				CM_Menu menu = dao.select(session, menuAuth.getMenuIdKey());
+				list.add(menu);
+				if (userType == null) {
 					menu.setMenuAuths(authDao.selectMenuAuthWithMenu(session, menu));
-					if (menu.getMenuAuths() != null) {
-						CM_MenuAuth menuAuth;
-						for (int jj=0; jj<menu.getMenuAuths().size(); jj++) {
-							menuAuth = menu.getMenuAuths().get(jj);
-							menuAuth.l10n(session);
-						}
-					}
 				}
 			}
+			CM_PagingList<CM_Menu> paging = new CM_PagingList<>();
+			paging.setList(list);
 			return ResponseUtil.getResponse((new ModelHandler<CM_PagingList>(CM_PagingList.class)).convertToJson(paging));
 		} catch (Exception e) {
 			e.printStackTrace();

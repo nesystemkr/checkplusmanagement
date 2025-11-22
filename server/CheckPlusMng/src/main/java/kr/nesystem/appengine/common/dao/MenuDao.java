@@ -22,11 +22,6 @@ public class MenuDao extends BaseDao<CM_Menu> {
 		return super.list(session, filter, offset, size);
 	}
 
-	public CM_PagingList<CM_Menu> selectMenusWithUserType(HttpSession session, String userType) throws Exception {
-		PropertyFilter filter = PropertyFilter.eq("userType", userType);
-		return super.pagingList(session, filter, -1, 0);
-	}
-
 	public int selectMaxOrderSeq(CM_Menu menu) throws Exception {
 		PropertyFilter filter = PropertyFilter.eq("parentIdKey", menu.getParentIdKey());
 		List<CM_Menu> list = super.list(null, filter, -1, 0);

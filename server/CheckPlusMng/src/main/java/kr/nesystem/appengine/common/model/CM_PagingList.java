@@ -8,16 +8,15 @@ public class CM_PagingList<T> extends Model {
 	public CM_Paging getPaging() {
 		return paging;
 	}
-	public void setPaging(CM_Paging paging) {
-		this.paging = paging;
-	}
 	public List<T> getList() {
 		return list;
 	}
 	public void setList(List<T> list) {
 		this.list = list;
+		this.paging = new CM_Paging(list.size());
+		this.numbering(0);
 	}
-	public void numbering(int offset) {
+	protected void numbering(int offset) {
 		if (paging == null) {
 			return;
 		}

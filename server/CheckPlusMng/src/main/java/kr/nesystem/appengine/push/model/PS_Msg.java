@@ -190,10 +190,8 @@ public class PS_Msg extends GAEAutoIncModel {
 				.set("readDate", D2Z(readDate))
 				.build();
 	}
-	@Override
-	public Entity toEntity(Entity existOne) {
-		return Entity.newBuilder(existOne.getKey(), existOne)
-				.set("userIdKey", userIdKey)
+	public Entity.Builder builder(Entity.Builder builder) {
+		return builder.set("userIdKey", userIdKey)
 				.set("deviceType", N2Z(deviceType))
 				.set("pushKey", N2Z(pushKey))
 				.set("msgGroupIdKey", msgGroupIdKey)
@@ -214,8 +212,11 @@ public class PS_Msg extends GAEAutoIncModel {
 				.set("receiveStatus", N2Z(receiveStatus))
 				.set("receiveDate", D2Z(receiveDate))
 				.set("readStatus", N2Z(readStatus))
-				.set("readDate", D2Z(readDate))
-				.build();
+				.set("readDate", D2Z(readDate));
+	}
+	@Override
+	public Entity toEntity(Entity existOne) {
+		return builder(Entity.newBuilder(existOne.getKey(), existOne)).build();
 	}
 	@Override
 	public PS_Msg fromEntity(Entity entity) {
@@ -243,5 +244,27 @@ public class PS_Msg extends GAEAutoIncModel {
 		setReadStatus(entity.getString("readStatus"));
 		setReadDate(L2D(entity.getLong("readDate")));
 		return this;
+	}
+	public Entity toEntity(Entity existOne, String pmsStatus, int pmsTryCount, Date sendDate) {
+		return builder(Entity.newBuilder(existOne.getKey(), existOne))
+				.set("pmsStatus", N2Z(pmsStatus))
+				.set("pmsTryCount", pmsTryCount)
+				.set("sendDate", D2Z(sendDate))
+				.build();
+	}
+	public Entity toEntity(Entity existOne, String pmsStatus, Date completeDate, String errorCode, String errorMessage) {
+		return builder(Entity.newBuilder(existOne.getKey(), existOne))
+				.set("pmsStatus", N2Z(pmsStatus))
+				.set("completeDate", D2Z(completeDate))
+				.set("errorCode", N2Z(errorCode))
+				.set("errorMessage", N2Z(errorMessage))
+				.build();
+	}
+	public Entity toEntity(Entity existOne, String pmsStatus, String errorCode, String errorMessage) {
+		return builder(Entity.newBuilder(existOne.getKey(), existOne))
+				.set("pmsStatus", N2Z(pmsStatus))
+				.set("errorCode", N2Z(errorCode))
+				.set("errorMessage", N2Z(errorMessage))
+				.build();
 	}
 }

@@ -615,7 +615,6 @@ public class BoardService {
 			int offset = (page - 1) * Constant.DEFAULT_SIZE;
 			CM_PagingList<CM_BoardContentReply> paging = new CM_PagingList<>(); 
 			paging.setList(replyDao.selectBoardContentReplys(request.getSession(), boardIdKey, offset, Constant.DEFAULT_SIZE));
-			paging.setPaging(new CM_Paging(paging.getList().size(), 1));
 			CM_BoardContentReply reply;
 			for (int ii=0; ii<paging.getList().size(); ii++) {
 				reply = paging.getList().get(ii);

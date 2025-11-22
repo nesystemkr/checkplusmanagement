@@ -2,7 +2,9 @@ package kr.nesystem.appengine.common.service;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
@@ -19,12 +21,16 @@ import jakarta.ws.rs.core.Response.Status;
 import kr.nesystem.appengine.common.dao.CodeDao;
 import kr.nesystem.appengine.common.dao.CodeTypeDao;
 import kr.nesystem.appengine.common.dao.L10NDao;
+import kr.nesystem.appengine.common.dao.L10NLocaleDao;
+import kr.nesystem.appengine.common.dao.MenuAuthDao;
 import kr.nesystem.appengine.common.dao.MenuDao;
 import kr.nesystem.appengine.common.dao.UserDao;
 import kr.nesystem.appengine.common.model.CM_Code;
 import kr.nesystem.appengine.common.model.CM_CodeType;
 import kr.nesystem.appengine.common.model.CM_L10N;
+import kr.nesystem.appengine.common.model.CM_L10NLocale;
 import kr.nesystem.appengine.common.model.CM_Menu;
+import kr.nesystem.appengine.common.model.CM_MenuAuth;
 import kr.nesystem.appengine.common.model.CM_User;
 import kr.nesystem.appengine.common.util.CommonFunc;
 import kr.nesystem.appengine.common.util.L10N;
@@ -45,7 +51,6 @@ public class InitService {
 			insertServerBaseCodes();
 			insertServerBaseL10Ns();
 			insertServerBaseMenus();
-//			insertFragments();
 			
 			return ResponseUtil.getResponse(Status.OK);
 		} catch (Exception e) {
@@ -141,6 +146,7 @@ public class InitService {
 	
 	public void insertServerBaseL10Ns() throws Exception {
 		insertL10Ns_default("lang.properties");
+		insertL10Ns_locale("lang_en.properties", "en_US");
 		L10N.loadResource();
 	}
 	
@@ -161,6 +167,24 @@ public class InitService {
 		}
 	}
 	
+	public void  insertL10Ns_locale(String profileName, String locale) throws Exception {
+		L10NLocaleDao l10nDao = new L10NLocaleDao();
+		InputStream inputStream = null;
+		try {
+			inputStream = Resources.getResourceAsStream(profileName);
+			Properties prop = new Properties();
+			prop.load(inputStream);
+			Set<Object> keys = prop.keySet();
+			for (Object key : keys) {
+				String val = prop.getProperty((String)key);
+				//resource_en.put((String)key, new String(val.getBytes("ISO-8859-1"), "UTF-8"));
+				l10nDao.insert(getL10NLocaleModel((String)key, locale, new String(val.getBytes("ISO-8859-1"), "UTF-8")));
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public CM_L10N getL10NModel(String idString, String defaultString) {
 		CM_L10N l10n = new CM_L10N();
 		l10n.setIdString(idString);
@@ -168,9 +192,17 @@ public class InitService {
 		return l10n;
 	}
 	
+	public CM_L10NLocale getL10NLocaleModel(String idString, String locale, String localeString) {
+		CM_L10NLocale l10nLocale = new CM_L10NLocale();
+		l10nLocale.setIdString(idString);
+		l10nLocale.setLocale(locale);
+		l10nLocale.setLocaleString(localeString);
+		return l10nLocale;
+	}
 
 	public void insertServerBaseMenus() throws Exception {
 		MenuDao menuDao = new MenuDao();
+		MenuAuthDao menuAuthDao = new MenuAuthDao();
 		CM_Menu menuSiteMng = getMenuModel(0, "MENU_SITEMNG", null, 1);
 		CM_Menu menuSetup = getMenuModel(0, "MENU_SITESETUP", null, 2);
 		Entity entity;
@@ -184,12 +216,26 @@ public class InitService {
 		CM_Menu menuL10N   = getMenuModel(menuSetup.getIdKey(), "MENU_L10NMNG"  , "/sitesetup/l10n.jsp"  , 3);
 		CM_Menu menuBoard  = getMenuModel(menuSetup.getIdKey(), "MENU_BOARDMNG" , "/sitesetup/board.jsp" , 4);
 		CM_Menu menuDemon  = getMenuModel(menuSetup.getIdKey(), "MENU_DAEMONMNG", "/sitesetup/daemon.jsp", 4);
-		menuDao.insert(menuUser);
-		menuDao.insert(menuMenu);
-		menuDao.insert(menuCmCode);
-		menuDao.insert(menuL10N);
-		menuDao.insert(menuBoard);
-		menuDao.insert(menuDemon);
+		entity = menuDao.insert(menuUser);
+		menuUser.setIdKey(entity.getKey().getId());
+		entity = menuDao.insert(menuMenu);
+		menuMenu.setIdKey(entity.getKey().getId());
+		entity = menuDao.insert(menuCmCode);
+		menuCmCode.setIdKey(entity.getKey().getId());
+		entity = menuDao.insert(menuL10N);
+		menuL10N.setIdKey(entity.getKey().getId());
+		entity = menuDao.insert(menuBoard);
+		menuBoard.setIdKey(entity.getKey().getId());
+		entity = menuDao.insert(menuDemon);
+		menuDemon.setIdKey(entity.getKey().getId());
+		menuAuthDao.insert(getMenuAuthModels(menuSiteMng.getIdKey(), new String[] {"1", "2"}));
+		menuAuthDao.insert(getMenuAuthModels(menuUser.getIdKey()  , new String[] {"1", "2"}));
+		menuAuthDao.insert(getMenuAuthModels(menuSetup.getIdKey() , new String[] {"1"}));
+		menuAuthDao.insert(getMenuAuthModels(menuMenu.getIdKey()  , new String[] {"1"}));
+		menuAuthDao.insert(getMenuAuthModels(menuCmCode.getIdKey(), new String[] {"1"}));
+		menuAuthDao.insert(getMenuAuthModels(menuL10N.getIdKey()  , new String[] {"1"}));
+		menuAuthDao.insert(getMenuAuthModels(menuBoard.getIdKey() , new String[] {"1"}));
+		menuAuthDao.insert(getMenuAuthModels(menuDemon.getIdKey() , new String[] {"1"}));
 	}
 	
 	public CM_Menu getMenuModel(long parentIdKey, String menuName, String menuUrl, int orderSeq) {
@@ -200,5 +246,25 @@ public class InitService {
 		menu.setStatus("1");
 		menu.setOrderSeq(orderSeq);
 		return menu;
+	}
+	
+	public CM_MenuAuth getMenuAuthModel(long menuIdKey, String userType) {
+		CM_MenuAuth menuAuth = new CM_MenuAuth();
+		menuAuth.setUserType(userType);
+		menuAuth.setMenuIdKey(menuIdKey);
+		menuAuth.setAllowYN("Y");
+		return menuAuth;
+	}
+	
+	public List<CM_MenuAuth> getMenuAuthModels(long menuIdKey, String[] userTypes) {
+		List<CM_MenuAuth> list = new ArrayList<>();
+		for (int ii=0; ii<userTypes.length; ii++) {
+			CM_MenuAuth menuAuth = new CM_MenuAuth();
+			menuAuth.setUserType(userTypes[ii]);
+			menuAuth.setMenuIdKey(menuIdKey);
+			menuAuth.setAllowYN("Y");
+			list.add(menuAuth);
+		}
+		return list;
 	}
 }

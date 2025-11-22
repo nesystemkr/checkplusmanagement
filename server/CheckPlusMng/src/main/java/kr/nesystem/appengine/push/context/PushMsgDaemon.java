@@ -79,9 +79,11 @@ public class PushMsgDaemon extends ConsumerBaseDaemon {
 						break;
 					}
 					msgs = pushDao.selectPmsCandidatedMsg();
-					for (int ii=0; ii<msgs.size(); ii++) {
-						msg = msgs.get(ii);
-						(new PushThread(msg)).start();
+					if (msgs != null) {
+						for (int ii = 0; ii < msgs.size(); ii++) {
+							msg = msgs.get(ii);
+							(new PushThread(msg)).start();
+						}
 					}
 				}
 			} catch (WakeupException e) {
@@ -142,7 +144,7 @@ public class PushMsgDaemon extends ConsumerBaseDaemon {
 				newMsg.setPmsStatus("0");
 				newMsg.setPmsMaxRetryCount(pItem.getPmsMaxRetryCount());
 				newMsg.setPmsTryCount(0);
-				pushDao.insertPushMessage(newMsg);
+				pushDao.insert(newMsg);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -172,7 +174,11 @@ public class PushMsgDaemon extends ConsumerBaseDaemon {
 				__msg.setErrorCode("000");
 				__msg.setErrorMessage("DeviceType not matched!!!");
 				__msg.setErrorDate(new Date());
-				pushDao.updatePushMessage(__msg);
+				try {
+					pushDao.update(__msg);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
@@ -180,7 +186,7 @@ public class PushMsgDaemon extends ConsumerBaseDaemon {
 	public static void pushToFCM(PS_Msg msg) {
 		PushDao pushDao = new PushDao();
 		try {
-			pushDao.updateSendDate(msg.getIdKey());
+			pushDao.updateSendDate(msg);
 			if (fcmInited == 0) {
 				FileInputStream serviceAccount = new FileInputStream(Constant.FCM_PUSH_CREDENTIALS_PATH);
 				FirebaseOptions options = FirebaseOptions.builder()
@@ -203,12 +209,12 @@ public class PushMsgDaemon extends ConsumerBaseDaemon {
 			builder.setToken(msg.getPushKey());
 			com.google.firebase.messaging.Message pushMessage = builder.build();
 			String error = FirebaseMessaging.getInstance().send(pushMessage);
-			pushDao.updatePushResult(msg.getIdKey(), true, null, error);
+			pushDao.updatePushResult(msg, true, null, error);
 		} catch (FirebaseMessagingException e) {
-			pushDao.updatePushResult(msg.getIdKey(), false, String.valueOf(e.getErrorCode()), e.getMessage());
+			pushDao.updatePushResult(msg, false, String.valueOf(e.getErrorCode()), e.getMessage());
 			e.printStackTrace();
 		} catch (Exception e) {
-			pushDao.updatePushResult(msg.getIdKey(), false, "999", e.getMessage());
+			pushDao.updatePushResult(msg, false, "999", e.getMessage());
 			e.printStackTrace();
 		}
 	}
@@ -216,7 +222,7 @@ public class PushMsgDaemon extends ConsumerBaseDaemon {
 	public static void pushToAPNS(PS_Msg msg) {
 		try {
 			PushDao pushDao = new PushDao();
-			pushDao.updateSendDate(msg.getIdKey());
+			pushDao.updateSendDate(msg);
 			ApnsClientBuilder builder = new ApnsClientBuilder();
 			if (Constant.APNS_PUSH_DEV) {
 				builder.setApnsServer(ApnsClientBuilder.DEVELOPMENT_APNS_HOST);
@@ -247,13 +253,13 @@ public class PushMsgDaemon extends ConsumerBaseDaemon {
 			if (pushNotificationResponse.isAccepted()) {
 				if (pushNotificationResponse.getPushNotification() != null &&
 					pushNotificationResponse.getPushNotification().getApnsId() != null) {
-					pushDao.updatePushResult(msg.getIdKey(), true, 
+					pushDao.updatePushResult(msg, true, 
 							null, pushNotificationResponse.getPushNotification().getApnsId().toString());
 				} else {
-					pushDao.updatePushResult(msg.getIdKey(), true, null, "");
+					pushDao.updatePushResult(msg, true, null, "");
 				}
 			} else {
-				pushDao.updatePushResult(msg.getIdKey(), true,
+				pushDao.updatePushResult(msg, true,
 						pushNotificationResponse.getTokenInvalidationTimestamp() != null ? "APP IS INVALID." : null,
 						pushNotificationResponse.getRejectionReason());
 			}
@@ -263,13 +269,13 @@ public class PushMsgDaemon extends ConsumerBaseDaemon {
 					if (future.isSuccess()) {
 						if (future.getPushNotification() != null &&
 							future.getPushNotification().getApnsId() != null) {
-							pushDao.updatePushResult(msg.getIdKey(), true,
+							pushDao.updatePushResult(msg, true,
 									null, future.getPushNotification().getApnsId().toString());
 						} else {
-							pushDao.updatePushResult(msg.getIdKey(), true, null, "");
+							pushDao.updatePushResult(msg, true, null, "");
 						}
 					} else {
-						pushDao.updatePushResult(msg.getIdKey(), false, null, "UNKNOWN ERROR!!!");
+						pushDao.updatePushResult(msg, false, null, "UNKNOWN ERROR!!!");
 					}
 				}
 			});

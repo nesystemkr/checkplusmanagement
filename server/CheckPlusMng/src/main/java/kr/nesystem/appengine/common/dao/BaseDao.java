@@ -50,9 +50,6 @@ public class BaseDao<T extends GAEModel> {
 		List<T> list = list(session, filter, offset, size);
 		CM_PagingList<T> ret = new CM_PagingList<>();
 		ret.setList(list);
-		CM_Paging paging = new CM_Paging();
-		paging.setTotalCount(list.size());
-		ret.setPaging(paging);
 		return ret;
 	}
 	
@@ -80,8 +77,7 @@ public class BaseDao<T extends GAEModel> {
 	
 	@SuppressWarnings("unchecked")
 	public T select(HttpSession session, String val) throws Exception {
-		Key key = keyFactory.newKey(val);
-		Entity entity = datastore.get(key);
+		Entity entity = datastore.get(keyFactory.newKey(val));
 		if (entity != null) {
 			Constructor<?> constructor = clazz.getDeclaredConstructor();
 			GAEModel model = (GAEModel)constructor.newInstance();
@@ -94,8 +90,7 @@ public class BaseDao<T extends GAEModel> {
 	
 	@SuppressWarnings("unchecked")
 	public T select(HttpSession session, long val) throws Exception {
-		Key key = keyFactory.newKey(val);
-		Entity entity = datastore.get(key);
+		Entity entity = datastore.get(keyFactory.newKey(val));
 		if (entity != null) {
 			Constructor<?> constructor = clazz.getDeclaredConstructor();
 			GAEModel model = (GAEModel)constructor.newInstance();
@@ -111,8 +106,7 @@ public class BaseDao<T extends GAEModel> {
 		Entity ret = null;
 		try {
 			if (!(model instanceof GAEAutoIncModel)) {
-				Key key = model.toKey(keyFactory);
-				if (txn.get(key) != null) {
+				if (txn.get(model.toKey(keyFactory)) != null) {
 					throw new Exception("Already exists: " + model.key());
 				}
 			}
@@ -126,11 +120,33 @@ public class BaseDao<T extends GAEModel> {
 		} 
 	}
 	
+	public List<Entity> insert(List<T> list) throws Exception {
+		Transaction txn = datastore.newTransaction();
+		List<Entity> ret = new ArrayList<>();
+		try {
+			for (int ii = 0; ii < list.size(); ii++) {
+				T model = list.get(ii);
+				if (!(model instanceof GAEAutoIncModel)) {
+					Entity existOne = txn.get(model.toKey(keyFactory));
+					if (existOne == null) {
+						throw new Exception("Not found: " + model.key());
+					}
+				}
+				ret.add(txn.add(model.toEntity(keyFactory)));
+			}
+			txn.commit();
+			return ret;
+		} finally {
+			if (txn.isActive()) {
+				txn.rollback();
+			}
+		}
+	}
+	
 	public void update(GAEModel model) throws Exception {
 		Transaction txn = datastore.newTransaction();
 		try {
-			Key key = model.toKey(keyFactory);
-			Entity existOne = txn.get(key);
+			Entity existOne = txn.get(model.toKey(keyFactory));
 			if (existOne == null) {
 				throw new Exception("Not found: " + model.key());
 			}
