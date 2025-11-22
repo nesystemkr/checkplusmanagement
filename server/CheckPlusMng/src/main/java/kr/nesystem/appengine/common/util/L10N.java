@@ -73,6 +73,9 @@ public class L10N implements Serializable {
 	}
 	
 	public static String getLang(HttpSession session) {
-		return (String)session.getAttribute("Locale");
+		if (session != null) {
+			return (String)session.getAttribute("Locale");
+		}
+		return null;
 	}
 }

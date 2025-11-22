@@ -5,7 +5,7 @@ import java.util.List;
 
 import jakarta.servlet.http.HttpSession;
 import kr.nesystem.appengine.common.model.GAEAutoIncModel;
-import kr.nesystem.appengine.common.util.L10N;
+import kr.nesystem.appengine.common.util.UserStore;
 
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.FullEntity;
@@ -159,7 +159,8 @@ public class CM_BoardContent extends GAEAutoIncModel {
 		this.replies = replies;
 	}
 	public void l10n(HttpSession session) {
-		statusName = L10N.get(statusName, session);
+		creatorName = UserStore.getName(creator);
+		modifierName = UserStore.getName(modifier);
 	}
 	@Override
 	public FullEntity<?> toEntity(KeyFactory keyFactory) {

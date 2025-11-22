@@ -4,6 +4,7 @@ import java.util.List;
 
 import jakarta.servlet.http.HttpSession;
 import kr.nesystem.appengine.common.model.GAEAutoIncModel;
+import kr.nesystem.appengine.common.util.CodeStore;
 import kr.nesystem.appengine.common.util.L10N;
 
 import com.google.cloud.datastore.Entity;
@@ -117,6 +118,7 @@ public class CM_Board extends GAEAutoIncModel {
 		this.allowUpdateOthersYN = allowUpdateOthersYN;
 	}
 	public void l10n(HttpSession session) {
+		statusName = CodeStore.get("BOARDSTATUS", status);
 		statusName = L10N.get(statusName, session);
 	}
 	@Override

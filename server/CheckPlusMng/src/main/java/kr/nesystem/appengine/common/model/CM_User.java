@@ -6,6 +6,10 @@ import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.FullEntity;
 import com.google.cloud.datastore.KeyFactory;
 
+import jakarta.servlet.http.HttpSession;
+import kr.nesystem.appengine.common.util.CodeStore;
+import kr.nesystem.appengine.common.util.L10N;
+
 public class CM_User extends GAEAutoIncModel {
 	private String userId;
 	private String password;
@@ -90,6 +94,13 @@ public class CM_User extends GAEAutoIncModel {
 	}
 	public void setUserTypeName(String userTypeName) {
 		this.userTypeName = userTypeName;
+	}
+	@Override
+	public void l10n(HttpSession session) {
+		userTypeName = CodeStore.get("USERTYPE", userType);
+		statusName = CodeStore.get("USERSTATUS", status);
+		userTypeName = L10N.get(userTypeName, session);
+		statusName = L10N.get(statusName, session);
 	}
 	@Override
 	public FullEntity<?> toEntity(KeyFactory keyFactory) {

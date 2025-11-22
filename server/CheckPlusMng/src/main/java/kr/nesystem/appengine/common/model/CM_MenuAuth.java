@@ -1,6 +1,7 @@
 package kr.nesystem.appengine.common.model;
 
 import jakarta.servlet.http.HttpSession;
+import kr.nesystem.appengine.common.util.CodeStore;
 import kr.nesystem.appengine.common.util.L10N;
 
 import com.google.cloud.datastore.Entity;
@@ -38,6 +39,7 @@ public class CM_MenuAuth extends GAEAutoIncModel {
 	}
 	@Override
 	public void l10n(HttpSession session) {
+		userTypeName = CodeStore.get("USERTYPE", userType);
 		userTypeName = L10N.get(userTypeName, session);
 	}
 	@Override

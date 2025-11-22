@@ -16,7 +16,7 @@ public class CM_PagingList<T> extends Model {
 		this.paging = new CM_Paging(list.size());
 		this.numbering(0);
 	}
-	protected void numbering(int offset) {
+	public void numbering(int offset) {
 		if (paging == null) {
 			return;
 		}

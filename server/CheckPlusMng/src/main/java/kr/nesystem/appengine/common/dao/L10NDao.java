@@ -13,6 +13,7 @@ public class L10NDao extends BaseDeleteAllDao<CM_L10N> {
 	}
 
 	public CM_PagingList<CM_L10N> selectL10Ns(HttpSession session, int offset, int size, String search) throws Exception {
+		CompositeFilter filter = null;
 		if (search != null) {
 			char lastChar = search.charAt(search.length() - 1);
 			String searchBase = search.substring(0, search.length() - 1);
@@ -21,9 +22,8 @@ public class L10NDao extends BaseDeleteAllDao<CM_L10N> {
 															 PropertyFilter.lt("idString", nextSearch));
 			CompositeFilter rightFilter = CompositeFilter.and(PropertyFilter.ge("defaultString", search),
 															  PropertyFilter.lt("defaultString", nextSearch));
-			CompositeFilter filter = CompositeFilter.or(leftFilter, rightFilter);
-			return super.pagingList(session, filter, -1, 0);
+			filter = CompositeFilter.or(leftFilter, rightFilter);
 		}
-		return super.pagingList(session, null, -1, 0);
+		return super.pagingList(session, filter, offset, size);
 	}
 }

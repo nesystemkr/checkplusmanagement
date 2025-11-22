@@ -6,7 +6,9 @@ import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.FullEntity;
 import com.google.cloud.datastore.KeyFactory;
 
+import jakarta.servlet.http.HttpSession;
 import kr.nesystem.appengine.common.model.GAEAutoIncModel;
+import kr.nesystem.appengine.common.util.UserStore;
 
 public class CM_BoardContentReply extends GAEAutoIncModel {
 	private long boardContentIdKey;
@@ -92,6 +94,10 @@ public class CM_BoardContentReply extends GAEAutoIncModel {
 	}
 	public void setAttachmentGroup(CM_AttachmentGroup attachmentGroup) {
 		this.attachmentGroup = attachmentGroup;
+	}
+	public void l10n(HttpSession session) {
+		creatorName = UserStore.getName(creator);
+		modifierName = UserStore.getName(modifier);
 	}
 	@Override
 	public FullEntity<?> toEntity(KeyFactory keyFactory) {

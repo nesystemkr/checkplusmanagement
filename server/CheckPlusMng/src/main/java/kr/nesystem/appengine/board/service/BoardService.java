@@ -1,6 +1,5 @@
 package kr.nesystem.appengine.board.service;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -29,7 +28,6 @@ import kr.nesystem.appengine.board.model.CM_BoardAuth;
 import kr.nesystem.appengine.board.model.CM_BoardContent;
 import kr.nesystem.appengine.board.model.CM_BoardContentReply;
 import kr.nesystem.appengine.common.Constant;
-import kr.nesystem.appengine.common.model.CM_Paging;
 import kr.nesystem.appengine.common.model.CM_PagingList;
 import kr.nesystem.appengine.common.model.ModelHandler;
 import kr.nesystem.appengine.common.util.AuthToken;

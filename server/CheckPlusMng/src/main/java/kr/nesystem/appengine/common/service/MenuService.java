@@ -101,7 +101,6 @@ public class MenuService {
 	@SuppressWarnings("rawtypes")
 	public Response selectMenusByUsertype(HttpSession session, String userType, String authToken) {
 		try {
-System.out.println("OJKIMOJKIMOJKIM 0001  " + userType);
 			if (AuthToken.isValidToken(authToken) == false) {
 				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
 			}

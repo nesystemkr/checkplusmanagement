@@ -19,7 +19,6 @@ import com.google.cloud.datastore.Transaction;
 import jakarta.servlet.http.HttpSession;
 
 import com.google.cloud.datastore.EntityQuery.Builder;
-import kr.nesystem.appengine.common.model.CM_Paging;
 import kr.nesystem.appengine.common.model.CM_PagingList;
 import kr.nesystem.appengine.common.model.GAEAutoIncModel;
 import kr.nesystem.appengine.common.model.GAEModel;
@@ -46,14 +45,16 @@ public class BaseDao<T extends GAEModel> {
 		}
 	}
 	
-	public CM_PagingList<T> pagingList(HttpSession session, Filter filter,int offset, int size) throws Exception {
+	public CM_PagingList<T> pagingList(HttpSession session, Filter filter, int offset, int size) throws Exception {
 		List<T> list = list(session, filter, offset, size);
 		CM_PagingList<T> ret = new CM_PagingList<>();
 		ret.setList(list);
+		ret.getPaging().setTotalCount(totalCount(filter));
+		ret.numbering(offset);
 		return ret;
 	}
 	
-	public List<T> list(HttpSession session, Filter filter,int offset, int size) throws Exception {
+	public List<T> list(HttpSession session, Filter filter, int offset, int size) throws Exception {
 		List<T> ret = new ArrayList<>();
 		Builder builder = Query.newEntityQueryBuilder().setKind(tableName);
 		if (filter != null) {
@@ -71,6 +72,21 @@ public class BaseDao<T extends GAEModel> {
 			model.fromEntity(entity);
 			model.l10n(session);
 			ret.add(model);
+		}
+		return ret;
+	}
+	
+	public int totalCount(Filter filter) throws Exception {
+		int ret = 0;
+		Builder builder = Query.newEntityQueryBuilder().setKind(tableName);
+		if (filter != null) {
+			builder.setFilter(filter);
+		}
+		Query<Entity> query = builder.build();
+		QueryResults<Entity> results = datastore.run(query);
+		while (results.hasNext()) {
+			results.next();
+			ret++;
 		}
 		return ret;
 	}

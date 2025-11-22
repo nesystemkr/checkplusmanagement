@@ -7,6 +7,7 @@ import com.google.cloud.datastore.FullEntity;
 import com.google.cloud.datastore.KeyFactory;
 
 import jakarta.servlet.http.HttpSession;
+import kr.nesystem.appengine.common.util.CodeStore;
 import kr.nesystem.appengine.common.util.L10N;
 
 public class CM_Menu extends GAEAutoIncModel {
@@ -82,6 +83,7 @@ public class CM_Menu extends GAEAutoIncModel {
 	}
 	@Override
 	public void l10n(HttpSession session) {
+		statusName = CodeStore.get("MENUSTATUS", status);
 		menuLocale = L10N.get(menuName, session);
 		statusName = L10N.get(statusName, session);
 	}
