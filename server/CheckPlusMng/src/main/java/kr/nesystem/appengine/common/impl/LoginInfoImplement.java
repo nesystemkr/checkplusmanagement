@@ -1,6 +1,7 @@
 package kr.nesystem.appengine.common.impl;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import jakarta.servlet.http.HttpSession;
@@ -19,6 +20,31 @@ public class LoginInfoImplement implements LoginInfoInterface {
 	}
 	
 	public static List<CM_Menu> getHierachyMenus(List<CM_Menu> listMenu) {
+		listMenu.sort(new Comparator<CM_Menu>() {
+			@Override
+			public int compare(CM_Menu o1, CM_Menu o2) {
+				if (o1.getParentIdKey() == 0 && o2.getParentIdKey() == 0) {
+					if (o1.getOrderSeq() < o2.getOrderSeq()) {
+						return -1;
+					} else if (o1.getOrderSeq() < o2.getOrderSeq()) {
+						return 1;
+					}
+					return 0;
+				} else if (o1.getParentIdKey() == 0) {
+					return -1;
+				} else if (o2.getParentIdKey() == 0) {
+					return 1;
+				} else {
+					if (o1.getOrderSeq() < o2.getOrderSeq()) {
+						return -1;
+					} else if (o1.getOrderSeq() < o2.getOrderSeq()) {
+						return 1;
+					}
+					return 0;
+				}
+			}
+			
+		});
 		List<CM_Menu> retMenu = new ArrayList<>();
 		CM_Menu menu;
 		CM_Menu parentMenu;

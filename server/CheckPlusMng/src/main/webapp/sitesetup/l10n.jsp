@@ -86,7 +86,7 @@ function saveL10Ns() {
 	}
 	var url = "${contextPath}/svc/v1/l10n/list"
 	var paging = {}
-	paging.reqToken = getAuthToken()
+	paging.authToken = getAuthToken()
 	paging.list = touchedList;
 	nesAjax(url,
 			JSON.stringify(paging),
@@ -107,7 +107,7 @@ function delL10Ns() {
 	}
 	var url = "${contextPath}/svc/v1/l10n/list/delete"
 	var paging = {}
-	paging.reqToken = getAuthToken()
+	paging.authToken = getAuthToken()
 	paging.list = selectedList;
 	nesAjax(url,
 			JSON.stringify(paging),
@@ -185,7 +185,7 @@ function saveL10NLocales() {
 	}
 	var url = "${contextPath}/svc/v1/l10n/" + selectedIdKey + "/locale/list"
 	var paging = {}
-	paging.reqToken = getAuthToken()
+	paging.authToken = getAuthToken()
 	paging.list = touchedList;
 	nesAjax(url,
 			JSON.stringify(paging),
@@ -213,7 +213,7 @@ function delL10NLocales() {
 	}
 	var url = "${contextPath}/svc/v1/l10n/" + selectedIdKey + "/locale/list/delete"
 	var paging = {}
-	paging.reqToken = getAuthToken()
+	paging.authToken = getAuthToken()
 	paging.list = selectedList;
 	nesAjax(url,
 			JSON.stringify(paging),

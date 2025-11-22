@@ -297,7 +297,7 @@ function saveEdit() {
 	}
 	
 	var board = {};
-	board.reqToken = getAuthToken();
+	board.authToken = getAuthToken();
 	board.idKey = $("#board_idKey").val().trim();
 	board.boardType = "1"
 	board.boardName = $("#board_boardName").val().trim();

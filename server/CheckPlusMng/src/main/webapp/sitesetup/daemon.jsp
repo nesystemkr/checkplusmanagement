@@ -171,7 +171,7 @@ function saveEdit() {
 	}
 	
 	var daemon = {}
-	daemon.reqToken = getAuthToken()
+	daemon.authToken = getAuthToken()
 	daemon.idKey = $("#daemon_idKey").val().trim()
 	daemon.daemonName = $("#daemon_daemonName").val().trim()
 	daemon.className = $("#daemon_className").val().trim()

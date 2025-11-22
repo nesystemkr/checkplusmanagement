@@ -198,13 +198,21 @@ public class BaseDao<T extends GAEModel> {
 		Transaction txn = datastore.newTransaction();
 		try {
 			for (int ii = 0; ii < list.size(); ii++) {
-				T code = list.get(ii);
-				Key key = code.toKey(keyFactory);
-				Entity existOne = txn.get(key);
-				if (existOne != null) {
-					txn.update(code.toEntity(existOne));
+				T model = list.get(ii);
+				Entity existOne = null;
+				if (model instanceof GAEAutoIncModel) {
+					if (((GAEAutoIncModel) model).getIdKey() != 0) {
+						Key key = model.toKey(keyFactory);
+						existOne = txn.get(key);
+					}
 				} else {
-					txn.add(code.toEntity(keyFactory));
+					Key key = model.toKey(keyFactory);
+					existOne = txn.get(key);
+				}
+				if (existOne != null) {
+					txn.update(model.toEntity(existOne));
+				} else {
+					txn.add(model.toEntity(keyFactory));
 				}
 			}
 			txn.commit();

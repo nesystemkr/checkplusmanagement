@@ -154,7 +154,7 @@ function saveMenu() {
 	}
 	
 	var menu = {};
-	menu.reqToken = getAuthToken();
+	menu.authToken = getAuthToken();
 	menu.idKey = $("#menu_idKey").val().trim();
 	menu.parentIdKey = $("#menu_parentIdKey").val().trim();
 	menu.menuName = $("#menu_menuName").val().trim();
@@ -212,7 +212,7 @@ function saveMenus() {
 	}
 	
 	var paging = {};
-	paging.reqToken = getAuthToken();
+	paging.authToken = getAuthToken();
 	paging.list = changed
 	
 	var url = "${contextPath}/svc/v1/menu/list";

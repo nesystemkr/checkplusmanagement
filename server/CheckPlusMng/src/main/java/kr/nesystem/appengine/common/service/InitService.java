@@ -229,13 +229,13 @@ public class InitService {
 		entity = menuDao.insert(menuDemon);
 		menuDemon.setIdKey(entity.getKey().getId());
 		menuAuthDao.insert(getMenuAuthModels(menuSiteMng.getIdKey(), new String[] {"1", "2"}));
-		menuAuthDao.insert(getMenuAuthModels(menuUser.getIdKey()  , new String[] {"1", "2"}));
-		menuAuthDao.insert(getMenuAuthModels(menuSetup.getIdKey() , new String[] {"1"}));
-		menuAuthDao.insert(getMenuAuthModels(menuMenu.getIdKey()  , new String[] {"1"}));
-		menuAuthDao.insert(getMenuAuthModels(menuCmCode.getIdKey(), new String[] {"1"}));
-		menuAuthDao.insert(getMenuAuthModels(menuL10N.getIdKey()  , new String[] {"1"}));
-		menuAuthDao.insert(getMenuAuthModels(menuBoard.getIdKey() , new String[] {"1"}));
-		menuAuthDao.insert(getMenuAuthModels(menuDemon.getIdKey() , new String[] {"1"}));
+		menuAuthDao.insert(getMenuAuthModels(menuUser.getIdKey()   , new String[] {"1", "2"}));
+		menuAuthDao.insert(getMenuAuthModels(menuSetup.getIdKey()  , new String[] {"1"}));
+		menuAuthDao.insert(getMenuAuthModels(menuMenu.getIdKey()   , new String[] {"1"}));
+		menuAuthDao.insert(getMenuAuthModels(menuCmCode.getIdKey() , new String[] {"1"}));
+		menuAuthDao.insert(getMenuAuthModels(menuL10N.getIdKey()   , new String[] {"1"}));
+		menuAuthDao.insert(getMenuAuthModels(menuBoard.getIdKey()  , new String[] {"1"}));
+		menuAuthDao.insert(getMenuAuthModels(menuDemon.getIdKey()  , new String[] {"1"}));
 	}
 	
 	public CM_Menu getMenuModel(long parentIdKey, String menuName, String menuUrl, int orderSeq) {

@@ -75,7 +75,7 @@ function saveCodeTypes() {
 	}
 	var url = "${contextPath}/svc/v1/codetype/list"
 	var paging = {}
-	paging.reqToken = getAuthToken()
+	paging.authToken = getAuthToken()
 	paging.list = touchedList;
 	nesAjax(url,
 			JSON.stringify(paging),
@@ -96,7 +96,7 @@ function delCodeTypes() {
 	}
 	var url = "${contextPath}/svc/v1/codetype/list/delete"
 	var paging = {}
-	paging.reqToken = getAuthToken()
+	paging.authToken = getAuthToken()
 	paging.list = selectedList;
 	nesAjax(url,
 			JSON.stringify(paging),
@@ -156,7 +156,7 @@ function saveCodes() {
 	}
 	var url = "${contextPath}/svc/v1/code/list"
 	var paging = {}
-	paging.reqToken = getAuthToken()
+	paging.authToken = getAuthToken()
 	paging.list = touchedList;
 	nesAjax(url,
 			JSON.stringify(paging),
@@ -177,7 +177,7 @@ function delCodes() {
 	}
 	var url = "${contextPath}/svc/v1/code/list/delete"
 	var paging = {}
-	paging.reqToken = getAuthToken()
+	paging.authToken = getAuthToken()
 	paging.list = selectedList;
 	nesAjax(url,
 			JSON.stringify(paging),

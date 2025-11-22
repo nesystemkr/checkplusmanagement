@@ -211,7 +211,7 @@ public class AttachmentService {
 	@Produces({MediaType.APPLICATION_JSON})
 	@Path("/upload/{groupIdKey}")
 	public Response appendAttachment(@PathParam("groupIdKey") long groupIdKey,
-									 @FormDataParam("reqToken") String authToken,
+									 @FormDataParam("authToken") String authToken,
 									 @FormDataParam("uploadfiles") FormDataBodyPart body) throws Exception {
 		try {
 			if (AuthToken.isValidToken(authToken) == false) {

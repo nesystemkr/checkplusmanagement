@@ -1,10 +1,12 @@
 package kr.nesystem.appengine.common.service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
+import com.google.cloud.datastore.Entity;
+
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -81,37 +83,74 @@ public class MenuService {
 		}
 	}
 
+	@SuppressWarnings("rawtypes")
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
 	@Path("/listbyusertype")
 	public Response selectMenusAll(@Context HttpServletRequest request,
 								   @QueryParam("q") String authToken) {
-		return selectMenusByUsertype(request.getSession(), null, authToken);
+		try {
+			if (AuthToken.isValidToken(authToken) == false) {
+				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
+			}
+			List<CM_Menu> list = dao.list(request.getSession(), null, -1, 0);
+			for (int ii = 0; ii < list.size(); ii++) {
+				CM_Menu menu = list.get(ii);
+				menu.setMenuAuths(authDao.selectMenuAuthWithMenu(request.getSession(), menu));
+			}
+			list.sort(new Comparator<CM_Menu>() {
+				@Override
+				public int compare(CM_Menu o1, CM_Menu o2) {
+					if (o1.getParentIdKey() == 0 && o2.getParentIdKey() == 0) {
+						if (o1.getOrderSeq() < o2.getOrderSeq()) {
+							return -1;
+						} else if (o1.getOrderSeq() < o2.getOrderSeq()) {
+							return 1;
+						}
+						return 0;
+					} else if (o1.getParentIdKey() == 0) {
+						return -1;
+					} else if (o2.getParentIdKey() == 0) {
+						return 1;
+					} else {
+						if (o1.getOrderSeq() < o2.getOrderSeq()) {
+							return -1;
+						} else if (o1.getOrderSeq() < o2.getOrderSeq()) {
+							return 1;
+						}
+						return 0;
+					}
+				}
+				
+			});
+			CM_PagingList<CM_Menu> paging = new CM_PagingList<>();
+			paging.setList(list);
+			return ResponseUtil.getResponse((new ModelHandler<CM_PagingList>(CM_PagingList.class)).convertToJson(paging));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseUtil.internalError(e.getMessage());
+		}
 	}
 	
+	@SuppressWarnings("rawtypes")
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
 	@Path("/listbyusertype/{userType}")
 	public Response selectMenusByUsertype(@Context HttpServletRequest request,
 										  @PathParam("userType") String userType,
 										  @QueryParam("q") String authToken) {
-		return selectMenusByUsertype(request.getSession(), userType, authToken);
-	}
-	
-	@SuppressWarnings("rawtypes")
-	public Response selectMenusByUsertype(HttpSession session, String userType, String authToken) {
 		try {
 			if (AuthToken.isValidToken(authToken) == false) {
 				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
 			}
 			List<CM_Menu> list = new ArrayList<>();
-			List<CM_MenuAuth> menuAuthList = authDao.selectMenuAuthWithUserType(session, userType);
+			List<CM_MenuAuth> menuAuthList = authDao.selectMenuAuthWithUserType(request.getSession(), userType);
 			for (int ii = 0; ii < menuAuthList.size(); ii++) {
 				CM_MenuAuth menuAuth = menuAuthList.get(ii);
-				CM_Menu menu = dao.select(session, menuAuth.getMenuIdKey());
+				CM_Menu menu = dao.select(request.getSession(), menuAuth.getMenuIdKey());
 				list.add(menu);
 				if (userType == null) {
-					menu.setMenuAuths(authDao.selectMenuAuthWithMenu(session, menu));
+					menu.setMenuAuths(authDao.selectMenuAuthWithMenu(request.getSession(), menu));
 				}
 			}
 			CM_PagingList<CM_Menu> paging = new CM_PagingList<>();
@@ -152,7 +191,13 @@ public class MenuService {
 			}
 			int maxOrderSeq = dao.selectMaxOrderSeq(menu);
 			menu.setOrderSeq(maxOrderSeq + 1);
-			dao.insert(menu);
+			Entity newOne = dao.insert(menu);
+			if (menu.getMenuAuths() != null) {
+				for (int ii = 0; ii < menu.getMenuAuths().size(); ii++) {
+					menu.getMenuAuths().get(ii).setMenuIdKey(newOne.getKey().getId());
+				}
+				authDao.insert(menu.getMenuAuths());
+			}
 			return ResponseUtil.getResponse((new ModelHandler<CM_Menu>(CM_Menu.class)).convertToJson(menu));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -180,6 +225,13 @@ public class MenuService {
 			existOne.setMenuUrl(menu.getMenuUrl());
 			existOne.setStatus(menu.getStatus());
 			dao.update(existOne);
+			authDao.delete(authDao.selectMenuAuthWithMenu(null, menu));
+			if (menu.getMenuAuths() != null) {
+				for (int ii = 0; ii < menu.getMenuAuths().size(); ii++) {
+					menu.getMenuAuths().get(ii).setMenuIdKey(menu.getIdKey());
+				}
+				authDao.insert(menu.getMenuAuths());
+			}
 			return ResponseUtil.getResponse((new ModelHandler<CM_Menu>(CM_Menu.class)).convertToJson(existOne));
 		} catch (Exception e) {
 			e.printStackTrace();

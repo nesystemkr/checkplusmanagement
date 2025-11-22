@@ -69,7 +69,7 @@ function signup() {
 	}
 	
 	var user = {};
-	user.reqToken = "signupbyuser";
+	user.authToken = "signupbyuser";
 	user.idKey = $("#user_idKey").val().trim();
 	user.userId = $("#user_userId").val().trim();
 	user.password = $("#user_password").val().trim();
