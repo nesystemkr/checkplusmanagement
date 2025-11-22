@@ -26,7 +26,7 @@ public class LoginInfoImplement implements LoginInfoInterface {
 				if (o1.getParentIdKey() == 0 && o2.getParentIdKey() == 0) {
 					if (o1.getOrderSeq() < o2.getOrderSeq()) {
 						return -1;
-					} else if (o1.getOrderSeq() < o2.getOrderSeq()) {
+					} else if (o1.getOrderSeq() > o2.getOrderSeq()) {
 						return 1;
 					}
 					return 0;
@@ -37,7 +37,7 @@ public class LoginInfoImplement implements LoginInfoInterface {
 				} else {
 					if (o1.getOrderSeq() < o2.getOrderSeq()) {
 						return -1;
-					} else if (o1.getOrderSeq() < o2.getOrderSeq()) {
+					} else if (o1.getOrderSeq() > o2.getOrderSeq()) {
 						return 1;
 					}
 					return 0;
