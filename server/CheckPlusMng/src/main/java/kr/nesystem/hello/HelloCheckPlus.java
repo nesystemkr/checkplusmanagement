@@ -1,4 +1,4 @@
-package kr.nesystem.checkplusmng;
+package kr.nesystem.hello;
 
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;

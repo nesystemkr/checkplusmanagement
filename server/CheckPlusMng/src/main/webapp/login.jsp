@@ -113,7 +113,7 @@ function signup() {
 			</li>
 		</ul>
 		<div class="btn_box">
-			<a class="btn_type submit" href="javascript:openSignup()">${L10N.get("SIGNIN_SIGNUPBTN")}</a>&nbsp;
+			<!--a class="btn_type submit" href="javascript:openSignup()">${L10N.get("SIGNIN_SIGNUPBTN")}</a-->&nbsp;
 			<a class="btn_type submit" href="javascript:login()">${L10N.get("SIGNIN_LOGINBTN")}</a>
 		</div>
 	</div>

@@ -1,4 +1,4 @@
-package kr.nesystem.checkplusmng.service;
+package kr.nesystem.hello.service;
 
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
