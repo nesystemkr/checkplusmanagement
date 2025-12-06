@@ -14,40 +14,40 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
+import kr.co.checkplusmng.dao.ProjectDao;
+import kr.co.checkplusmng.model.MW_Project;
 import kr.nesystem.appengine.common.Constant;
 import kr.nesystem.appengine.common.model.CM_PagingList;
-import kr.co.checkplusmng.dao.CompanyDao;
-import kr.co.checkplusmng.model.MW_Company;
 import kr.nesystem.appengine.common.model.ModelHandler;
 import kr.nesystem.appengine.common.util.AuthToken;
 import kr.nesystem.appengine.common.util.ResponseUtil;
 
-@Path("/{version}/company")
-public class CompanyService {
-	CompanyDao dao = new CompanyDao();
+@Path("/{version}/project")
+public class ProjectService {
+	ProjectDao dao = new ProjectDao();
 	
 	// SignUp
 	@POST
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces({MediaType.APPLICATION_JSON})
-	public Response insert(MW_Company company) throws Exception {
+	public Response insert(MW_Project project) throws Exception {
 		try {
-			if (AuthToken.isValidToken(company.getAuthToken()) == false) {
+			if (AuthToken.isValidToken(project.getAuthToken()) == false) {
 				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
 			}
-			if (company.getCompanyId() == null || company.getCompanyId().length() == 0 ||
-				company.getName() == null || company.getName().length() == 0 ||
-				company.getAddress1() == null || company.getAddress1().length() == 0 ||
-				company.getTelephone1() == null || company.getTelephone1().length() == 0 ||
-				company.getMainOfficer() == null || company.getMainOfficer().length() == 0) {
+			if (project.getCompanyId() == null || project.getCompanyId().length() == 0 ||
+				project.getName() == null || project.getName().length() == 0 ||
+				project.getAddress1() == null || project.getAddress1().length() == 0 ||
+				project.getTelephone1() == null || project.getTelephone1().length() == 0 ||
+				project.getMainOfficer() == null || project.getMainOfficer().length() == 0) {
 				return ResponseUtil.getResponse(Status.BAD_REQUEST);
 			}
-			MW_Company existOne = dao.selectByCompanyId(null, company.getCompanyId());
+			MW_Project existOne = dao.selectByCompanyId(null, project.getCompanyId());
 			if (existOne != null) {
 				return ResponseUtil.getResponse(Status.CONFLICT);
 			}
-			dao.insert(company);
-			return ResponseUtil.getResponse((new ModelHandler<MW_Company>(MW_Company.class)).convertToJson(company));
+			dao.insert(project);
+			return ResponseUtil.getResponse((new ModelHandler<MW_Project>(MW_Project.class)).convertToJson(project));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseUtil.internalError(e.getMessage());
@@ -60,41 +60,41 @@ public class CompanyService {
 	@Produces({MediaType.APPLICATION_JSON})
 	@Path("/{idKey}")
 	public Response update(@PathParam("idKey") long idKey,
-						   MW_Company company) {
+						   MW_Project project) {
 		try {
-			if (AuthToken.isValidToken(company.getAuthToken()) == false) {
+			if (AuthToken.isValidToken(project.getAuthToken()) == false) {
 				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
 			}
-			if (idKey != company.getIdKey()) {
+			if (idKey != project.getIdKey()) {
 				return ResponseUtil.getResponse(Status.BAD_REQUEST);
 			}
-			if (company.getCompanyId() == null || company.getCompanyId().length() == 0 ||
-				company.getName() == null || company.getName().length() == 0 ||
-				company.getAddress1() == null || company.getAddress1().length() == 0 ||
-				company.getTelephone1() == null || company.getTelephone1().length() == 0 ||
-				company.getMainOfficer() == null || company.getMainOfficer().length() == 0) {
+			if (project.getCompanyId() == null || project.getCompanyId().length() == 0 ||
+				project.getName() == null || project.getName().length() == 0 ||
+				project.getAddress1() == null || project.getAddress1().length() == 0 ||
+				project.getTelephone1() == null || project.getTelephone1().length() == 0 ||
+				project.getMainOfficer() == null || project.getMainOfficer().length() == 0) {
 				return ResponseUtil.getResponse(Status.BAD_REQUEST);
 			}
-			MW_Company existOne = dao.select(null, idKey);
+			MW_Project existOne = dao.select(null, idKey);
 			if (existOne == null) {
 				return ResponseUtil.getResponse(Status.NOT_FOUND);
 			}
-			existOne.setAddress1(company.getAddress1());
-			existOne.setTelephone1(company.getTelephone1());
-			existOne.setAddress2(company.getAddress2());
-			existOne.setTelephone2(company.getTelephone2());
-			existOne.setMainOfficer(company.getMainOfficer());
-			existOne.setMainOfficerPosition(company.getMainOfficerPosition());
-			existOne.setMainOfficerTelephone(company.getMainOfficerTelephone());
-			existOne.setMainOfficerEmail(company.getMainOfficerEmail());
-			existOne.setSubOfficer(company.getSubOfficer());
-			existOne.setSubOfficerPosition(company.getSubOfficerPosition());
-			existOne.setSubOfficerTelephone(company.getSubOfficerTelephone());
-			existOne.setSubOfficerEmail(company.getSubOfficerEmail());
-			existOne.setMemo(company.getMemo());
-			existOne.setStatus(company.getStatus());
-			dao.update(existOne);
-			return ResponseUtil.getResponse((new ModelHandler<MW_Company>(MW_Company.class)).convertToJson(existOne));
+			existCompany.setAddress1(company.getAddress1());
+			existCompany.setTelephone1(company.getTelephone1());
+			existCompany.setAddress2(company.getAddress2());
+			existCompany.setTelephone2(company.getTelephone2());
+			existCompany.setMainOfficer(company.getMainOfficer());
+			existCompany.setMainOfficerPosition(company.getMainOfficerPosition());
+			existCompany.setMainOfficerTelephone(company.getMainOfficerTelephone());
+			existCompany.setMainOfficerEmail(company.getMainOfficerEmail());
+			existCompany.setSubOfficer(company.getSubOfficer());
+			existCompany.setSubOfficerPosition(company.getSubOfficerPosition());
+			existCompany.setSubOfficerTelephone(company.getSubOfficerTelephone());
+			existCompany.setSubOfficerEmail(company.getSubOfficerEmail());
+			existCompany.setMemo(company.getMemo());
+			existCompany.setStatus(company.getStatus());
+			dao.update(existCompany);
+			return ResponseUtil.getResponse((new ModelHandler<MW_Project>(MW_Project.class)).convertToJson(existOne));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseUtil.internalError(e.getMessage());
@@ -111,12 +111,12 @@ public class CompanyService {
 			if (AuthToken.isValidToken(authToken) == false) {
 				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
 			}
-			MW_Company existOne = dao.select(null, idKey);
+			MW_Project existOne = dao.select(null, idKey);
 			if (existOne == null) {
 				return ResponseUtil.getResponse(Status.NOT_FOUND);
 			}
 			dao.delete(existOne);
-			return ResponseUtil.getResponse((new ModelHandler<MW_Company>(MW_Company.class)).convertToJson(existOne));
+			return ResponseUtil.getResponse((new ModelHandler<MW_Project>(MW_Project.class)).convertToJson(existOne));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseUtil.internalError(e.getMessage());
@@ -135,7 +135,7 @@ public class CompanyService {
 				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
 			}
 			int offset = (page - 1) * Constant.DEFAULT_SIZE;
-			CM_PagingList<MW_Company> paging = dao.pagingList(request.getSession(), null, offset, Constant.DEFAULT_SIZE);
+			CM_PagingList<MW_Project> paging = dao.pagingList(request.getSession(), null, offset, Constant.DEFAULT_SIZE);
 			return ResponseUtil.getResponse((new ModelHandler<CM_PagingList>(CM_PagingList.class)).convertToJson(paging));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -154,11 +154,11 @@ public class CompanyService {
 			if (AuthToken.isValidToken(authToken) == false) {
 				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
 			}
-			MW_Company existOne = dao.select(request.getSession(), idKey);
+			MW_Project existOne = dao.select(request.getSession(), idKey);
 			if (existOne == null) {
 				return ResponseUtil.getResponse(Status.NOT_FOUND);
 			}
-			return ResponseUtil.getResponse((new ModelHandler<MW_Company>(MW_Company.class)).convertToJson(existOne));
+			return ResponseUtil.getResponse((new ModelHandler<MW_Project>(MW_Project.class)).convertToJson(existOne));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseUtil.internalError(e.getMessage());
