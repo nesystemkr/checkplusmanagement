@@ -21,6 +21,4 @@ public class CompanyDao extends BaseDao<MW_Company> {
 		}
 		return list.get(0);
 	}
-	
-
 }

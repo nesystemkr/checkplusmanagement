@@ -14,37 +14,36 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
-import kr.co.checkplusmng.dao.ProjectDao;
-import kr.co.checkplusmng.model.MW_Project;
+import kr.co.checkplusmng.dao.WifiDao;
+import kr.co.checkplusmng.model.MW_Wifi;
 import kr.nesystem.appengine.common.Constant;
 import kr.nesystem.appengine.common.model.CM_PagingList;
 import kr.nesystem.appengine.common.model.ModelHandler;
 import kr.nesystem.appengine.common.util.AuthToken;
 import kr.nesystem.appengine.common.util.ResponseUtil;
 
-@Path("/{version}/project")
-public class ProjectService {
-	ProjectDao dao = new ProjectDao();
+@Path("/{version}/wifi")
+public class WifiService {
+	WifiDao dao = new WifiDao();
 	
 	// SignUp
 	@POST
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces({MediaType.APPLICATION_JSON})
-	public Response insert(MW_Project project) throws Exception {
+	public Response insert(MW_Wifi wifi) throws Exception {
 		try {
-			if (AuthToken.isValidToken(project.getAuthToken()) == false) {
+			if (AuthToken.isValidToken(wifi.getAuthToken()) == false) {
 				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
 			}
-			if (project.getProjectId() == null || project.getProjectId().length() == 0 ||
-				project.getProjectName() == null || project.getProjectName().length() == 0) {
+			if (wifi.getWifiId() == null || wifi.getWifiId().length() == 0) {
 				return ResponseUtil.getResponse(Status.BAD_REQUEST);
 			}
-			MW_Project existOne = dao.selectByProjectId(null, project.getProjectId());
+			MW_Wifi existOne = dao.selectByWifiId(null, wifi.getWifiId());
 			if (existOne != null) {
 				return ResponseUtil.getResponse(Status.CONFLICT);
 			}
-			dao.insert(project);
-			return ResponseUtil.getResponse((new ModelHandler<MW_Project>(MW_Project.class)).convertToJson(project));
+			dao.insert(wifi);
+			return ResponseUtil.getResponse((new ModelHandler<MW_Wifi>(MW_Wifi.class)).convertToJson(wifi));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseUtil.internalError(e.getMessage());
@@ -57,29 +56,31 @@ public class ProjectService {
 	@Produces({MediaType.APPLICATION_JSON})
 	@Path("/{idKey}")
 	public Response update(@PathParam("idKey") long idKey,
-						   MW_Project project) {
+						   MW_Wifi wifi) {
 		try {
-			if (AuthToken.isValidToken(project.getAuthToken()) == false) {
+			if (AuthToken.isValidToken(wifi.getAuthToken()) == false) {
 				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
 			}
-			if (idKey != project.getIdKey()) {
+			if (idKey != wifi.getIdKey()) {
 				return ResponseUtil.getResponse(Status.BAD_REQUEST);
 			}
-			if (project.getProjectId() == null || project.getProjectId().length() == 0 ||
-				project.getProjectName() == null || project.getProjectName().length() == 0) {
+			if (wifi.getWifiId() == null || wifi.getWifiId().length() == 0) {
 				return ResponseUtil.getResponse(Status.BAD_REQUEST);
 			}
-			MW_Project existOne = dao.select(null, idKey);
+			MW_Wifi existOne = dao.select(null, idKey);
 			if (existOne == null) {
 				return ResponseUtil.getResponse(Status.NOT_FOUND);
 			}
-			existOne.setProjectName(project.getProjectName());
-			existOne.setSaleCompanyIdKey(project.getSaleCompanyIdKey());
-			existOne.setInstallCompanyIdKey(project.getInstallCompanyIdKey());
-			existOne.setContractDate(project.getContractDate());
-			existOne.setMemo(project.getMemo());
+			existOne.setProjectIdKey(wifi.getProjectIdKey());
+			existOne.setModelName(wifi.getModelName());
+			existOne.setSerialNo(wifi.getSerialNo());
+			existOne.setMacAddress(wifi.getMacAddress());
+			existOne.setApGateId(wifi.getApGateId());
+			existOne.setApGatePw(wifi.getApGatePw());
+			existOne.setApWifiId(wifi.getApWifiPw());
+			existOne.setMemo(wifi.getMemo());
 			dao.update(existOne);
-			return ResponseUtil.getResponse((new ModelHandler<MW_Project>(MW_Project.class)).convertToJson(existOne));
+			return ResponseUtil.getResponse((new ModelHandler<MW_Wifi>(MW_Wifi.class)).convertToJson(existOne));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseUtil.internalError(e.getMessage());
@@ -96,12 +97,12 @@ public class ProjectService {
 			if (AuthToken.isValidToken(authToken) == false) {
 				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
 			}
-			MW_Project existOne = dao.select(null, idKey);
+			MW_Wifi existOne = dao.select(null, idKey);
 			if (existOne == null) {
 				return ResponseUtil.getResponse(Status.NOT_FOUND);
 			}
 			dao.delete(existOne);
-			return ResponseUtil.getResponse((new ModelHandler<MW_Project>(MW_Project.class)).convertToJson(existOne));
+			return ResponseUtil.getResponse((new ModelHandler<MW_Wifi>(MW_Wifi.class)).convertToJson(existOne));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseUtil.internalError(e.getMessage());
@@ -120,7 +121,7 @@ public class ProjectService {
 				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
 			}
 			int offset = (page - 1) * Constant.DEFAULT_SIZE;
-			CM_PagingList<MW_Project> paging = dao.pagingList(request.getSession(), null, offset, Constant.DEFAULT_SIZE);
+			CM_PagingList<MW_Wifi> paging = dao.pagingList(request.getSession(), null, offset, Constant.DEFAULT_SIZE);
 			return ResponseUtil.getResponse((new ModelHandler<CM_PagingList>(CM_PagingList.class)).convertToJson(paging));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -139,11 +140,11 @@ public class ProjectService {
 			if (AuthToken.isValidToken(authToken) == false) {
 				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
 			}
-			MW_Project existOne = dao.select(request.getSession(), idKey);
+			MW_Wifi existOne = dao.select(request.getSession(), idKey);
 			if (existOne == null) {
 				return ResponseUtil.getResponse(Status.NOT_FOUND);
 			}
-			return ResponseUtil.getResponse((new ModelHandler<MW_Project>(MW_Project.class)).convertToJson(existOne));
+			return ResponseUtil.getResponse((new ModelHandler<MW_Wifi>(MW_Wifi.class)).convertToJson(existOne));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseUtil.internalError(e.getMessage());
