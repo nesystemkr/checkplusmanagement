@@ -15,7 +15,10 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 import kr.co.checkplusmng.dao.WelderDao;
+import kr.co.checkplusmng.model.MW_Project;
 import kr.co.checkplusmng.model.MW_Welder;
+import kr.co.checkplusmng.util.CompanyStore;
+import kr.co.checkplusmng.util.ProjectStore;
 import kr.nesystem.appengine.common.Constant;
 import kr.nesystem.appengine.common.model.CM_PagingList;
 import kr.nesystem.appengine.common.model.ModelHandler;
@@ -79,6 +82,7 @@ public class WelderService {
 			existOne.setInstallDate(welder.getInstallDate());
 			existOne.setInstallLocation(welder.getInstallLocation());
 			existOne.setMemo(welder.getMemo());
+			existOne.setOrderSeq(welder.getOrderSeq());
 			dao.update(existOne);
 			return ResponseUtil.getResponse((new ModelHandler<MW_Welder>(MW_Welder.class)).convertToJson(existOne));
 		} catch (Exception e) {
@@ -121,7 +125,13 @@ public class WelderService {
 				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
 			}
 			int offset = (page - 1) * Constant.DEFAULT_SIZE;
-			CM_PagingList<MW_Welder> paging = dao.pagingList(request.getSession(), null, offset, Constant.DEFAULT_SIZE);
+			CM_PagingList<MW_Welder> paging = dao.pagingList(request.getSession(), null, offset, Constant.DEFAULT_SIZE, "orderSeq");
+			if (paging != null && paging.getList() != null) {
+				for (int ii = 0; ii < paging.getList().size(); ii++) {
+					MW_Welder item = paging.getList().get(ii);
+					fillupSubData(item);
+				}
+			}
 			return ResponseUtil.getResponse((new ModelHandler<CM_PagingList>(CM_PagingList.class)).convertToJson(paging));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -144,10 +154,19 @@ public class WelderService {
 			if (existOne == null) {
 				return ResponseUtil.getResponse(Status.NOT_FOUND);
 			}
+			fillupSubData(existOne);
 			return ResponseUtil.getResponse((new ModelHandler<MW_Welder>(MW_Welder.class)).convertToJson(existOne));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseUtil.internalError(e.getMessage());
+		}
+	}
+	
+	private void fillupSubData(MW_Welder item) {
+		MW_Project project = ProjectStore.get(item.getProjectIdKey());
+		if (project != null) {
+			item.setProjectName(project.getProjectName());
+			item.setContractCompanyName(CompanyStore.getName(project.getContractCompanyIdKey()));
 		}
 	}
 }

@@ -9,6 +9,8 @@ import kr.nesystem.appengine.common.model.GAEAutoIncModel;
 public class MW_Wifi extends GAEAutoIncModel {
 	private String wifiId;
 	private long projectIdKey;
+	private String projectName;
+	private String contractCompanyName;
 	private String modelName;
 	private String serialNo;
 	private String macAddress;
@@ -17,6 +19,7 @@ public class MW_Wifi extends GAEAutoIncModel {
 	private String apWifiId;
 	private String apWifiPw;
 	private String memo;
+	private int orderSeq;
 	public String getWifiId() {
 		return wifiId;
 	}
@@ -28,6 +31,18 @@ public class MW_Wifi extends GAEAutoIncModel {
 	}
 	public void setProjectIdKey(long projectIdKey) {
 		this.projectIdKey = projectIdKey;
+	}
+	public String getProjectName() {
+		return projectName;
+	}
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
+	}
+	public String getContractCompanyName() {
+		return contractCompanyName;
+	}
+	public void setContractCompanyName(String contractCompanyName) {
+		this.contractCompanyName = contractCompanyName;
 	}
 	public String getModelName() {
 		return modelName;
@@ -77,6 +92,12 @@ public class MW_Wifi extends GAEAutoIncModel {
 	public void setMemo(String memo) {
 		this.memo = memo;
 	}
+	public int getOrderSeq() {
+		return orderSeq;
+	}
+	public void setOrderSeq(int orderSeq) {
+		this.orderSeq = orderSeq;
+	}
 	@Override
 	public FullEntity<?> toEntity(KeyFactory keyFactory) {
 		return Entity.newBuilder(keyFactory.newKey())
@@ -90,6 +111,7 @@ public class MW_Wifi extends GAEAutoIncModel {
 				.set("apWifiId", N2Z(apWifiId))
 				.set("apWifiPw", N2Z(apWifiPw))
 				.set("memo", N2Z(memo))
+				.set("orderSeq", orderSeq)
 				.build();
 	}
 	@Override
@@ -105,6 +127,7 @@ public class MW_Wifi extends GAEAutoIncModel {
 				.set("apWifiId", N2Z(apWifiId))
 				.set("apWifiPw", N2Z(apWifiPw))
 				.set("memo", N2Z(memo))
+				.set("orderSeq", orderSeq)
 				.build();
 	}
 	@Override
@@ -120,6 +143,7 @@ public class MW_Wifi extends GAEAutoIncModel {
 		setApWifiId(entity.getString("apWifiId"));
 		setApWifiPw(entity.getString("apWifiPw"));
 		setMemo(entity.getString("memo"));
+		setOrderSeq((int)entity.getLong("orderSeq"));
 		return this;
 	}
 }

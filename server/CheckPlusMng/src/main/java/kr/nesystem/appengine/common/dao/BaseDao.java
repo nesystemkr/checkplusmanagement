@@ -14,6 +14,7 @@ import com.google.cloud.datastore.KeyFactory;
 import com.google.cloud.datastore.Query;
 import com.google.cloud.datastore.QueryResults;
 import com.google.cloud.datastore.StructuredQuery.Filter;
+import com.google.cloud.datastore.StructuredQuery.OrderBy;
 import com.google.cloud.datastore.Transaction;
 
 import jakarta.servlet.http.HttpSession;
@@ -46,7 +47,10 @@ public class BaseDao<T extends GAEModel> {
 	}
 	
 	public CM_PagingList<T> pagingList(HttpSession session, Filter filter, int offset, int size) throws Exception {
-		List<T> list = list(session, filter, offset, size);
+		return pagingList(session, filter, offset, size, null);
+	}
+	public CM_PagingList<T> pagingList(HttpSession session, Filter filter, int offset, int size, String sortField) throws Exception {
+		List<T> list = list(session, filter, offset, size, sortField);
 		CM_PagingList<T> ret = new CM_PagingList<>();
 		ret.setList(list);
 		ret.getPaging().setTotalCount(totalCount(filter));
@@ -55,6 +59,10 @@ public class BaseDao<T extends GAEModel> {
 	}
 	
 	public List<T> list(HttpSession session, Filter filter, int offset, int size) throws Exception {
+		return list(session, filter, offset, size, null);
+	}
+	
+	public List<T> list(HttpSession session, Filter filter, int offset, int size, String sortField) throws Exception {
 		List<T> ret = new ArrayList<>();
 		Builder builder = Query.newEntityQueryBuilder().setKind(tableName);
 		if (filter != null) {
@@ -62,6 +70,9 @@ public class BaseDao<T extends GAEModel> {
 		}
 		if (size != 0 && offset >= 0) {
 			builder.setLimit(size).setOffset(offset);
+		}
+		if (sortField != null) {
+			builder.addOrderBy(OrderBy.asc(sortField));
 		}
 		Query<Entity> query = builder.build();
 		QueryResults<Entity> results = datastore.run(query);

@@ -12,9 +12,9 @@ import kr.nesystem.appengine.common.model.CM_CodeType;
 public class CodeStore {
 	static Map<String, Map<String, CM_Code>> _stores = null;
 	static {
-		reload();
+		load();
 	}
-	static public void reload() {
+	static public void load() {
 		try {
 			if (_stores != null) {
 				return;
@@ -37,8 +37,9 @@ public class CodeStore {
 			e.printStackTrace();
 		}
 	}
-	static public void clear() {
+	static public void reload() {
 		_stores = null;
+		load();
 	}
 	static public String get(String type, String code) {
 		Map<String, CM_Code> mapCode = _stores.get(type);

@@ -74,7 +74,7 @@ function deleteOne(rowId, rowData) {
 				refreshList()
 			},
 			function(data) {
-				alert("사용자 삭제에 실패했습니다.")
+				alert("업체 삭제에 실패했습니다.")
 			},
 			"DELETE")
 }
@@ -108,6 +108,7 @@ function openPopupForUpdate(idKey) {
 				$("#company_subOfficerEmail").val(data.subOfficerEmail)
 				$("#company_memo").val(data.memo)
 				$("#company_status").val(data.status)
+				$("#company_orderSeq").val(data.orderSeq)
 			},
 			function(data) {
 				alert("조회에 실패했습니다.")
@@ -140,6 +141,7 @@ function resetEdit() {
 	$("#company_subOfficerEmail").val('')
 	$("#company_memo").val('')
 	$("#company_status").val('1')
+	$("#company_orderSeq").val('')
 }
 
 function cancelEdit() {
@@ -193,6 +195,7 @@ function saveEdit() {
 	company.subOfficerEmail      = $("#company_subOfficerEmail").val().trim()
 	company.memo   = $("#company_memo").val().trim()
 	company.status = $("#company_status").val().trim()
+	company.orderSeq = $("#company_orderSeq").val().trim()
 	
 	var url = ""
 	var method = ""
@@ -229,7 +232,7 @@ function saveEdit() {
 			<input type="hidden" name="company_idKey" id="company_idKey">
 			<table class="tbsty">
 				<tr>
-					<th>사용자ID</th>
+					<th>업체ID</th>
 					<td><input type="text" name="company_companyId" id="company_companyId" style="width:90%"></td>
 				</tr>
 				<tr>
@@ -289,8 +292,12 @@ function saveEdit() {
 					<td><textarea name="company_memo" id="company_memo" style="width:90%" rows="4"></textarea>
 				</tr>
 				<tr>
-					<th>사용자상태</th>
+					<th>상태</th>
 					<td><select name="company_status" id="company_status" style="width:90%"></select></td>
+				</tr>
+				<tr>
+					<th>순서</th>
+					<td><input name="company_orderSeq" id="company_orderSeq" style="width:90%"></td>
 				</tr>
 			</table>
 		</div>

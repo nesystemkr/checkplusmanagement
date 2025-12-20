@@ -27,7 +27,7 @@ if (session.getAttribute("L10N") == null ||
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>PeelknightServerBase</title>
+<title>체크플러스 관리</title>
 <%@ include file="/common/include/meta.jsp" %>
 <%@ include file="/common/include/cssjs.jsp" %>
 <%@ include file="/common/include/exemptionlist.jsp" %>

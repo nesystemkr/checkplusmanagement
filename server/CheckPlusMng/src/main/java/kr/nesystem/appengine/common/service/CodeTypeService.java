@@ -20,6 +20,7 @@ import kr.nesystem.appengine.common.model.CM_CodeType;
 import kr.nesystem.appengine.common.model.CM_PagingList;
 import kr.nesystem.appengine.common.model.ModelHandler;
 import kr.nesystem.appengine.common.util.AuthToken;
+import kr.nesystem.appengine.common.util.CodeStore;
 import kr.nesystem.appengine.common.util.ResponseUtil;
 
 @Path("/{version}/codetype")
@@ -84,6 +85,7 @@ public class CodeTypeService {
 				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
 			}
 			dao.insert(codeType);
+			CodeStore.reload();
 			return ResponseUtil.getResponse((new ModelHandler<CM_CodeType>(CM_CodeType.class)).convertToJson(codeType));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -107,6 +109,7 @@ public class CodeTypeService {
 			}
 			existOne.setTypeName(codeType.getTypeName());
 			dao.update(existOne);
+			CodeStore.reload();
 			return ResponseUtil.getResponse((new ModelHandler<CM_CodeType>(CM_CodeType.class)).convertToJson(existOne));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -128,6 +131,7 @@ public class CodeTypeService {
 				return ResponseUtil.getResponse(Status.NOT_FOUND);
 			}
 			dao.delete(existOne);
+			CodeStore.reload();
 			return ResponseUtil.getResponse((new ModelHandler<CM_CodeType>(CM_CodeType.class)).convertToJson(existOne));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -149,6 +153,7 @@ public class CodeTypeService {
 				return ResponseUtil.getResponse(Status.BAD_REQUEST);
 			}
 			dao.insertOrUpdate(paging.getList());
+			CodeStore.reload();
 			return ResponseUtil.getResponse((new ModelHandler<CM_PagingList>(CM_PagingList.class)).convertToJson(paging));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -169,6 +174,7 @@ public class CodeTypeService {
 				return ResponseUtil.getResponse(Status.BAD_REQUEST);
 			}
 			dao.delete(paging.getList());
+			CodeStore.reload();
 			return ResponseUtil.getResponse((new ModelHandler<CM_PagingList>(CM_PagingList.class)).convertToJson(paging));
 		} catch (Exception e) {
 			e.printStackTrace();

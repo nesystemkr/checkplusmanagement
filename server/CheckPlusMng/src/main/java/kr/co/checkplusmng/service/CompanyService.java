@@ -93,6 +93,7 @@ public class CompanyService {
 			existOne.setSubOfficerEmail(company.getSubOfficerEmail());
 			existOne.setMemo(company.getMemo());
 			existOne.setStatus(company.getStatus());
+			existOne.setOrderSeq(company.getOrderSeq());
 			dao.update(existOne);
 			return ResponseUtil.getResponse((new ModelHandler<MW_Company>(MW_Company.class)).convertToJson(existOne));
 		} catch (Exception e) {
@@ -135,7 +136,7 @@ public class CompanyService {
 				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
 			}
 			int offset = (page - 1) * Constant.DEFAULT_SIZE;
-			CM_PagingList<MW_Company> paging = dao.pagingList(request.getSession(), null, offset, Constant.DEFAULT_SIZE);
+			CM_PagingList<MW_Company> paging = dao.pagingList(request.getSession(), null, offset, Constant.DEFAULT_SIZE, "orderSeq");
 			return ResponseUtil.getResponse((new ModelHandler<CM_PagingList>(CM_PagingList.class)).convertToJson(paging));
 		} catch (Exception e) {
 			e.printStackTrace();

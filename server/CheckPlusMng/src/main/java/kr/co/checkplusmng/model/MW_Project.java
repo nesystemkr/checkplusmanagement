@@ -12,9 +12,12 @@ public class MW_Project extends GAEAutoIncModel {
 	private String projectId;
 	private String projectName;
 	private long saleCompanyIdKey;
-	private long installCompanyIdKey;
+	private String saleCompanyName;
+	private long contractCompanyIdKey;
+	private String contractCompanyName;
 	private Date contractDate;
 	private String memo;
+	private int orderSeq;
 	public String getProjectId() {
 		return projectId;
 	}
@@ -33,11 +36,23 @@ public class MW_Project extends GAEAutoIncModel {
 	public void setSaleCompanyIdKey(long saleCompanyIdKey) {
 		this.saleCompanyIdKey = saleCompanyIdKey;
 	}
-	public long getInstallCompanyIdKey() {
-		return installCompanyIdKey;
+	public String getSaleCompanyName() {
+		return saleCompanyName;
 	}
-	public void setInstallCompanyIdKey(long installCompanyIdKey) {
-		this.installCompanyIdKey = installCompanyIdKey;
+	public void setSaleCompanyName(String saleCompanyName) {
+		this.saleCompanyName = saleCompanyName;
+	}
+	public long getContractCompanyIdKey() {
+		return contractCompanyIdKey;
+	}
+	public void setContractCompanyIdKey(long contractCompanyIdKey) {
+		this.contractCompanyIdKey = contractCompanyIdKey;
+	}
+	public String getContractCompanyName() {
+		return contractCompanyName;
+	}
+	public void setContractCompanyName(String contractCompanyName) {
+		this.contractCompanyName = contractCompanyName;
 	}
 	public Date getContractDate() {
 		return contractDate;
@@ -51,15 +66,22 @@ public class MW_Project extends GAEAutoIncModel {
 	public void setMemo(String memo) {
 		this.memo = memo;
 	}
+	public int getOrderSeq() {
+		return orderSeq;
+	}
+	public void setOrderSeq(int orderSeq) {
+		this.orderSeq = orderSeq;
+	}
 	@Override
 	public FullEntity<?> toEntity(KeyFactory keyFactory) {
 		return Entity.newBuilder(keyFactory.newKey())
 				.set("projectId", N2Z(projectId))
 				.set("projectName", N2Z(projectName))
 				.set("saleCompanyIdKey", saleCompanyIdKey)
-				.set("installCompanyIdKey", installCompanyIdKey)
+				.set("contractCompanyIdKey", contractCompanyIdKey)
 				.set("contractDate", D2Z(contractDate))
 				.set("memo", N2Z(memo))
+				.set("orderSeq", orderSeq)
 				.build();
 	}
 	@Override
@@ -68,9 +90,10 @@ public class MW_Project extends GAEAutoIncModel {
 				.set("projectId", N2Z(projectId))
 				.set("projectName", N2Z(projectName))
 				.set("saleCompanyIdKey", saleCompanyIdKey)
-				.set("installCompanyIdKey", installCompanyIdKey)
+				.set("contractCompanyIdKey", contractCompanyIdKey)
 				.set("contractDate", D2Z(contractDate))
 				.set("memo", N2Z(memo))
+				.set("orderSeq", orderSeq)
 				.build();
 	}
 	@Override
@@ -79,9 +102,10 @@ public class MW_Project extends GAEAutoIncModel {
 		setProjectId(entity.getString("projectId"));
 		setProjectName(entity.getString("projectName"));
 		setSaleCompanyIdKey(entity.getLong("saleCompanyIdKey"));
-		setInstallCompanyIdKey(entity.getLong("installCompanyIdKey"));
+		setContractCompanyIdKey(entity.getLong("contractCompanyIdKey"));
 		setContractDate(L2D(entity.getLong("contractDate")));
 		setMemo(entity.getString("memo"));
+		setOrderSeq((int)entity.getLong("orderSeq"));
 		return this;
 	}
 }

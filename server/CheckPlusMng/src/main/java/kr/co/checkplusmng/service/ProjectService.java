@@ -16,6 +16,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 import kr.co.checkplusmng.dao.ProjectDao;
 import kr.co.checkplusmng.model.MW_Project;
+import kr.co.checkplusmng.util.CompanyStore;
 import kr.nesystem.appengine.common.Constant;
 import kr.nesystem.appengine.common.model.CM_PagingList;
 import kr.nesystem.appengine.common.model.ModelHandler;
@@ -44,6 +45,7 @@ public class ProjectService {
 				return ResponseUtil.getResponse(Status.CONFLICT);
 			}
 			dao.insert(project);
+			CompanyStore.reload();
 			return ResponseUtil.getResponse((new ModelHandler<MW_Project>(MW_Project.class)).convertToJson(project));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -75,10 +77,12 @@ public class ProjectService {
 			}
 			existOne.setProjectName(project.getProjectName());
 			existOne.setSaleCompanyIdKey(project.getSaleCompanyIdKey());
-			existOne.setInstallCompanyIdKey(project.getInstallCompanyIdKey());
+			existOne.setContractCompanyIdKey(project.getContractCompanyIdKey());
 			existOne.setContractDate(project.getContractDate());
 			existOne.setMemo(project.getMemo());
+			existOne.setOrderSeq(project.getOrderSeq());
 			dao.update(existOne);
+			CompanyStore.reload();
 			return ResponseUtil.getResponse((new ModelHandler<MW_Project>(MW_Project.class)).convertToJson(existOne));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -101,6 +105,7 @@ public class ProjectService {
 				return ResponseUtil.getResponse(Status.NOT_FOUND);
 			}
 			dao.delete(existOne);
+			CompanyStore.reload();
 			return ResponseUtil.getResponse((new ModelHandler<MW_Project>(MW_Project.class)).convertToJson(existOne));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -120,7 +125,13 @@ public class ProjectService {
 				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
 			}
 			int offset = (page - 1) * Constant.DEFAULT_SIZE;
-			CM_PagingList<MW_Project> paging = dao.pagingList(request.getSession(), null, offset, Constant.DEFAULT_SIZE);
+			CM_PagingList<MW_Project> paging = dao.pagingList(request.getSession(), null, offset, Constant.DEFAULT_SIZE, "orderSeq");
+			if (paging != null && paging.getList() != null) {
+				for (int ii = 0; ii < paging.getList().size(); ii++) {
+					MW_Project item = paging.getList().get(ii);
+					fillupSubData(item);
+				}
+			}
 			return ResponseUtil.getResponse((new ModelHandler<CM_PagingList>(CM_PagingList.class)).convertToJson(paging));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -143,10 +154,16 @@ public class ProjectService {
 			if (existOne == null) {
 				return ResponseUtil.getResponse(Status.NOT_FOUND);
 			}
+			fillupSubData(existOne);
 			return ResponseUtil.getResponse((new ModelHandler<MW_Project>(MW_Project.class)).convertToJson(existOne));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseUtil.internalError(e.getMessage());
 		}
+	}
+	
+	private void fillupSubData(MW_Project item) {
+		item.setSaleCompanyName(CompanyStore.getName(item.getSaleCompanyIdKey()));
+		item.setContractCompanyName(CompanyStore.getName(item.getContractCompanyIdKey()));
 	}
 }

@@ -4,8 +4,10 @@
 <script>
 var $gridLayout
 startFuncs[startFuncs.length] = function() {
-	fillUpSelect('${contextPath}', 'company_status', 'COMPANYSTATUS')
-	
+	fillUpSelectByUrl("${contextPath}/svc/v1/project/list/0?q=" + getAuthToken(), "lte_projectIdKey", "idKey", "projectName")
+	createDatePicker('lte_registDate')
+	createDatePicker('lte_startDate')
+	createDatePicker('lte_endDate')
 	var buttons = [
 			{type:'search', callback: 'detailOne'},
 			{type:'del'   , callback: 'deleteOne'},
@@ -15,17 +17,26 @@ startFuncs[startFuncs.length] = function() {
 			container:"listLayout",
 			showCheckBox: false,
 			colModel: [
-					{ name: 'idKey'               , hidden: true, },
-					{ name: 'no'                  , label: 'NO'      , width: 50 , align: 'center',},
-					{ name: 'companyId'           , label: '아이디'  , width: 100, align: 'center',},
-					{ name: 'name'                , label: '이름'    , width: 100, align: 'center',},
-					{ name: 'telephone1'          , label: '전화번호', width: 120, align: 'center',},
-					{ name: 'mainOfficer'         , label: '주담당자', width: 100, align: 'center',},
-					{ name: 'mainOfficerPosition' , label: '직책'    , width: 80 , align: 'center',},
-					{ name: 'mainOfficerTelephone', label: '전화번호', width: 120, align: 'center',},
-					{ name: 'mainOfficerEmail'    , label: '이메일'  , width: 140, align: 'center',},
-					{ name: 'memo'                , label: '메모'    , width: 280, align: 'center',},
-					{ name: 'action'              , label: 'ACTION'  ,             align: 'center', formatter: getGridButtonClosure(buttons)},
+					{ name: 'idKey'              , hidden: true, },
+					{ name: 'projectIdKey'       , hidden: true, },
+					{ name: 'no'                 , label: 'NO'          , width: 50 , align: 'center',},
+					{ name: 'lteId'              , label: '아이디'      , width: 100, align: 'center',},
+					{ name: 'projectName'        , label: '프로젝트'    , width: 100, align: 'center',},
+					{ name: 'contractCompanyName', label: '설치업체'    , width: 100, align: 'center',},
+					{ name: 'modelName'          , label: '모델명'      , width: 100, align: 'center',},
+					{ name: 'deviceSerialNo'     , label: '일련번호'    , width: 100, align: 'center',},
+					{ name: 'usimSerialNo'       , label: '유심일련번호', width: 120, align: 'center',},
+					{ name: 'telephoneNo'        , label: '전화번호'    , width: 120, align: 'center',},
+					{ name: 'lteGateId'          , label: 'LTE_GATE_ID' , width: 100, align: 'center',},
+					{ name: 'lteGatePw'          , label: 'LTE_GATE_PW' , width: 100, align: 'center',},
+					{ name: 'lteWifiId'          , label: 'LTE_WIFI_ID' , width: 100, align: 'center',},
+					{ name: 'lteWifiPw'          , label: 'LTE_WIFI_PW' , width: 100, align: 'center',},
+					{ name: 'registDate'         , label: '가입일'      , width: 100, align: 'center', formatter: getGridDateFormatClosure()},
+					{ name: 'startDate'          , label: '시작일'      , width: 100, align: 'center', formatter: getGridDateFormatClosure()},
+					{ name: 'endDate'            , label: '만기일'      , width: 100, align: 'center', formatter: getGridDateFormatClosure()},
+					{ name: 'contract'           , label: '약정'        , width: 100, align: 'center',},
+					{ name: 'memo'               , label: '메모'        , width: 280, align: 'center',},
+					{ name: 'action'             , label: 'ACTION'      ,             align: 'center', formatter: getGridButtonClosure(buttons)},
 			],
 			stretchColumn:"action",
 	})
@@ -50,12 +61,12 @@ function getDefaultList(page) {
 			"GET")
 }
 </script>
-<h1>업체관리</h1>
+<h1>LTE기기관리</h1>
 <div id="listLayout">
 	<table id="gridLayout" style="width:100%;"></table>
 </div>
 <div class="btn_box">
-	<button class="btn_type normal" onclick="openPopupForRegist()">업체추가</button><br>
+	<button class="btn_type normal" onclick="openPopupForRegist()">LTE기기추가</button><br>
 </div>
 
 <jsp:include page="/common/paging.jsp"/>
@@ -64,7 +75,7 @@ function getDefaultList(page) {
 
 <script>
 function deleteOne(rowId, rowData) {
-	if (false == confirm("업체를 삭제 처리하시겠습니까? - 삭제처리를 추후 복구가 불가능합니다. 임시처리는 사용중지를 해주세요.")) {
+	if (false == confirm("LTE기기를 삭제 처리하시겠습니까? - 삭제처리를 추후 복구가 불가능합니다.")) {
 		return;
 	}
 	var url = "${contextPath}/svc/v1/lte/" + rowData.idKey + "?q=" + getAuthToken()
@@ -74,7 +85,7 @@ function deleteOne(rowId, rowData) {
 				refreshList()
 			},
 			function(data) {
-				alert("사용자 삭제에 실패했습니다.")
+				alert("LTE기기 삭제에 실패했습니다.")
 			},
 			"DELETE")
 }
@@ -88,26 +99,26 @@ function openPopupForUpdate(idKey) {
 	nesAjax(url,
 			null,
 			function(data) {
-				$("#layertitle").html("업체정보수정")
+				$("#layertitle").html("LTE기기정보수정")
 				openPopup('defaultPopupLayout', 600, 600)
-				$("#company_idKey").val(data.idKey)
-				$("#company_companyId").val(data.companyId)
-				$("#company_companyId").prop('readonly', true)
-				$("#company_name").val(data.name)
-				$("#company_address1").val(data.address1)
-				$("#company_telephone1").val(data.telephone1)
-				$("#company_address2").val(data.address2)
-				$("#company_telephone2").val(data.telephone2)
-				$("#company_mainOfficer").val(data.mainOfficer)
-				$("#company_mainOfficerPosition").val(data.mainOfficerPosition)
-				$("#company_mainOfficerTelephone").val(data.mainOfficerTelephone)
-				$("#company_mainOfficerEmail").val(data.mainOfficerEmail)
-				$("#company_subOfficer").val(data.subOfficer)
-				$("#company_subOfficerPosition").val(data.subOfficerPosition)
-				$("#company_subOfficerTelephone").val(data.subOfficerTelephone)
-				$("#company_subOfficerEmail").val(data.subOfficerEmail)
-				$("#company_memo").val(data.memo)
-				$("#company_status").val(data.status)
+				$("#lte_idKey").val(data.idKey)
+				$("#lte_lteId").val(data.lteId)
+				$("#lte_lteId").prop('readonly', true)
+				$("#lte_projectIdKey").val(data.projectIdKey)
+				$("#lte_modelName").val(data.modelName)
+				$("#lte_deviceSerialNo").val(data.deviceSerialNo)
+				$("#lte_usimSerialNo").val(data.usimSerialNo)
+				$("#lte_telephoneNo").val(data.telephoneNo)
+				$("#lte_lteGateId").val(data.lteGateId)
+				$("#lte_lteGatePw").val(data.lteGatePw)
+				$("#lte_lteWifiId").val(data.lteWifiId)
+				$("#lte_lteWifiPw").val(data.lteWifiPw)
+				$("#lte_registDate").datepicker('setDate', data.registDate)
+				$("#lte_startDate").datepicker('setDate', data.startDate)
+				$("#lte_endDate").datepicker('setDate', data.endDate)
+				$("#lte_contract").val(data.contract)
+				$("#lte_memo").val(data.memo)
+				$("#lte_orderSeq").val(data.orderSeq)
 			},
 			function(data) {
 				alert("조회에 실패했습니다.")
@@ -116,30 +127,30 @@ function openPopupForUpdate(idKey) {
 }
 
 function openPopupForRegist() {
-	$("#layertitle").html("업체추가");
+	$("#layertitle").html("LTE기기추가");
 	resetEdit()
 	openPopup('defaultPopupLayout', 600, 600);
 }
 
 function resetEdit() {
-	$("#company_idKey").val('')
-	$("#company_companyId").val('')
-	$("#company_companyId").prop('readonly', false)
-	$("#company_name").val('')
-	$("#company_address1").val('')
-	$("#company_telephone1").val('')
-	$("#company_address2").val('')
-	$("#company_telephone2").val('')
-	$("#company_mainOfficer").val('')
-	$("#company_mainOfficerPosition").val('')
-	$("#company_mainOfficerTelephone").val('')
-	$("#company_mainOfficerEmail").val('')
-	$("#company_subOfficer").val('')
-	$("#company_subOfficerPosition").val('')
-	$("#company_subOfficerTelephone").val('')
-	$("#company_subOfficerEmail").val('')
-	$("#company_memo").val('')
-	$("#company_status").val('1')
+	$("#lte_idKey").val('')
+	$("#lte_lteId").val('')
+	$("#lte_lteId").prop('readonly', false)
+	$("#lte_projectIdKey").val('')
+	$("#lte_modelName").val('')
+	$("#lte_deviceSerialNo").val('')
+	$("#lte_usimSerialNo").val('')
+	$("#lte_telephoneNo").val('')
+	$("#lte_lteGateId").val('')
+	$("#lte_lteGatePw").val('')
+	$("#lte_lteWifiId").val('')
+	$("#lte_lteWifiPw").val('')
+	$("#lte_registDate").val('')
+	$("#lte_startDate").val('')
+	$("#lte_endDate").val('')
+	$("#lte_contract").val('')
+	$("#lte_memo").val('')
+	$("#lte_orderSeq").val('')
 }
 
 function cancelEdit() {
@@ -148,70 +159,60 @@ function cancelEdit() {
 }
 
 function saveEdit() {
-	if ($("#company_companyId").val().trim() == "") {
+	if ($("#lte_lteId").val().trim() == "") {
 		alert("아이디를 입력해 주세요.")
-		$("#company_companyId").focus()
+		$("#lte_lteId").focus()
 		return
 	}
-	if ($("#company_name").val().trim() == "") {
-		alert("이름을 입력해 주세요.")
-		$("#company_name").focus()
+	if ($("#lte_projectIdKey").val() == undefined || $("#lte_projectIdKey").val().trim() == "" || $("#lte_projectIdKey").val() == "0") {
+		alert("프로젝트를 선택해 주세요.")
+		$("#lte_projectIdKey").focus()
+		return;
+	}
+	if ($("#lte_modelName").val().trim() == "") {
+		alert("모델명을 입력해 주세요.")
+		$("#lte_modelName").focus()
 		return
-	}
-	if ($("#company_address1").val().trim() == "") {
-		alert("주소를 입력해 주세요.")
-		$("#company_address1").focus()
-		return;
-	}
-	if ($("#company_telephone1").val().trim() == "") {
-		alert("전화번호를 입력해 주세요.")
-		$("#company_telephone1").focus()
-		return;
-	}
-	if ($("#company_mainOfficer").val().trim() == "") {
-		alert("주 담당자를 입력해 주세요.")
-		$("#company_mainOfficer").focus()
-		return;
 	}
 	
-	var company = {};
-	company.authToken = getAuthToken()
-	company.idKey      = $("#company_idKey").val().trim()
-	company.companyId  = $("#company_companyId").val().trim()
-	company.name       = $("#company_name").val().trim()
-	company.address1   = $("#company_address1").val().trim()
-	company.telephone1 = $("#company_telephone1").val().trim()
-	company.address2   = $("#company_address2").val().trim()
-	company.telephone2 = $("#company_telephone2").val().trim()
-	company.mainOfficer          = $("#company_mainOfficer").val().trim()
-	company.mainOfficerPosition  = $("#company_mainOfficerPosition").val().trim()
-	company.mainOfficerTelephone = $("#company_mainOfficerTelephone").val().trim()
-	company.mainOfficerEmail     = $("#company_mainOfficerEmail").val().trim()
-	company.subOfficer           = $("#company_subOfficer").val().trim()
-	company.subOfficerPosition   = $("#company_subOfficerPosition").val().trim()
-	company.subOfficerTelephone  = $("#company_subOfficerTelephone").val().trim()
-	company.subOfficerEmail      = $("#company_subOfficerEmail").val().trim()
-	company.memo   = $("#company_memo").val().trim()
-	company.status = $("#company_status").val().trim()
+	var lte = {};
+	lte.authToken = getAuthToken()
+	lte.idKey          = $("#lte_idKey").val().trim()
+	lte.lteId          = $("#lte_lteId").val().trim()
+	lte.projectIdKey   = $("#lte_projectIdKey").val().trim()
+	lte.modelName      = $("#lte_modelName").val().trim()
+	lte.deviceSerialNo = $("#lte_deviceSerialNo").val().trim()
+	lte.usimSerialNo   = $("#lte_usimSerialNo").val().trim()
+	lte.telephoneNo    = $("#lte_telephoneNo").val().trim()
+	lte.lteGateId      = $("#lte_lteGateId").val().trim()
+	lte.lteGatePw      = $("#lte_lteGatePw").val().trim()
+	lte.lteWifiId      = $("#lte_lteWifiId").val().trim()
+	lte.lteWifiPw      = $("#lte_lteWifiPw").val().trim()
+	lte.registDate     = $("#lte_registDate").datepicker('getDate')
+	lte.startDate      = $("#lte_startDate").datepicker('getDate')
+	lte.endDate        = $("#lte_endDate").datepicker('getDate')
+	lte.contract       = $("#lte_contract").val().trim()
+	lte.memo           = $("#lte_memo").val().trim()
+	lte.orderSeq       = $("#lte_orderSeq").val().trim()
 	
 	var url = ""
 	var method = ""
-	if (company.idKey == "") {
+	if (lte.idKey == "") {
 		url = "${contextPath}/svc/v1/lte"
 		method = "POST"
 	} else {
-		url = "${contextPath}/svc/v1/lte/" + company.idKey
+		url = "${contextPath}/svc/v1/lte/" + lte.idKey
 		method = "PUT"
 	}
 	nesAjax(url,
-			JSON.stringify(company),
+			JSON.stringify(lte),
 			function(data) {
 				cancelEdit()
 				refreshList()
 			},
 			function(data) {
 				if (data.status == 409) {
-					alert("동일한 아이디의 업체가 존재합니다.")
+					alert("동일한 아이디의 LTE기기가 존재합니다.")
 				} else {
 					alert("입력에 실패했습니다.")
 				}
@@ -226,71 +227,71 @@ function saveEdit() {
 			<a href="#none" class="pop_close white" onClick="cancelEdit();return false;"><span>닫기</span></a>
 		</div>
 		<div class="pop_body">
-			<input type="hidden" name="company_idKey" id="company_idKey">
+			<input type="hidden" name="lte_idKey" id="lte_idKey">
 			<table class="tbsty">
 				<tr>
-					<th>사용자ID</th>
-					<td><input type="text" name="company_companyId" id="company_companyId" style="width:90%"></td>
+					<th>LTE ID</th>
+					<td><input type="text" name="lte_lteId" id="lte_lteId" style="width:90%"></td>
 				</tr>
 				<tr>
-					<th>이름</th>
-					<td><input type="text" name="company_name" id="company_name" style="width:90%"></td>
+					<th>프로젝트</th>
+					<td><select name="lte_projectIdKey" id="lte_projectIdKey"></select></td>
 				</tr>
 				<tr>
-					<th>주소1</th>
-					<td><input name="company_address1" id="company_address1" style="width:90%"></td>
+					<th>모델명</th>
+					<td><input type="text" name="lte_modelName" id="lte_modelName" style="width:90%"></td>
 				</tr>
 				<tr>
-					<th>전화번호1</th>
-					<td><input name="company_telephone1" id="company_telephone1" style="width:90%"></td>
+					<th>기기일련번호</th>
+					<td><input type="text" name="lte_deviceSerialNo" id="lte_deviceSerialNo" style="width:90%"></td>
 				</tr>
 				<tr>
-					<th>주소2</th>
-					<td><input name="company_address2" id="company_address2" style="width:90%"></td>
+					<th>USIM일련번호</th>
+					<td><input type="text" name="lte_usimSerialNo" id="lte_usimSerialNo" style="width:90%"></td>
 				</tr>
 				<tr>
-					<th>전화번호2</th>
-					<td><input name="company_telephone2" id="company_telephone2" style="width:90%"></td>
+					<th>전화번호</th>
+					<td><input type="text" name="lte_telephoneNo" id="lte_telephoneNo" style="width:90%"></td>
 				</tr>
 				<tr>
-					<th>주담당자이름</th>
-					<td><input name="company_mainOfficer" id="company_mainOfficer" style="width:90%"></td>
+					<th>LTE_GATE_ID</th>
+					<td><input type="text" name="lte_lteGateId" id="lte_lteGateId" style="width:90%"></td>
 				</tr>
 				<tr>
-					<th>주담당자직책</th>
-					<td><input name="company_mainOfficerPosition" id="company_mainOfficerPosition" style="width:90%"></td>
+					<th>LTE_GATE_PW</th>
+					<td><input type="text" name="lte_lteGatePw" id="lte_lteGatePw" style="width:90%"></td>
 				</tr>
 				<tr>
-					<th>주담당자전화번호</th>
-					<td><input name="company_mainOfficerTelephone" id="company_mainOfficerTelephone" style="width:90%"></td>
+					<th>LTE_WIFI_ID</th>
+					<td><input type="text" name="lte_lteWifiId" id="lte_lteWifiId" style="width:90%"></td>
 				</tr>
 				<tr>
-					<th>주담당자이메일</th>
-					<td><input name="company_mainOfficerEmail" id="company_mainOfficerEmail" style="width:90%"></td>
+					<th>LTE_WIFI_PW</th>
+					<td><input type="text" name="lte_lteWifiPw" id="lte_lteWifiPw" style="width:90%"></td>
 				</tr>
 				<tr>
-					<th>부담당자이름</th>
-					<td><input name="company_subOfficer" id="company_subOfficer" style="width:90%"></td>
+					<th>등록일</th>
+					<td><input type="text" class="form-control" id="lte_registDate" /></td>
 				</tr>
 				<tr>
-					<th>부담당자직책</th>
-					<td><input name="company_subOfficerPosition" id="company_subOfficerPosition" style="width:90%"></td>
+					<th>시작일</th>
+					<td><input type="text" class="form-control" id="lte_startDate" /></td>
 				</tr>
 				<tr>
-					<th>부담당자전화번호</th>
-					<td><input name="company_subOfficerTelephone" id="company_subOfficerTelephone" style="width:90%"></td>
+					<th>만기일</th>
+					<td><input type="text" class="form-control" id="lte_endDate" /></td>
 				</tr>
 				<tr>
-					<th>부담당자이메일</th>
-					<td><input name="company_subOfficerEmail" id="company_subOfficerEmail" style="width:90%"></td>
+					<th>약정</th>
+					<td><input name="lte_contract" id="lte_contract" style="width:90%"></td>
 				</tr>
 				<tr>
 					<th>메모</th>
-					<td><textarea name="company_memo" id="company_memo" style="width:90%" rows="4"></textarea>
+					<td><textarea name="lte_memo" id="lte_memo" style="width:90%" rows="4"></textarea>
 				</tr>
 				<tr>
-					<th>사용자상태</th>
-					<td><select name="company_status" id="company_status" style="width:90%"></select></td>
+					<th>순서</th>
+					<td><input name="lte_orderSeq" id="lte_orderSeq" style="width:90%"></td>
 				</tr>
 			</table>
 		</div>

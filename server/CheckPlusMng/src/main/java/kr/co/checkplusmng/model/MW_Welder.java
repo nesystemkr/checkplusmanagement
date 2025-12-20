@@ -11,6 +11,8 @@ import kr.nesystem.appengine.common.model.GAEAutoIncModel;
 public class MW_Welder extends GAEAutoIncModel {
 	private String welderId;
 	private long projectIdKey;
+	private String projectName;
+	private String contractCompanyName;
 	private String modelName;
 	private String weldType;
 	private String subDevice;
@@ -18,6 +20,7 @@ public class MW_Welder extends GAEAutoIncModel {
 	private Date installDate;
 	private String installLocation;
 	private String memo;
+	private int orderSeq;
 	public String getWelderId() {
 		return welderId;
 	}
@@ -30,8 +33,20 @@ public class MW_Welder extends GAEAutoIncModel {
 	public void setProjectIdKey(long projectIdKey) {
 		this.projectIdKey = projectIdKey;
 	}
+	public String getProjectName() {
+		return projectName;
+	}
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
+	}
 	public String getModelName() {
 		return modelName;
+	}
+	public String getContractCompanyName() {
+		return contractCompanyName;
+	}
+	public void setContractCompanyName(String contractCompanyName) {
+		this.contractCompanyName = contractCompanyName;
 	}
 	public void setModelName(String modelName) {
 		this.modelName = modelName;
@@ -72,6 +87,12 @@ public class MW_Welder extends GAEAutoIncModel {
 	public void setMemo(String memo) {
 		this.memo = memo;
 	}
+	public int getOrderSeq() {
+		return orderSeq;
+	}
+	public void setOrderSeq(int orderSeq) {
+		this.orderSeq = orderSeq;
+	}
 	@Override
 	public FullEntity<?> toEntity(KeyFactory keyFactory) {
 		return Entity.newBuilder(keyFactory.newKey())
@@ -84,6 +105,7 @@ public class MW_Welder extends GAEAutoIncModel {
 				.set("installDate", D2Z(installDate))
 				.set("installLocation", N2Z(installLocation))
 				.set("memo", N2Z(memo))
+				.set("orderSeq", orderSeq)
 				.build();
 	}
 	@Override
@@ -98,6 +120,7 @@ public class MW_Welder extends GAEAutoIncModel {
 				.set("installDate", D2Z(installDate))
 				.set("installLocation", N2Z(installLocation))
 				.set("memo", N2Z(memo))
+				.set("orderSeq", orderSeq)
 				.build();
 	}
 	@Override
@@ -112,6 +135,7 @@ public class MW_Welder extends GAEAutoIncModel {
 		setInstallDate(L2D(entity.getLong("installDate")));
 		setInstallLocation(entity.getString("installLocation"));
 		setMemo(entity.getString("memo"));
+		setOrderSeq((int)entity.getLong("orderSeq"));
 		return this;
 	}
 

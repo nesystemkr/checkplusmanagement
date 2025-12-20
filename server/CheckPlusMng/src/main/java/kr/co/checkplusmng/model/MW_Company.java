@@ -23,6 +23,7 @@ public class MW_Company extends GAEAutoIncModel {
 	private String subOfficerEmail;
 	private String memo;
 	private String status;
+	private int orderSeq;
 	public String getCompanyId() {
 		return companyId;
 	}
@@ -119,6 +120,12 @@ public class MW_Company extends GAEAutoIncModel {
 	public void setStatus(String status) {
 		this.status = status;
 	}
+	public int getOrderSeq() {
+		return orderSeq;
+	}
+	public void setOrderSeq(int orderSeq) {
+		this.orderSeq = orderSeq;
+	}
 	@Override
 	public FullEntity<?> toEntity(KeyFactory keyFactory) {
 		return Entity.newBuilder(keyFactory.newKey())
@@ -138,6 +145,7 @@ public class MW_Company extends GAEAutoIncModel {
 				.set("subOfficerEmail", N2Z(subOfficerEmail))
 				.set("memo", N2Z(memo))
 				.set("status", N2Z(status))
+				.set("orderSeq", orderSeq)
 				.build();
 	}
 	@Override
@@ -159,6 +167,7 @@ public class MW_Company extends GAEAutoIncModel {
 				.set("subOfficerEmail", N2Z(subOfficerEmail))
 				.set("memo", N2Z(memo))
 				.set("status", N2Z(status))
+				.set("orderSeq", orderSeq)
 				.build();
 	}
 	@Override
@@ -180,6 +189,7 @@ public class MW_Company extends GAEAutoIncModel {
 		setSubOfficerEmail(entity.getString("subOfficerEmail"));
 		setMemo(entity.getString("memo"));
 		setStatus(entity.getString("status"));
+		setOrderSeq((int)entity.getLong("orderSeq"));
 		return this;
 	}
 }

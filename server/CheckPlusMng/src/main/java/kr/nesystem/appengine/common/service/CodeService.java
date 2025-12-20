@@ -24,6 +24,7 @@ import kr.nesystem.appengine.common.model.CM_Code;
 import kr.nesystem.appengine.common.model.CM_PagingList;
 import kr.nesystem.appengine.common.model.ModelHandler;
 import kr.nesystem.appengine.common.util.AuthToken;
+import kr.nesystem.appengine.common.util.CodeStore;
 import kr.nesystem.appengine.common.util.ResponseUtil;
 
 @Path("/{version}/code")
@@ -97,6 +98,7 @@ public class CodeService {
 				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
 			}
 			dao.insert(code);
+			CodeStore.reload();
 			return ResponseUtil.getResponse((new ModelHandler<CM_Code>(CM_Code.class)).convertToJson(code));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -123,6 +125,7 @@ public class CodeService {
 			existOne.setComment(code.getComment());
 			existOne.setOrderSeq(code.getOrderSeq());
 			dao.update(existOne);
+			CodeStore.reload();
 			return ResponseUtil.getResponse((new ModelHandler<CM_Code>(CM_Code.class)).convertToJson(existOne));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -145,6 +148,7 @@ public class CodeService {
 				return ResponseUtil.getResponse(Status.NOT_FOUND);
 			}
 			dao.delete(existOne);
+			CodeStore.reload();
 			return ResponseUtil.getResponse((new ModelHandler<CM_Code>(CM_Code.class)).convertToJson(existOne));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -166,6 +170,7 @@ public class CodeService {
 				return ResponseUtil.getResponse(Status.BAD_REQUEST);
 			}
 			dao.insertOrUpdate(paging.getList());
+			CodeStore.reload();
 			return ResponseUtil.getResponse((new ModelHandler<CM_PagingList>(CM_PagingList.class)).convertToJson(paging));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -186,6 +191,7 @@ public class CodeService {
 				return ResponseUtil.getResponse(Status.BAD_REQUEST);
 			}
 			dao.delete(paging.getList());
+			CodeStore.reload();
 			return ResponseUtil.getResponse((new ModelHandler<CM_PagingList>(CM_PagingList.class)).convertToJson(paging));
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -4,7 +4,7 @@
 <script>
 var $gridLayout
 startFuncs[startFuncs.length] = function() {
-	fillUpSelect('${contextPath}', 'company_status', 'COMPANYSTATUS')
+	fillUpSelectByUrl("${contextPath}/svc/v1/project/list/0?q=" + getAuthToken(), "wifi_projectIdKey", "idKey", "projectName")
 	
 	var buttons = [
 			{type:'search', callback: 'detailOne'},
@@ -15,17 +15,21 @@ startFuncs[startFuncs.length] = function() {
 			container:"listLayout",
 			showCheckBox: false,
 			colModel: [
-					{ name: 'idKey'               , hidden: true, },
-					{ name: 'no'                  , label: 'NO'      , width: 50 , align: 'center',},
-					{ name: 'companyId'           , label: '아이디'  , width: 100, align: 'center',},
-					{ name: 'name'                , label: '이름'    , width: 100, align: 'center',},
-					{ name: 'telephone1'          , label: '전화번호', width: 120, align: 'center',},
-					{ name: 'mainOfficer'         , label: '주담당자', width: 100, align: 'center',},
-					{ name: 'mainOfficerPosition' , label: '직책'    , width: 80 , align: 'center',},
-					{ name: 'mainOfficerTelephone', label: '전화번호', width: 120, align: 'center',},
-					{ name: 'mainOfficerEmail'    , label: '이메일'  , width: 140, align: 'center',},
-					{ name: 'memo'                , label: '메모'    , width: 280, align: 'center',},
-					{ name: 'action'              , label: 'ACTION'  ,             align: 'center', formatter: getGridButtonClosure(buttons)},
+					{ name: 'idKey'              , hidden: true, },
+					{ name: 'projectIdKey'       , hidden: true, },
+					{ name: 'no'                 , label: 'NO'        , width: 50 , align: 'center',},
+					{ name: 'wifiId'             , label: '아이디'    , width: 100, align: 'center',},
+					{ name: 'projectName'        , label: '프로젝트'  , width: 100, align: 'center',},
+					{ name: 'contractCompanyName', label: '설치업체'  , width: 100, align: 'center',},
+					{ name: 'modelName'          , label: '모델명'    , width: 100, align: 'center',},
+					{ name: 'serialNo'           , label: 'Serial No' , width: 100, align: 'center',},
+					{ name: 'macAddress'         , label: 'MAC Addr'  , width: 120, align: 'center',},
+					{ name: 'apGateId'           , label: 'AP_GATE_ID', width: 100, align: 'center',},
+					{ name: 'apGatePw'           , label: 'AP_GATE_PW', width: 100, align: 'center',},
+					{ name: 'apWifiId'           , label: 'AP_WIFI_ID', width: 100, align: 'center',},
+					{ name: 'apWifiPw'           , label: 'AP_WIFI_PW', width: 100, align: 'center',},
+					{ name: 'memo'               , label: '메모'      , width: 280, align: 'center',},
+					{ name: 'action'             , label: 'ACTION'    ,             align: 'center', formatter: getGridButtonClosure(buttons)},
 			],
 			stretchColumn:"action",
 	})
@@ -50,12 +54,12 @@ function getDefaultList(page) {
 			"GET")
 }
 </script>
-<h1>업체관리</h1>
+<h1>WIFI기기관리</h1>
 <div id="listLayout">
 	<table id="gridLayout" style="width:100%;"></table>
 </div>
 <div class="btn_box">
-	<button class="btn_type normal" onclick="openPopupForRegist()">업체추가</button><br>
+	<button class="btn_type normal" onclick="openPopupForRegist()">WIFI기기추가</button><br>
 </div>
 
 <jsp:include page="/common/paging.jsp"/>
@@ -64,7 +68,7 @@ function getDefaultList(page) {
 
 <script>
 function deleteOne(rowId, rowData) {
-	if (false == confirm("업체를 삭제 처리하시겠습니까? - 삭제처리를 추후 복구가 불가능합니다. 임시처리는 사용중지를 해주세요.")) {
+	if (false == confirm("WIFI기기를 삭제 처리하시겠습니까? - 삭제처리를 추후 복구가 불가능합니다.")) {
 		return;
 	}
 	var url = "${contextPath}/svc/v1/wifi/" + rowData.idKey + "?q=" + getAuthToken()
@@ -74,7 +78,7 @@ function deleteOne(rowId, rowData) {
 				refreshList()
 			},
 			function(data) {
-				alert("사용자 삭제에 실패했습니다.")
+				alert("WIFI기기 삭제에 실패했습니다.")
 			},
 			"DELETE")
 }
@@ -88,26 +92,21 @@ function openPopupForUpdate(idKey) {
 	nesAjax(url,
 			null,
 			function(data) {
-				$("#layertitle").html("업체정보수정")
+				$("#layertitle").html("WIFI기기정보수정")
 				openPopup('defaultPopupLayout', 600, 600)
-				$("#company_idKey").val(data.idKey)
-				$("#company_companyId").val(data.companyId)
-				$("#company_companyId").prop('readonly', true)
-				$("#company_name").val(data.name)
-				$("#company_address1").val(data.address1)
-				$("#company_telephone1").val(data.telephone1)
-				$("#company_address2").val(data.address2)
-				$("#company_telephone2").val(data.telephone2)
-				$("#company_mainOfficer").val(data.mainOfficer)
-				$("#company_mainOfficerPosition").val(data.mainOfficerPosition)
-				$("#company_mainOfficerTelephone").val(data.mainOfficerTelephone)
-				$("#company_mainOfficerEmail").val(data.mainOfficerEmail)
-				$("#company_subOfficer").val(data.subOfficer)
-				$("#company_subOfficerPosition").val(data.subOfficerPosition)
-				$("#company_subOfficerTelephone").val(data.subOfficerTelephone)
-				$("#company_subOfficerEmail").val(data.subOfficerEmail)
-				$("#company_memo").val(data.memo)
-				$("#company_status").val(data.status)
+				$("#wifi_idKey").val(data.idKey)
+				$("#wifi_wifiId").val(data.wifiId)
+				$("#wifi_wifiId").prop('readonly', true)
+				$("#wifi_projectIdKey").val(data.projectIdKey)
+				$("#wifi_modelName").val(data.modelName)
+				$("#wifi_serialNo").val(data.serialNo)
+				$("#wifi_macAddress").val(data.macAddress)
+				$("#wifi_apGateId").val(data.apGateId)
+				$("#wifi_apGatePw").val(data.apGatePw)
+				$("#wifi_apWifiId").val(data.apWifiId)
+				$("#wifi_apWifiPw").val(data.apWifiPw)
+				$("#wifi_memo").val(data.memo)
+				$("#wifi_orderSeq").val(data.orderSeq)
 			},
 			function(data) {
 				alert("조회에 실패했습니다.")
@@ -116,30 +115,25 @@ function openPopupForUpdate(idKey) {
 }
 
 function openPopupForRegist() {
-	$("#layertitle").html("업체추가");
+	$("#layertitle").html("WIFI기기추가");
 	resetEdit()
 	openPopup('defaultPopupLayout', 600, 600);
 }
 
 function resetEdit() {
-	$("#company_idKey").val('')
-	$("#company_companyId").val('')
-	$("#company_companyId").prop('readonly', false)
-	$("#company_name").val('')
-	$("#company_address1").val('')
-	$("#company_telephone1").val('')
-	$("#company_address2").val('')
-	$("#company_telephone2").val('')
-	$("#company_mainOfficer").val('')
-	$("#company_mainOfficerPosition").val('')
-	$("#company_mainOfficerTelephone").val('')
-	$("#company_mainOfficerEmail").val('')
-	$("#company_subOfficer").val('')
-	$("#company_subOfficerPosition").val('')
-	$("#company_subOfficerTelephone").val('')
-	$("#company_subOfficerEmail").val('')
-	$("#company_memo").val('')
-	$("#company_status").val('1')
+	$("#wifi_idKey").val('')
+	$("#wifi_wifiId").val('')
+	$("#wifi_wifiId").prop('readonly', false)
+	$("#wifi_projectIdKey").val('')
+	$("#wifi_modelName").val('')
+	$("#wifi_serialNo").val('')
+	$("#wifi_macAddress").val('')
+	$("#wifi_apGateId").val('')
+	$("#wifi_apGatePw").val('')
+	$("#wifi_apWifiId").val('')
+	$("#wifi_apWifiPw").val('')
+	$("#wifi_memo").val('')
+	$("#wifi_orderSeq").val('')
 }
 
 function cancelEdit() {
@@ -148,70 +142,55 @@ function cancelEdit() {
 }
 
 function saveEdit() {
-	if ($("#company_companyId").val().trim() == "") {
+	if ($("#wifi_wifiId").val().trim() == "") {
 		alert("아이디를 입력해 주세요.")
-		$("#company_companyId").focus()
+		$("#wifi_wifiId").focus()
 		return
 	}
-	if ($("#company_name").val().trim() == "") {
-		alert("이름을 입력해 주세요.")
-		$("#company_name").focus()
+	if ($("#wifi_projectIdKey").val() == undefined || $("#wifi_projectIdKey").val().trim() == "" || $("#wifi_projectIdKey").val() == "0") {
+		alert("프로젝트를 선택해 주세요.")
+		$("#wifi_projectIdKey").focus()
+		return;
+	}
+	if ($("#wifi_modelName").val().trim() == "") {
+		alert("모델명을 입력해 주세요.")
+		$("#wifi_modelName").focus()
 		return
-	}
-	if ($("#company_address1").val().trim() == "") {
-		alert("주소를 입력해 주세요.")
-		$("#company_address1").focus()
-		return;
-	}
-	if ($("#company_telephone1").val().trim() == "") {
-		alert("전화번호를 입력해 주세요.")
-		$("#company_telephone1").focus()
-		return;
-	}
-	if ($("#company_mainOfficer").val().trim() == "") {
-		alert("주 담당자를 입력해 주세요.")
-		$("#company_mainOfficer").focus()
-		return;
 	}
 	
-	var company = {};
-	company.authToken = getAuthToken()
-	company.idKey      = $("#company_idKey").val().trim()
-	company.companyId  = $("#company_companyId").val().trim()
-	company.name       = $("#company_name").val().trim()
-	company.address1   = $("#company_address1").val().trim()
-	company.telephone1 = $("#company_telephone1").val().trim()
-	company.address2   = $("#company_address2").val().trim()
-	company.telephone2 = $("#company_telephone2").val().trim()
-	company.mainOfficer          = $("#company_mainOfficer").val().trim()
-	company.mainOfficerPosition  = $("#company_mainOfficerPosition").val().trim()
-	company.mainOfficerTelephone = $("#company_mainOfficerTelephone").val().trim()
-	company.mainOfficerEmail     = $("#company_mainOfficerEmail").val().trim()
-	company.subOfficer           = $("#company_subOfficer").val().trim()
-	company.subOfficerPosition   = $("#company_subOfficerPosition").val().trim()
-	company.subOfficerTelephone  = $("#company_subOfficerTelephone").val().trim()
-	company.subOfficerEmail      = $("#company_subOfficerEmail").val().trim()
-	company.memo   = $("#company_memo").val().trim()
-	company.status = $("#company_status").val().trim()
+	var wifi = {};
+	wifi.authToken = getAuthToken()
+	wifi.idKey        = $("#wifi_idKey").val().trim()
+	wifi.wifiId       = $("#wifi_wifiId").val().trim()
+	wifi.projectIdKey = $("#wifi_projectIdKey").val().trim()
+	wifi.modelName    = $("#wifi_modelName").val().trim()
+	wifi.serialNo     = $("#wifi_serialNo").val().trim()
+	wifi.macAddress   = $("#wifi_macAddress").val().trim()
+	wifi.apGateId     = $("#wifi_apGateId").val().trim()
+	wifi.apGatePw     = $("#wifi_apGatePw").val().trim()
+	wifi.apWifiId     = $("#wifi_apWifiId").val().trim()
+	wifi.apWifiPw     = $("#wifi_apWifiPw").val().trim()
+	wifi.memo         = $("#wifi_memo").val().trim()
+	wifi.orderSeq     = $("#wifi_orderSeq").val().trim()
 	
 	var url = ""
 	var method = ""
-	if (company.idKey == "") {
+	if (wifi.idKey == "") {
 		url = "${contextPath}/svc/v1/wifi"
 		method = "POST"
 	} else {
-		url = "${contextPath}/svc/v1/wifi/" + company.idKey
+		url = "${contextPath}/svc/v1/wifi/" + wifi.idKey
 		method = "PUT"
 	}
 	nesAjax(url,
-			JSON.stringify(company),
+			JSON.stringify(wifi),
 			function(data) {
 				cancelEdit()
 				refreshList()
 			},
 			function(data) {
 				if (data.status == 409) {
-					alert("동일한 아이디의 업체가 존재합니다.")
+					alert("동일한 아이디의 WIFI기기가 존재합니다.")
 				} else {
 					alert("입력에 실패했습니다.")
 				}
@@ -226,71 +205,51 @@ function saveEdit() {
 			<a href="#none" class="pop_close white" onClick="cancelEdit();return false;"><span>닫기</span></a>
 		</div>
 		<div class="pop_body">
-			<input type="hidden" name="company_idKey" id="company_idKey">
+			<input type="hidden" name="wifi_idKey" id="wifi_idKey">
 			<table class="tbsty">
 				<tr>
-					<th>사용자ID</th>
-					<td><input type="text" name="company_companyId" id="company_companyId" style="width:90%"></td>
+					<th>WIFI ID</th>
+					<td><input type="text" name="wifi_wifiId" id="wifi_wifiId" style="width:90%"></td>
 				</tr>
 				<tr>
-					<th>이름</th>
-					<td><input type="text" name="company_name" id="company_name" style="width:90%"></td>
+					<th>프로젝트</th>
+					<td><select name="wifi_projectIdKey" id="wifi_projectIdKey"></select></td>
 				</tr>
 				<tr>
-					<th>주소1</th>
-					<td><input name="company_address1" id="company_address1" style="width:90%"></td>
+					<th>모델명</th>
+					<td><input type="text" name="wifi_modelName" id="wifi_modelName" style="width:90%"></td>
 				</tr>
 				<tr>
-					<th>전화번호1</th>
-					<td><input name="company_telephone1" id="company_telephone1" style="width:90%"></td>
+					<th>Serial No</th>
+					<td><input type="text" name="wifi_serialNo" id="wifi_serialNo" style="width:90%"></td>
 				</tr>
 				<tr>
-					<th>주소2</th>
-					<td><input name="company_address2" id="company_address2" style="width:90%"></td>
+					<th>MAC Addr</th>
+					<td><input type="text" name="wifi_macAddress" id="wifi_macAddress" style="width:90%"></td>
 				</tr>
 				<tr>
-					<th>전화번호2</th>
-					<td><input name="company_telephone2" id="company_telephone2" style="width:90%"></td>
+					<th>AP_GATE_ID</th>
+					<td><input type="text" name="wifi_apGateId" id="wifi_apGateId" style="width:90%"></td>
 				</tr>
 				<tr>
-					<th>주담당자이름</th>
-					<td><input name="company_mainOfficer" id="company_mainOfficer" style="width:90%"></td>
+					<th>AP_GATE_PW</th>
+					<td><input type="text" name="wifi_apGatePw" id="wifi_apGatePw" style="width:90%"></td>
 				</tr>
 				<tr>
-					<th>주담당자직책</th>
-					<td><input name="company_mainOfficerPosition" id="company_mainOfficerPosition" style="width:90%"></td>
+					<th>AP_WIFI_ID</th>
+					<td><input type="text" name="wifi_apWifiId" id="wifi_apWifiId" style="width:90%"></td>
 				</tr>
 				<tr>
-					<th>주담당자전화번호</th>
-					<td><input name="company_mainOfficerTelephone" id="company_mainOfficerTelephone" style="width:90%"></td>
-				</tr>
-				<tr>
-					<th>주담당자이메일</th>
-					<td><input name="company_mainOfficerEmail" id="company_mainOfficerEmail" style="width:90%"></td>
-				</tr>
-				<tr>
-					<th>부담당자이름</th>
-					<td><input name="company_subOfficer" id="company_subOfficer" style="width:90%"></td>
-				</tr>
-				<tr>
-					<th>부담당자직책</th>
-					<td><input name="company_subOfficerPosition" id="company_subOfficerPosition" style="width:90%"></td>
-				</tr>
-				<tr>
-					<th>부담당자전화번호</th>
-					<td><input name="company_subOfficerTelephone" id="company_subOfficerTelephone" style="width:90%"></td>
-				</tr>
-				<tr>
-					<th>부담당자이메일</th>
-					<td><input name="company_subOfficerEmail" id="company_subOfficerEmail" style="width:90%"></td>
+					<th>AP_WIFI_PW</th>
+					<td><input name="wifi_apWifiPw" id="wifi_apWifiPw" style="width:90%"></td>
 				</tr>
 				<tr>
 					<th>메모</th>
-					<td><textarea name="company_memo" id="company_memo" style="width:90%" rows="4"></textarea>
+					<td><textarea name="wifi_memo" id="wifi_memo" style="width:90%" rows="4"></textarea>
 				</tr>
 				<tr>
-					<th>사용자상태</th>
-					<td><select name="company_status" id="company_status" style="width:90%"></select></td>
+					<th>순서</th>
+					<td><input type="text" name="wifi_orderSeq" id="wifi_orderSeq" style="width:90%"></td>
 				</tr>
 			</table>
 		</div>

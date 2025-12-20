@@ -11,6 +11,8 @@ import kr.nesystem.appengine.common.model.GAEAutoIncModel;
 public class MW_LTE extends GAEAutoIncModel {
 	private String lteId;
 	private long projectIdKey;
+	private String projectName;
+	private String contractCompanyName;
 	private String modelName;
 	private String deviceSerialNo;
 	private String usimSerialNo;
@@ -24,6 +26,7 @@ public class MW_LTE extends GAEAutoIncModel {
 	private Date endDate;
 	private String contract;
 	private String memo;
+	private int orderSeq;
 	public String getLteId() {
 		return lteId;
 	}
@@ -35,6 +38,18 @@ public class MW_LTE extends GAEAutoIncModel {
 	}
 	public void setProjectIdKey(long projectIdKey) {
 		this.projectIdKey = projectIdKey;
+	}
+	public String getProjectName() {
+		return projectName;
+	}
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
+	}
+	public String getContractCompanyName() {
+		return contractCompanyName;
+	}
+	public void setContractCompanyName(String contractCompanyName) {
+		this.contractCompanyName = contractCompanyName;
 	}
 	public String getModelName() {
 		return modelName;
@@ -114,6 +129,12 @@ public class MW_LTE extends GAEAutoIncModel {
 	public void setMemo(String memo) {
 		this.memo = memo;
 	}
+	public int getOrderSeq() {
+		return orderSeq;
+	}
+	public void setOrderSeq(int orderSeq) {
+		this.orderSeq = orderSeq;
+	}
 	@Override
 	public FullEntity<?> toEntity(KeyFactory keyFactory) {
 		return Entity.newBuilder(keyFactory.newKey())
@@ -132,6 +153,7 @@ public class MW_LTE extends GAEAutoIncModel {
 				.set("endDate", D2Z(endDate))
 				.set("contract", N2Z(contract))
 				.set("memo", N2Z(memo))
+				.set("orderSeq", orderSeq)
 				.build();
 	}
 	@Override
@@ -152,6 +174,7 @@ public class MW_LTE extends GAEAutoIncModel {
 				.set("endDate", D2Z(endDate))
 				.set("contract", N2Z(contract))
 				.set("memo", N2Z(memo))
+				.set("orderSeq", orderSeq)
 				.build();
 	}
 	@Override
@@ -172,6 +195,7 @@ public class MW_LTE extends GAEAutoIncModel {
 		setEndDate(L2D(entity.getLong("endDate")));
 		setContract(entity.getString("contract"));
 		setMemo(entity.getString("memo"));
+		setOrderSeq((int)entity.getLong("orderSeq"));
 		return this;
 	}
 }
