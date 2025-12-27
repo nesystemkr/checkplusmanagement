@@ -20,12 +20,12 @@ startFuncs[startFuncs.length] = function() {
 					{ name: 'saleCompanyIdKey'    , hidden: true, },
 					{ name: 'contractCompanyIdKey', hidden: true, },
 					{ name: 'no'                  , label: 'NO'      , width: 50 , align: 'center',},
-					{ name: 'projectId'           , label: '아이디'  , width: 100, align: 'center',},
-					{ name: 'projectName'         , label: '이름'    , width: 100, align: 'center',},
+					{ name: 'projectId'           , label: '아이디'  , width: 200, align: 'center',},
+					{ name: 'projectName'         , label: '이름'    , width: 200, align: 'center',},
 					{ name: 'saleCompanyName'     , label: '판매업체', width: 120, align: 'center',},
 					{ name: 'contractCompanyName' , label: '설치업체', width: 100, align: 'center',},
 					{ name: 'contractDate'        , label: '계약일'  , width: 80 , align: 'center', formatter: getGridDateFormatClosure()},
-					{ name: 'memo'                , label: '메모'    , width: 280, align: 'center',},
+					{ name: 'memo'                , label: '메모'    , width: 380, align: 'center',},
 					{ name: 'action'              , label: 'ACTION'  ,             align: 'center', formatter: getGridButtonClosure(buttons)},
 			],
 			stretchColumn:"action",
@@ -60,6 +60,12 @@ function getDefaultList(page) {
 </div>
 
 <jsp:include page="/common/paging.jsp"/>
+
+<div id="projectLayout">
+	<table id="projectGrid" style="width:100%;"></table>
+	<table id="projectGrid" style="width:100%;"></table>
+	<table id="projectGrid" style="width:100%;"></table>
+</div>
 
 <jsp:include page="/common/footer.jsp"/>
 
@@ -111,6 +117,19 @@ function openPopupForRegist() {
 	$("#layertitle").html("프로젝트추가");
 	resetEdit()
 	openPopup('defaultPopupLayout', 600, 600);
+	getNewId()
+}
+
+function getNewId() {
+	nesAjax("${contextPath}/svc/v1/project/newId?format=PROJ_%2504d&q=" + getAuthToken(),
+			null,
+			function(data) {
+				$("#project_projectId").val(data.projectId)
+			},
+			function(data) {
+				alert(JSON.stringify(data))
+			},
+			"POST")
 }
 
 function resetEdit() {

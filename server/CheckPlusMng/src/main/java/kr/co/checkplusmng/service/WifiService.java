@@ -1,5 +1,7 @@
 package kr.co.checkplusmng.service;
 
+import java.util.List;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -167,6 +169,46 @@ public class WifiService {
 		if (project != null) {
 			item.setProjectName(project.getProjectName());
 			item.setContractCompanyName(CompanyStore.getName(project.getContractCompanyIdKey()));
+		}
+	}
+	
+	@POST
+	@Produces({MediaType.APPLICATION_JSON})
+	@Path("/newId")
+	public Response newId(@QueryParam("format") String format,
+						  @QueryParam("q") String authToken) {
+		try {
+			if (AuthToken.isValidToken(authToken) == false) {
+				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
+			}
+			List<MW_Wifi> list = dao.list(null, null, -1, 0);
+			int index = 1;
+			String compId;
+			boolean isFound;
+			if (list != null) {
+				while (true) {
+					compId = String.format(format, index);
+					isFound = false;
+					for (int ii = 0; ii < list.size(); ii++) {
+						if (compId.equals(list.get(ii).getWifiId())) {
+							isFound = true;
+							break;
+						}
+					}
+					if (isFound == false) {
+						break;
+					}
+					index++;
+				}
+			} else {
+				compId = String.format(format, index);
+			}
+			MW_Wifi ret = new MW_Wifi();
+			ret.setWifiId(compId);
+			return ResponseUtil.getResponse((new ModelHandler<MW_Wifi>(MW_Wifi.class)).convertToJson(ret));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseUtil.internalError(e.getMessage());
 		}
 	}
 }

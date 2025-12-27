@@ -144,11 +144,11 @@ function saveEdit() {
 		$("#welder_welderId").focus()
 		return
 	}
-	if ($("#welder_projectIdKey").val() == undefined || $("#welder_projectIdKey").val().trim() == "" || $("#welder_projectIdKey").val() == "0") {
-		alert("프로젝트를 선택해 주세요.")
-		$("#welder_projectIdKey").focus()
-		return;
-	}
+//	if ($("#welder_projectIdKey").val() == undefined || $("#welder_projectIdKey").val().trim() == "" || $("#welder_projectIdKey").val() == "0") {
+//		alert("프로젝트를 선택해 주세요.")
+//		$("#welder_projectIdKey").focus()
+//		return;
+//	}
 	if ($("#welder_modelName").val().trim() == "") {
 		alert("모델명을 입력해 주세요.")
 		$("#welder_modelName").focus()

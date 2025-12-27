@@ -130,6 +130,19 @@ function openPopupForRegist() {
 	$("#layertitle").html("LTE기기추가");
 	resetEdit()
 	openPopup('defaultPopupLayout', 600, 600);
+	getNewId()
+}
+
+function getNewId() {
+	nesAjax("${contextPath}/svc/v1/lte/newId?format=LTE_%2504d&q=" + getAuthToken(),
+			null,
+			function(data) {
+				$("#lte_lteId").val(data.lteId)
+			},
+			function(data) {
+				alert(JSON.stringify(data))
+			},
+			"POST")
 }
 
 function resetEdit() {
@@ -164,11 +177,11 @@ function saveEdit() {
 		$("#lte_lteId").focus()
 		return
 	}
-	if ($("#lte_projectIdKey").val() == undefined || $("#lte_projectIdKey").val().trim() == "" || $("#lte_projectIdKey").val() == "0") {
-		alert("프로젝트를 선택해 주세요.")
-		$("#lte_projectIdKey").focus()
-		return;
-	}
+//	if ($("#lte_projectIdKey").val() == undefined || $("#lte_projectIdKey").val().trim() == "" || $("#lte_projectIdKey").val() == "0") {
+//		alert("프로젝트를 선택해 주세요.")
+//		$("#lte_projectIdKey").focus()
+//		return;
+//	}
 	if ($("#lte_modelName").val().trim() == "") {
 		alert("모델명을 입력해 주세요.")
 		$("#lte_modelName").focus()

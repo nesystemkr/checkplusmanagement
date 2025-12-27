@@ -1,5 +1,7 @@
 package kr.co.checkplusmng.service;
 
+import java.util.List;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -144,7 +146,6 @@ public class CompanyService {
 		}
 	}
 	
-	//User detail
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
 	@Path("/{idKey}")
@@ -160,6 +161,46 @@ public class CompanyService {
 				return ResponseUtil.getResponse(Status.NOT_FOUND);
 			}
 			return ResponseUtil.getResponse((new ModelHandler<MW_Company>(MW_Company.class)).convertToJson(existOne));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseUtil.internalError(e.getMessage());
+		}
+	}
+	
+	@POST
+	@Produces({MediaType.APPLICATION_JSON})
+	@Path("/newId")
+	public Response newId(@QueryParam("format") String format,
+						  @QueryParam("q") String authToken) {
+		try {
+			if (AuthToken.isValidToken(authToken) == false) {
+				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
+			}
+			List<MW_Company> list = dao.list(null, null, -1, 0);
+			int index = 1;
+			String compId;
+			boolean isFound;
+			if (list != null) {
+				while (true) {
+					compId = String.format(format, index);
+					isFound = false;
+					for (int ii = 0; ii < list.size(); ii++) {
+						if (compId.equals(list.get(ii).getCompanyId())) {
+							isFound = true;
+							break;
+						}
+					}
+					if (isFound == false) {
+						break;
+					}
+					index++;
+				}
+			} else {
+				compId = String.format(format, index);
+			}
+			MW_Company ret = new MW_Company();
+			ret.setCompanyId(compId);
+			return ResponseUtil.getResponse((new ModelHandler<MW_Company>(MW_Company.class)).convertToJson(ret));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseUtil.internalError(e.getMessage());

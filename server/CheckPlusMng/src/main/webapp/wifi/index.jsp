@@ -118,6 +118,19 @@ function openPopupForRegist() {
 	$("#layertitle").html("WIFI기기추가");
 	resetEdit()
 	openPopup('defaultPopupLayout', 600, 600);
+	getNewId()
+}
+
+function getNewId() {
+	nesAjax("${contextPath}/svc/v1/wifi/newId?format=WIFI_%2504d&q=" + getAuthToken(),
+			null,
+			function(data) {
+				$("#wifi_wifiId").val(data.wifiId)
+			},
+			function(data) {
+				alert(JSON.stringify(data))
+			},
+			"POST")
 }
 
 function resetEdit() {
@@ -147,11 +160,11 @@ function saveEdit() {
 		$("#wifi_wifiId").focus()
 		return
 	}
-	if ($("#wifi_projectIdKey").val() == undefined || $("#wifi_projectIdKey").val().trim() == "" || $("#wifi_projectIdKey").val() == "0") {
-		alert("프로젝트를 선택해 주세요.")
-		$("#wifi_projectIdKey").focus()
-		return;
-	}
+//	if ($("#wifi_projectIdKey").val() == undefined || $("#wifi_projectIdKey").val().trim() == "" || $("#wifi_projectIdKey").val() == "0") {
+//		alert("프로젝트를 선택해 주세요.")
+//		$("#wifi_projectIdKey").focus()
+//		return;
+//	}
 	if ($("#wifi_modelName").val().trim() == "") {
 		alert("모델명을 입력해 주세요.")
 		$("#wifi_modelName").focus()

@@ -1,5 +1,7 @@
 package kr.co.checkplusmng.service;
 
+import java.util.List;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -165,5 +167,45 @@ public class ProjectService {
 	private void fillupSubData(MW_Project item) {
 		item.setSaleCompanyName(CompanyStore.getName(item.getSaleCompanyIdKey()));
 		item.setContractCompanyName(CompanyStore.getName(item.getContractCompanyIdKey()));
+	}
+	
+	@POST
+	@Produces({MediaType.APPLICATION_JSON})
+	@Path("/newId")
+	public Response newId(@QueryParam("format") String format,
+						  @QueryParam("q") String authToken) {
+		try {
+			if (AuthToken.isValidToken(authToken) == false) {
+				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
+			}
+			List<MW_Project> list = dao.list(null, null, -1, 0);
+			int index = 1;
+			String compId;
+			boolean isFound;
+			if (list != null) {
+				while (true) {
+					compId = String.format(format, index);
+					isFound = false;
+					for (int ii = 0; ii < list.size(); ii++) {
+						if (compId.equals(list.get(ii).getProjectId())) {
+							isFound = true;
+							break;
+						}
+					}
+					if (isFound == false) {
+						break;
+					}
+					index++;
+				}
+			} else {
+				compId = String.format(format, index);
+			}
+			MW_Project ret = new MW_Project();
+			ret.setProjectId(compId);
+			return ResponseUtil.getResponse((new ModelHandler<MW_Project>(MW_Project.class)).convertToJson(ret));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseUtil.internalError(e.getMessage());
+		}
 	}
 }
