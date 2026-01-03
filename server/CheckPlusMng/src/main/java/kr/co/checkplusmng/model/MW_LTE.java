@@ -6,98 +6,66 @@ import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.FullEntity;
 import com.google.cloud.datastore.KeyFactory;
 
-import kr.nesystem.appengine.common.model.GAEAutoIncModel;
-
-public class MW_LTE extends GAEAutoIncModel {
-	private String lteId;
-	private long projectIdKey;
-	private String projectName;
-	private String contractCompanyName;
+public class MW_LTE extends MW_IDBaseModel {
 	private String modelName;
-	private String deviceSerialNo;
-	private String usimSerialNo;
-	private String telephoneNo;
-	private String lteGateId;
-	private String lteGatePw;
-	private String lteWifiId;
-	private String lteWifiPw;
+	private String serialNo;
+	private String usimNo;
+	private String telephone;
+	private String gateId;
+	private String gatePw;
+	private String wifiId;
+	private String wifiPw;
 	private Date registDate;
 	private Date startDate;
 	private Date endDate;
 	private String contract;
-	private String memo;
-	private int orderSeq;
-	public String getLteId() {
-		return lteId;
-	}
-	public void setLteId(String lteId) {
-		this.lteId = lteId;
-	}
-	public long getProjectIdKey() {
-		return projectIdKey;
-	}
-	public void setProjectIdKey(long projectIdKey) {
-		this.projectIdKey = projectIdKey;
-	}
-	public String getProjectName() {
-		return projectName;
-	}
-	public void setProjectName(String projectName) {
-		this.projectName = projectName;
-	}
-	public String getContractCompanyName() {
-		return contractCompanyName;
-	}
-	public void setContractCompanyName(String contractCompanyName) {
-		this.contractCompanyName = contractCompanyName;
-	}
 	public String getModelName() {
 		return modelName;
 	}
 	public void setModelName(String modelName) {
 		this.modelName = modelName;
 	}
-	public String getDeviceSerialNo() {
-		return deviceSerialNo;
+	public String getSerialNo() {
+		return serialNo;
 	}
-	public void setDeviceSerialNo(String deviceSerialNo) {
-		this.deviceSerialNo = deviceSerialNo;
+	public void setSerialNo(String serialNo) {
+		this.serialNo = serialNo;
 	}
-	public String getUsimSerialNo() {
-		return usimSerialNo;
+	public String getUsimNo() {
+		return usimNo;
 	}
-	public void setUsimSerialNo(String usimSerialNo) {
-		this.usimSerialNo = usimSerialNo;
+	public void setUsimNo(String usimNo) {
+		this.usimNo = usimNo;
 	}
-	public String getTelephoneNo() {
-		return telephoneNo;
+	public String getTelephone() {
+		return telephone;
 	}
-	public void setTelephoneNo(String telephoneNo) {
-		this.telephoneNo = telephoneNo;
+	public void setTelephone(String telephone) {
+		this.telephone = telephone;
 	}
-	public String getLteGateId() {
-		return lteGateId;
+	public String getGateId() {
+		return gateId;
 	}
-	public void setLteGateId(String lteGateId) {
-		this.lteGateId = lteGateId;
+	public void setGateId(String gateId) {
+		this.gateId = gateId;
 	}
-	public String getLteGatePw() {
-		return lteGatePw;
+	public String getGatePw() {
+		return gatePw;
 	}
-	public void setLteGatePw(String lteGatePw) {
-		this.lteGatePw = lteGatePw;
+	public void setGatePw(String gatePw) {
+		this.gatePw = gatePw;
 	}
-	public String getLteWifiId() {
-		return lteWifiId;
+	public String getWifiId() {
+		return wifiId;
 	}
-	public void setLteWifiId(String lteWifiId) {
-		this.lteWifiId = lteWifiId;
+	public void setWifiId(String wifiId) {
+		this.wifiId = wifiId;
 	}
-	public String getLteWifiPw() {
-		return lteWifiPw;
+	public String getWifiPw() {
+		return wifiPw;
 	}
-	public void setLteWifiPw(String lteWifiPw) {
-		this.lteWifiPw = lteWifiPw;
+	public void setWifiPw(String wifiPw) {
+		this.wifiPw = wifiPw;
 	}
 	public Date getRegistDate() {
 		return registDate;
@@ -123,79 +91,55 @@ public class MW_LTE extends GAEAutoIncModel {
 	public void setContract(String contract) {
 		this.contract = contract;
 	}
-	public String getMemo() {
-		return memo;
-	}
-	public void setMemo(String memo) {
-		this.memo = memo;
-	}
-	public int getOrderSeq() {
-		return orderSeq;
-	}
-	public void setOrderSeq(int orderSeq) {
-		this.orderSeq = orderSeq;
-	}
 	@Override
 	public FullEntity<?> toEntity(KeyFactory keyFactory) {
-		return Entity.newBuilder(keyFactory.newKey())
-				.set("lteId", N2Z(lteId))
-				.set("projectIdKey", projectIdKey)
+		return super.builder(keyFactory)
 				.set("modelName", N2Z(modelName))
-				.set("deviceSerialNo", N2Z(deviceSerialNo))
-				.set("usimSerialNo", N2Z(usimSerialNo))
-				.set("telephoneNo", N2Z(telephoneNo))
-				.set("lteGateId", N2Z(lteGateId))
-				.set("lteGatePw", N2Z(lteGatePw))
-				.set("lteWifiId", N2Z(lteWifiId))
-				.set("lteWifiPw", N2Z(lteWifiPw))
+				.set("serialNo", N2Z(serialNo))
+				.set("usimNo", N2Z(usimNo))
+				.set("telephone", N2Z(telephone))
+				.set("gateId", N2Z(gateId))
+				.set("gatePw", N2Z(gatePw))
+				.set("wifiId", N2Z(wifiId))
+				.set("wifiPw", N2Z(wifiPw))
 				.set("registDate", D2Z(registDate))
 				.set("startDate", D2Z(startDate))
 				.set("endDate", D2Z(endDate))
 				.set("contract", N2Z(contract))
-				.set("memo", N2Z(memo))
-				.set("orderSeq", orderSeq)
 				.build();
 	}
 	@Override
 	public Entity toEntity(Entity existOne) {
-		return Entity.newBuilder(existOne.getKey(), existOne)
-				.set("lteId", N2Z(lteId))
-				.set("projectIdKey", projectIdKey)
+		return super.builder(existOne)
 				.set("modelName", N2Z(modelName))
-				.set("deviceSerialNo", N2Z(deviceSerialNo))
-				.set("usimSerialNo", N2Z(usimSerialNo))
-				.set("telephoneNo", N2Z(telephoneNo))
-				.set("lteGateId", N2Z(lteGateId))
-				.set("lteGatePw", N2Z(lteGatePw))
-				.set("lteWifiId", N2Z(lteWifiId))
-				.set("lteWifiPw", N2Z(lteWifiPw))
+				.set("serialNo", N2Z(serialNo))
+				.set("usimNo", N2Z(usimNo))
+				.set("telephone", N2Z(telephone))
+				.set("gateId", N2Z(gateId))
+				.set("gatePw", N2Z(gatePw))
+				.set("wifiId", N2Z(wifiId))
+				.set("wifiPw", N2Z(wifiPw))
 				.set("registDate", D2Z(registDate))
 				.set("startDate", D2Z(startDate))
 				.set("endDate", D2Z(endDate))
 				.set("contract", N2Z(contract))
-				.set("memo", N2Z(memo))
-				.set("orderSeq", orderSeq)
 				.build();
 	}
 	@Override
 	public MW_LTE fromEntity(Entity entity) {
 		super.fromEntity(entity);
-		setLteId(entity.getString("lteId"));
-		setProjectIdKey(entity.getLong("projectIdKey"));
 		setModelName(entity.getString("modelName"));
-		setDeviceSerialNo(entity.getString("deviceSerialNo"));
-		setUsimSerialNo(entity.getString("usimSerialNo"));
-		setTelephoneNo(entity.getString("telephoneNo"));
-		setLteGateId(entity.getString("lteGateId"));
-		setLteGatePw(entity.getString("lteGatePw"));
-		setLteWifiId(entity.getString("lteWifiId"));
-		setLteWifiPw(entity.getString("lteWifiPw"));
+		setSerialNo(entity.getString("serialNo"));
+		setUsimNo(entity.getString("usimNo"));
+		setTelephone(entity.getString("telephone"));
+		setGateId(entity.getString("gateId"));
+		setGatePw(entity.getString("gatePw"));
+		setWifiId(entity.getString("wifiId"));
+		setWifiPw(entity.getString("wifiPw"));
 		setRegistDate(L2D(entity.getLong("registDate")));
 		setStartDate(L2D(entity.getLong("startDate")));
 		setEndDate(L2D(entity.getLong("endDate")));
 		setContract(entity.getString("contract"));
-		setMemo(entity.getString("memo"));
-		setOrderSeq((int)entity.getLong("orderSeq"));
 		return this;
 	}
 }

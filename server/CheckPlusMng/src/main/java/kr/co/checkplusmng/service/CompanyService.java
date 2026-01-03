@@ -37,14 +37,14 @@ public class CompanyService {
 			if (AuthToken.isValidToken(company.getAuthToken()) == false) {
 				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
 			}
-			if (company.getCompanyId() == null || company.getCompanyId().length() == 0 ||
+			if (company.getIdString() == null || company.getIdString().length() == 0 ||
 				company.getName() == null || company.getName().length() == 0 ||
-				company.getAddress1() == null || company.getAddress1().length() == 0 ||
-				company.getTelephone1() == null || company.getTelephone1().length() == 0 ||
-				company.getMainOfficer() == null || company.getMainOfficer().length() == 0) {
+				company.getAddress() == null || company.getAddress().length() == 0 ||
+				company.getTelephone() == null || company.getTelephone().length() == 0 ||
+				company.getOfficer() == null || company.getOfficer().length() == 0) {
 				return ResponseUtil.getResponse(Status.BAD_REQUEST);
 			}
-			MW_Company existOne = dao.selectByCompanyId(null, company.getCompanyId());
+			MW_Company existOne = dao.selectByCompanyId(null, company.getIdString());
 			if (existOne != null) {
 				return ResponseUtil.getResponse(Status.CONFLICT);
 			}
@@ -70,31 +70,23 @@ public class CompanyService {
 			if (idKey != company.getIdKey()) {
 				return ResponseUtil.getResponse(Status.BAD_REQUEST);
 			}
-			if (company.getCompanyId() == null || company.getCompanyId().length() == 0 ||
+			if (company.getIdString() == null || company.getIdString().length() == 0 ||
 				company.getName() == null || company.getName().length() == 0 ||
-				company.getAddress1() == null || company.getAddress1().length() == 0 ||
-				company.getTelephone1() == null || company.getTelephone1().length() == 0 ||
-				company.getMainOfficer() == null || company.getMainOfficer().length() == 0) {
+				company.getAddress() == null || company.getAddress().length() == 0 ||
+				company.getTelephone() == null || company.getTelephone().length() == 0 ||
+				company.getOfficer() == null || company.getOfficer().length() == 0) {
 				return ResponseUtil.getResponse(Status.BAD_REQUEST);
 			}
 			MW_Company existOne = dao.select(null, idKey);
 			if (existOne == null) {
 				return ResponseUtil.getResponse(Status.NOT_FOUND);
 			}
-			existOne.setAddress1(company.getAddress1());
-			existOne.setTelephone1(company.getTelephone1());
-			existOne.setAddress2(company.getAddress2());
-			existOne.setTelephone2(company.getTelephone2());
-			existOne.setMainOfficer(company.getMainOfficer());
-			existOne.setMainOfficerPosition(company.getMainOfficerPosition());
-			existOne.setMainOfficerTelephone(company.getMainOfficerTelephone());
-			existOne.setMainOfficerEmail(company.getMainOfficerEmail());
-			existOne.setSubOfficer(company.getSubOfficer());
-			existOne.setSubOfficerPosition(company.getSubOfficerPosition());
-			existOne.setSubOfficerTelephone(company.getSubOfficerTelephone());
-			existOne.setSubOfficerEmail(company.getSubOfficerEmail());
+			existOne.setAddress(company.getAddress());
+			existOne.setTelephone(company.getTelephone());
+			existOne.setEmail(company.getEmail());
+			existOne.setOfficer(company.getOfficer());
+			existOne.setOfficerTel(company.getOfficerTel());
 			existOne.setMemo(company.getMemo());
-			existOne.setStatus(company.getStatus());
 			existOne.setOrderSeq(company.getOrderSeq());
 			dao.update(existOne);
 			return ResponseUtil.getResponse((new ModelHandler<MW_Company>(MW_Company.class)).convertToJson(existOne));
@@ -185,7 +177,7 @@ public class CompanyService {
 					compId = String.format(format, index);
 					isFound = false;
 					for (int ii = 0; ii < list.size(); ii++) {
-						if (compId.equals(list.get(ii).getCompanyId())) {
+						if (compId.equals(list.get(ii).getIdString())) {
 							isFound = true;
 							break;
 						}
@@ -199,7 +191,7 @@ public class CompanyService {
 				compId = String.format(format, index);
 			}
 			MW_Company ret = new MW_Company();
-			ret.setCompanyId(compId);
+			ret.setIdString(compId);
 			return ResponseUtil.getResponse((new ModelHandler<MW_Company>(MW_Company.class)).convertToJson(ret));
 		} catch (Exception e) {
 			e.printStackTrace();

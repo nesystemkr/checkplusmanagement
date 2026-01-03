@@ -18,9 +18,6 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 import kr.co.checkplusmng.dao.LTEDao;
 import kr.co.checkplusmng.model.MW_LTE;
-import kr.co.checkplusmng.model.MW_Project;
-import kr.co.checkplusmng.util.CompanyStore;
-import kr.co.checkplusmng.util.ProjectStore;
 import kr.nesystem.appengine.common.Constant;
 import kr.nesystem.appengine.common.model.CM_PagingList;
 import kr.nesystem.appengine.common.model.ModelHandler;
@@ -40,10 +37,10 @@ public class LTEService {
 			if (AuthToken.isValidToken(lte.getAuthToken()) == false) {
 				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
 			}
-			if (lte.getLteId() == null || lte.getLteId().length() == 0) {
+			if (lte.getIdString() == null || lte.getIdString().length() == 0) {
 				return ResponseUtil.getResponse(Status.BAD_REQUEST);
 			}
-			MW_LTE existOne = dao.selectByLTEId(null, lte.getLteId());
+			MW_LTE existOne = dao.selectByLTEId(null, lte.getIdString());
 			if (existOne != null) {
 				return ResponseUtil.getResponse(Status.CONFLICT);
 			}
@@ -69,7 +66,7 @@ public class LTEService {
 			if (idKey != lte.getIdKey()) {
 				return ResponseUtil.getResponse(Status.BAD_REQUEST);
 			}
-			if (lte.getLteId() == null || lte.getLteId().length() == 0) {
+			if (lte.getIdString() == null || lte.getIdString().length() == 0) {
 				return ResponseUtil.getResponse(Status.BAD_REQUEST);
 			}
 			MW_LTE existOne = dao.select(null, idKey);
@@ -77,16 +74,15 @@ public class LTEService {
 				return ResponseUtil.getResponse(Status.NOT_FOUND);
 			}
 			
-			existOne.setProjectIdKey(lte.getProjectIdKey());
-			existOne.setLteId(lte.getLteId());
+			existOne.setIdString(lte.getIdString());
 			existOne.setModelName(lte.getModelName());
-			existOne.setDeviceSerialNo(lte.getDeviceSerialNo());
-			existOne.setUsimSerialNo(lte.getUsimSerialNo());
-			existOne.setTelephoneNo(lte.getTelephoneNo());
-			existOne.setLteGateId(lte.getLteGateId());
-			existOne.setLteGatePw(lte.getLteGatePw());
-			existOne.setLteWifiId(lte.getLteWifiId());
-			existOne.setLteWifiPw(lte.getLteWifiPw());
+			existOne.setSerialNo(lte.getSerialNo());
+			existOne.setUsimNo(lte.getUsimNo());
+			existOne.setTelephone(lte.getTelephone());
+			existOne.setGateId(lte.getGateId());
+			existOne.setGatePw(lte.getGatePw());
+			existOne.setWifiId(lte.getWifiId());
+			existOne.setWifiPw(lte.getWifiPw());
 			existOne.setRegistDate(lte.getRegistDate());
 			existOne.setStartDate(lte.getStartDate());
 			existOne.setEndDate(lte.getEndDate());
@@ -173,11 +169,6 @@ public class LTEService {
 	}
 	
 	private void fillupSubData(MW_LTE item) {
-		MW_Project project = ProjectStore.get(item.getProjectIdKey());
-		if (project != null) {
-			item.setProjectName(project.getProjectName());
-			item.setContractCompanyName(CompanyStore.getName(project.getContractCompanyIdKey()));
-		}
 	}
 	
 	@POST
@@ -198,7 +189,7 @@ public class LTEService {
 					compId = String.format(format, index);
 					isFound = false;
 					for (int ii = 0; ii < list.size(); ii++) {
-						if (compId.equals(list.get(ii).getLteId())) {
+						if (compId.equals(list.get(ii).getIdString())) {
 							isFound = true;
 							break;
 						}
@@ -212,7 +203,7 @@ public class LTEService {
 				compId = String.format(format, index);
 			}
 			MW_LTE ret = new MW_LTE();
-			ret.setLteId(compId);
+			ret.setIdString(compId);
 			return ResponseUtil.getResponse((new ModelHandler<MW_LTE>(MW_LTE.class)).convertToJson(ret));
 		} catch (Exception e) {
 			e.printStackTrace();

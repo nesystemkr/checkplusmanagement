@@ -17,10 +17,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 import kr.co.checkplusmng.dao.WifiDao;
-import kr.co.checkplusmng.model.MW_Project;
 import kr.co.checkplusmng.model.MW_Wifi;
-import kr.co.checkplusmng.util.CompanyStore;
-import kr.co.checkplusmng.util.ProjectStore;
 import kr.nesystem.appengine.common.Constant;
 import kr.nesystem.appengine.common.model.CM_PagingList;
 import kr.nesystem.appengine.common.model.ModelHandler;
@@ -76,13 +73,13 @@ public class WifiService {
 			if (existOne == null) {
 				return ResponseUtil.getResponse(Status.NOT_FOUND);
 			}
-			existOne.setProjectIdKey(wifi.getProjectIdKey());
 			existOne.setModelName(wifi.getModelName());
 			existOne.setSerialNo(wifi.getSerialNo());
 			existOne.setMacAddress(wifi.getMacAddress());
-			existOne.setApGateId(wifi.getApGateId());
-			existOne.setApGatePw(wifi.getApGatePw());
-			existOne.setApWifiId(wifi.getApWifiPw());
+			existOne.setGateId(wifi.getGateId());
+			existOne.setGatePw(wifi.getGatePw());
+			existOne.setWifiId(wifi.getWifiId());
+			existOne.setWifiPw(wifi.getWifiPw());
 			existOne.setMemo(wifi.getMemo());
 			existOne.setOrderSeq(wifi.getOrderSeq());
 			dao.update(existOne);
@@ -165,11 +162,6 @@ public class WifiService {
 	}
 	
 	private void fillupSubData(MW_Wifi item) {
-		MW_Project project = ProjectStore.get(item.getProjectIdKey());
-		if (project != null) {
-			item.setProjectName(project.getProjectName());
-			item.setContractCompanyName(CompanyStore.getName(project.getContractCompanyIdKey()));
-		}
 	}
 	
 	@POST

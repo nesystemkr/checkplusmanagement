@@ -6,53 +6,32 @@ import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.FullEntity;
 import com.google.cloud.datastore.KeyFactory;
 
-import kr.nesystem.appengine.common.model.GAEAutoIncModel;
-
-public class MW_Project extends GAEAutoIncModel {
-	private String projectId;
-	private String projectName;
-	private long saleCompanyIdKey;
-	private String saleCompanyName;
-	private long contractCompanyIdKey;
-	private String contractCompanyName;
+public class MW_Project extends MW_IDBaseModel {
+	private String name;
+	private long customerIdKey;
+	private long brokerIdKey;
 	private Date contractDate;
-	private String memo;
-	private int orderSeq;
-	public String getProjectId() {
-		return projectId;
+	private String checkPlusId;
+	private String checkPlusPw;
+	private String customerName;
+	private String brokerName;
+	public String getName() {
+		return name;
 	}
-	public void setProjectId(String projectId) {
-		this.projectId = projectId;
+	public void setName(String name) {
+		this.name = name;
 	}
-	public String getProjectName() {
-		return projectName;
+	public long getCustomerIdKey() {
+		return customerIdKey;
 	}
-	public void setProjectName(String projectName) {
-		this.projectName = projectName;
+	public void setCustomerIdKey(long customerIdKey) {
+		this.customerIdKey = customerIdKey;
 	}
-	public long getSaleCompanyIdKey() {
-		return saleCompanyIdKey;
+	public long getBrokerIdKey() {
+		return brokerIdKey;
 	}
-	public void setSaleCompanyIdKey(long saleCompanyIdKey) {
-		this.saleCompanyIdKey = saleCompanyIdKey;
-	}
-	public String getSaleCompanyName() {
-		return saleCompanyName;
-	}
-	public void setSaleCompanyName(String saleCompanyName) {
-		this.saleCompanyName = saleCompanyName;
-	}
-	public long getContractCompanyIdKey() {
-		return contractCompanyIdKey;
-	}
-	public void setContractCompanyIdKey(long contractCompanyIdKey) {
-		this.contractCompanyIdKey = contractCompanyIdKey;
-	}
-	public String getContractCompanyName() {
-		return contractCompanyName;
-	}
-	public void setContractCompanyName(String contractCompanyName) {
-		this.contractCompanyName = contractCompanyName;
+	public void setBrokerIdKey(long brokerIdKey) {
+		this.brokerIdKey = brokerIdKey;
 	}
 	public Date getContractDate() {
 		return contractDate;
@@ -60,52 +39,61 @@ public class MW_Project extends GAEAutoIncModel {
 	public void setContractDate(Date contractDate) {
 		this.contractDate = contractDate;
 	}
-	public String getMemo() {
-		return memo;
+	public String getCheckPlusId() {
+		return checkPlusId;
 	}
-	public void setMemo(String memo) {
-		this.memo = memo;
+	public void setCheckPlusId(String checkPlusId) {
+		this.checkPlusId = checkPlusId;
 	}
-	public int getOrderSeq() {
-		return orderSeq;
+	public String getCheckPlusPw() {
+		return checkPlusPw;
 	}
-	public void setOrderSeq(int orderSeq) {
-		this.orderSeq = orderSeq;
+	public void setCheckPlusPw(String checkPlusPw) {
+		this.checkPlusPw = checkPlusPw;
+	}
+	public String getCustomerName() {
+		return customerName;
+	}
+	public void setCustomerName(String customerName) {
+		this.customerName = customerName;
+	}
+	public String getBrokerName() {
+		return brokerName;
+	}
+	public void setBrokerName(String brokerName) {
+		this.brokerName = brokerName;
 	}
 	@Override
 	public FullEntity<?> toEntity(KeyFactory keyFactory) {
-		return Entity.newBuilder(keyFactory.newKey())
-				.set("projectId", N2Z(projectId))
-				.set("projectName", N2Z(projectName))
-				.set("saleCompanyIdKey", saleCompanyIdKey)
-				.set("contractCompanyIdKey", contractCompanyIdKey)
+		return super.builder(keyFactory)
+				.set("name", N2Z(name))
+				.set("customerIdKey", customerIdKey)
+				.set("brokerIdKey", brokerIdKey)
 				.set("contractDate", D2Z(contractDate))
-				.set("memo", N2Z(memo))
-				.set("orderSeq", orderSeq)
+				.set("checkPlusId", checkPlusId)
+				.set("checkPlusPw", checkPlusPw)
 				.build();
 	}
 	@Override
 	public Entity toEntity(Entity existOne) {
-		return Entity.newBuilder(existOne.getKey(), existOne)
-				.set("projectId", N2Z(projectId))
-				.set("projectName", N2Z(projectName))
-				.set("saleCompanyIdKey", saleCompanyIdKey)
-				.set("contractCompanyIdKey", contractCompanyIdKey)
+		return super.builder(existOne)
+				.set("name", N2Z(name))
+				.set("customerIdKey", customerIdKey)
+				.set("brokerIdKey", brokerIdKey)
 				.set("contractDate", D2Z(contractDate))
-				.set("memo", N2Z(memo))
-				.set("orderSeq", orderSeq)
+				.set("checkPlusId", checkPlusId)
+				.set("checkPlusPw", checkPlusPw)
 				.build();
 	}
 	@Override
 	public MW_Project fromEntity(Entity entity) {
 		super.fromEntity(entity);
-		setProjectId(entity.getString("projectId"));
-		setProjectName(entity.getString("projectName"));
-		setSaleCompanyIdKey(entity.getLong("saleCompanyIdKey"));
-		setContractCompanyIdKey(entity.getLong("contractCompanyIdKey"));
+		setName(entity.getString("projectName"));
+		setCustomerIdKey(entity.getLong("customerIdKey"));
+		setBrokerIdKey(entity.getLong("brokerIdKey"));
 		setContractDate(L2D(entity.getLong("contractDate")));
-		setMemo(entity.getString("memo"));
-		setOrderSeq((int)entity.getLong("orderSeq"));
+		setCheckPlusId(entity.getString("checkPlusId"));
+		setCheckPlusPw(entity.getString("checkPlusPw"));
 		return this;
 	}
 }

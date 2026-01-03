@@ -38,11 +38,11 @@ public class ProjectService {
 			if (AuthToken.isValidToken(project.getAuthToken()) == false) {
 				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
 			}
-			if (project.getProjectId() == null || project.getProjectId().length() == 0 ||
-				project.getProjectName() == null || project.getProjectName().length() == 0) {
+			if (project.getIdString() == null || project.getIdString().length() == 0 ||
+				project.getName() == null || project.getName().length() == 0) {
 				return ResponseUtil.getResponse(Status.BAD_REQUEST);
 			}
-			MW_Project existOne = dao.selectByProjectId(null, project.getProjectId());
+			MW_Project existOne = dao.selectByProjectId(null, project.getIdString());
 			if (existOne != null) {
 				return ResponseUtil.getResponse(Status.CONFLICT);
 			}
@@ -69,17 +69,17 @@ public class ProjectService {
 			if (idKey != project.getIdKey()) {
 				return ResponseUtil.getResponse(Status.BAD_REQUEST);
 			}
-			if (project.getProjectId() == null || project.getProjectId().length() == 0 ||
-				project.getProjectName() == null || project.getProjectName().length() == 0) {
+			if (project.getIdString() == null || project.getIdString().length() == 0 ||
+				project.getName() == null || project.getName().length() == 0) {
 				return ResponseUtil.getResponse(Status.BAD_REQUEST);
 			}
 			MW_Project existOne = dao.select(null, idKey);
 			if (existOne == null) {
 				return ResponseUtil.getResponse(Status.NOT_FOUND);
 			}
-			existOne.setProjectName(project.getProjectName());
-			existOne.setSaleCompanyIdKey(project.getSaleCompanyIdKey());
-			existOne.setContractCompanyIdKey(project.getContractCompanyIdKey());
+			existOne.setName(project.getName());
+			existOne.setCustomerIdKey(project.getCustomerIdKey());
+			existOne.setBrokerIdKey(project.getBrokerIdKey());
 			existOne.setContractDate(project.getContractDate());
 			existOne.setMemo(project.getMemo());
 			existOne.setOrderSeq(project.getOrderSeq());
@@ -165,8 +165,8 @@ public class ProjectService {
 	}
 	
 	private void fillupSubData(MW_Project item) {
-		item.setSaleCompanyName(CompanyStore.getName(item.getSaleCompanyIdKey()));
-		item.setContractCompanyName(CompanyStore.getName(item.getContractCompanyIdKey()));
+		item.setCustomerName(CompanyStore.getName(item.getCustomerIdKey()));
+		item.setBrokerName(CompanyStore.getName(item.getBrokerIdKey()));
 	}
 	
 	@POST
@@ -187,7 +187,7 @@ public class ProjectService {
 					compId = String.format(format, index);
 					isFound = false;
 					for (int ii = 0; ii < list.size(); ii++) {
-						if (compId.equals(list.get(ii).getProjectId())) {
+						if (compId.equals(list.get(ii).getIdString())) {
 							isFound = true;
 							break;
 						}
@@ -201,7 +201,7 @@ public class ProjectService {
 				compId = String.format(format, index);
 			}
 			MW_Project ret = new MW_Project();
-			ret.setProjectId(compId);
+			ret.setIdString(compId);
 			return ResponseUtil.getResponse((new ModelHandler<MW_Project>(MW_Project.class)).convertToJson(ret));
 		} catch (Exception e) {
 			e.printStackTrace();

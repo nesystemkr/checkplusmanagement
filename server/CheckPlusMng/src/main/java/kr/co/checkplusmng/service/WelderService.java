@@ -15,10 +15,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 import kr.co.checkplusmng.dao.WelderDao;
-import kr.co.checkplusmng.model.MW_Project;
 import kr.co.checkplusmng.model.MW_Welder;
-import kr.co.checkplusmng.util.CompanyStore;
-import kr.co.checkplusmng.util.ProjectStore;
 import kr.nesystem.appengine.common.Constant;
 import kr.nesystem.appengine.common.model.CM_PagingList;
 import kr.nesystem.appengine.common.model.ModelHandler;
@@ -38,10 +35,10 @@ public class WelderService {
 			if (AuthToken.isValidToken(welder.getAuthToken()) == false) {
 				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
 			}
-			if (welder.getWelderId() == null || welder.getWelderId().length() == 0) {
+			if (welder.getIdString() == null || welder.getIdString().length() == 0) {
 				return ResponseUtil.getResponse(Status.BAD_REQUEST);
 			}
-			MW_Welder existOne = dao.selectByWelderId(null, welder.getWelderId());
+			MW_Welder existOne = dao.selectByWelderId(null, welder.getIdString());
 			if (existOne != null) {
 				return ResponseUtil.getResponse(Status.CONFLICT);
 			}
@@ -67,20 +64,16 @@ public class WelderService {
 			if (idKey != welder.getIdKey()) {
 				return ResponseUtil.getResponse(Status.BAD_REQUEST);
 			}
-			if (welder.getWelderId() == null || welder.getWelderId().length() == 0) {
+			if (welder.getIdString() == null || welder.getIdString().length() == 0) {
 				return ResponseUtil.getResponse(Status.BAD_REQUEST);
 			}
 			MW_Welder existOne = dao.select(null, idKey);
 			if (existOne == null) {
 				return ResponseUtil.getResponse(Status.NOT_FOUND);
 			}
-			existOne.setProjectIdKey(welder.getProjectIdKey());
 			existOne.setModelName(welder.getModelName());
 			existOne.setWeldType(welder.getWeldType());
-			existOne.setSubDevice(welder.getSubDevice());
 			existOne.setCustomized(welder.getCustomized());
-			existOne.setInstallDate(welder.getInstallDate());
-			existOne.setInstallLocation(welder.getInstallLocation());
 			existOne.setMemo(welder.getMemo());
 			existOne.setOrderSeq(welder.getOrderSeq());
 			dao.update(existOne);
@@ -163,10 +156,5 @@ public class WelderService {
 	}
 	
 	private void fillupSubData(MW_Welder item) {
-		MW_Project project = ProjectStore.get(item.getProjectIdKey());
-		if (project != null) {
-			item.setProjectName(project.getProjectName());
-			item.setContractCompanyName(CompanyStore.getName(project.getContractCompanyIdKey()));
-		}
 	}
 }

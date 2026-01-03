@@ -32,10 +32,10 @@ public class ProjectStore {
 		_stores = null;
 		load();
 	}
-	static public String getProjectName(long idKey) {
+	static public String getName(long idKey) {
 		MW_Project item = _stores.get(idKey);
 		if (item != null) {
-			return item.getProjectName();
+			return item.getName();
 		}
 		return null;
 	}
