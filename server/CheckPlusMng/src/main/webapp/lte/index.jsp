@@ -4,7 +4,6 @@
 <script>
 var $gridLayout
 startFuncs[startFuncs.length] = function() {
-	fillUpSelectByUrl("${contextPath}/svc/v1/project/list/0?q=" + getAuthToken(), "lte_projectIdKey", "idKey", "projectName")
 	createDatePicker('lte_registDate')
 	createDatePicker('lte_startDate')
 	createDatePicker('lte_endDate')
@@ -17,26 +16,23 @@ startFuncs[startFuncs.length] = function() {
 			container:"listLayout",
 			showCheckBox: false,
 			colModel: [
-					{ name: 'idKey'              , hidden: true, },
-					{ name: 'projectIdKey'       , hidden: true, },
-					{ name: 'no'                 , label: 'NO'          , width: 50 , align: 'center',},
-					{ name: 'lteId'              , label: '아이디'      , width: 100, align: 'center',},
-					{ name: 'projectName'        , label: '프로젝트'    , width: 100, align: 'center',},
-					{ name: 'contractCompanyName', label: '설치업체'    , width: 100, align: 'center',},
-					{ name: 'modelName'          , label: '모델명'      , width: 100, align: 'center',},
-					{ name: 'deviceSerialNo'     , label: '일련번호'    , width: 100, align: 'center',},
-					{ name: 'usimSerialNo'       , label: '유심일련번호', width: 120, align: 'center',},
-					{ name: 'telephoneNo'        , label: '전화번호'    , width: 120, align: 'center',},
-					{ name: 'lteGateId'          , label: 'LTE_GATE_ID' , width: 100, align: 'center',},
-					{ name: 'lteGatePw'          , label: 'LTE_GATE_PW' , width: 100, align: 'center',},
-					{ name: 'lteWifiId'          , label: 'LTE_WIFI_ID' , width: 100, align: 'center',},
-					{ name: 'lteWifiPw'          , label: 'LTE_WIFI_PW' , width: 100, align: 'center',},
-					{ name: 'registDate'         , label: '가입일'      , width: 100, align: 'center', formatter: getGridDateFormatClosure()},
-					{ name: 'startDate'          , label: '시작일'      , width: 100, align: 'center', formatter: getGridDateFormatClosure()},
-					{ name: 'endDate'            , label: '만기일'      , width: 100, align: 'center', formatter: getGridDateFormatClosure()},
-					{ name: 'contract'           , label: '약정'        , width: 100, align: 'center',},
-					{ name: 'memo'               , label: '메모'        , width: 280, align: 'center',},
-					{ name: 'action'             , label: 'ACTION'      ,             align: 'center', formatter: getGridButtonClosure(buttons)},
+					{ name: 'idKey'     , hidden: true, },
+					{ name: 'no'        , label: 'NO'          , width: 50 , align: 'center',},
+					{ name: 'idString'  , label: '아이디'      , width: 100, align: 'center',},
+					{ name: 'modelName' , label: '모델명'      , width: 100, align: 'center',},
+					{ name: 'serialNo'  , label: '일련번호'    , width: 100, align: 'center',},
+					{ name: 'usimNo'    , label: '유심일련번호', width: 120, align: 'center',},
+					{ name: 'telephone' , label: '전화번호'    , width: 120, align: 'center',},
+					{ name: 'gateId'    , label: 'LTE_GATE_ID' , width: 100, align: 'center',},
+					{ name: 'gatePw'    , label: 'LTE_GATE_PW' , width: 100, align: 'center',},
+					{ name: 'wifiId'    , label: 'LTE_WIFI_ID' , width: 100, align: 'center',},
+					{ name: 'wifiPw'    , label: 'LTE_WIFI_PW' , width: 100, align: 'center',},
+					{ name: 'registDate', label: '가입일'      , width: 100, align: 'center', formatter: getGridDateFormatClosure()},
+					{ name: 'startDate' , label: '시작일'      , width: 100, align: 'center', formatter: getGridDateFormatClosure()},
+					{ name: 'endDate'   , label: '만기일'      , width: 100, align: 'center', formatter: getGridDateFormatClosure()},
+					{ name: 'contract'  , label: '약정'        , width: 100, align: 'center',},
+					{ name: 'memo'      , label: '메모'        , width: 280, align: 'center',},
+					{ name: 'action'    , label: 'ACTION'      ,             align: 'center', formatter: getGridButtonClosure(buttons)},
 			],
 			stretchColumn:"action",
 	})
@@ -102,17 +98,16 @@ function openPopupForUpdate(idKey) {
 				$("#layertitle").html("LTE기기정보수정")
 				openPopup('defaultPopupLayout', 600, 600)
 				$("#lte_idKey").val(data.idKey)
-				$("#lte_lteId").val(data.lteId)
-				$("#lte_lteId").prop('readonly', true)
-				$("#lte_projectIdKey").val(data.projectIdKey)
+				$("#lte_idString").val(data.lteId)
+				$("#lte_idString").prop('readonly', true)
 				$("#lte_modelName").val(data.modelName)
-				$("#lte_deviceSerialNo").val(data.deviceSerialNo)
-				$("#lte_usimSerialNo").val(data.usimSerialNo)
-				$("#lte_telephoneNo").val(data.telephoneNo)
-				$("#lte_lteGateId").val(data.lteGateId)
-				$("#lte_lteGatePw").val(data.lteGatePw)
-				$("#lte_lteWifiId").val(data.lteWifiId)
-				$("#lte_lteWifiPw").val(data.lteWifiPw)
+				$("#lte_serialNo").val(data.serialNo)
+				$("#lte_usimNo").val(data.usimNo)
+				$("#lte_telephone").val(data.telephone)
+				$("#lte_gateId").val(data.gateId)
+				$("#lte_gatePw").val(data.gatePw)
+				$("#lte_wifiId").val(data.wifiId)
+				$("#lte_wifiPw").val(data.wifiPw)
 				$("#lte_registDate").datepicker('setDate', data.registDate)
 				$("#lte_startDate").datepicker('setDate', data.startDate)
 				$("#lte_endDate").datepicker('setDate', data.endDate)
@@ -137,7 +132,7 @@ function getNewId() {
 	nesAjax("${contextPath}/svc/v1/lte/newId?format=LTE_%2504d&q=" + getAuthToken(),
 			null,
 			function(data) {
-				$("#lte_lteId").val(data.lteId)
+				$("#lte_idString").val(data.lteId)
 			},
 			function(data) {
 				alert(JSON.stringify(data))
@@ -147,17 +142,16 @@ function getNewId() {
 
 function resetEdit() {
 	$("#lte_idKey").val('')
-	$("#lte_lteId").val('')
-	$("#lte_lteId").prop('readonly', false)
-	$("#lte_projectIdKey").val('')
+	$("#lte_idString").val('')
+	$("#lte_idString").prop('readonly', false)
 	$("#lte_modelName").val('')
-	$("#lte_deviceSerialNo").val('')
-	$("#lte_usimSerialNo").val('')
-	$("#lte_telephoneNo").val('')
-	$("#lte_lteGateId").val('')
-	$("#lte_lteGatePw").val('')
-	$("#lte_lteWifiId").val('')
-	$("#lte_lteWifiPw").val('')
+	$("#lte_serialNo").val('')
+	$("#lte_usimNo").val('')
+	$("#lte_telephone").val('')
+	$("#lte_gateId").val('')
+	$("#lte_gatePw").val('')
+	$("#lte_wifiId").val('')
+	$("#lte_wifiPw").val('')
 	$("#lte_registDate").val('')
 	$("#lte_startDate").val('')
 	$("#lte_endDate").val('')
@@ -172,9 +166,9 @@ function cancelEdit() {
 }
 
 function saveEdit() {
-	if ($("#lte_lteId").val().trim() == "") {
+	if ($("#lte_idString").val().trim() == "") {
 		alert("아이디를 입력해 주세요.")
-		$("#lte_lteId").focus()
+		$("#lte_idString").focus()
 		return
 	}
 //	if ($("#lte_projectIdKey").val() == undefined || $("#lte_projectIdKey").val().trim() == "" || $("#lte_projectIdKey").val() == "0") {
@@ -190,23 +184,22 @@ function saveEdit() {
 	
 	var lte = {};
 	lte.authToken = getAuthToken()
-	lte.idKey          = $("#lte_idKey").val().trim()
-	lte.lteId          = $("#lte_lteId").val().trim()
-	lte.projectIdKey   = $("#lte_projectIdKey").val().trim()
-	lte.modelName      = $("#lte_modelName").val().trim()
-	lte.deviceSerialNo = $("#lte_deviceSerialNo").val().trim()
-	lte.usimSerialNo   = $("#lte_usimSerialNo").val().trim()
-	lte.telephoneNo    = $("#lte_telephoneNo").val().trim()
-	lte.lteGateId      = $("#lte_lteGateId").val().trim()
-	lte.lteGatePw      = $("#lte_lteGatePw").val().trim()
-	lte.lteWifiId      = $("#lte_lteWifiId").val().trim()
-	lte.lteWifiPw      = $("#lte_lteWifiPw").val().trim()
-	lte.registDate     = $("#lte_registDate").datepicker('getDate')
-	lte.startDate      = $("#lte_startDate").datepicker('getDate')
-	lte.endDate        = $("#lte_endDate").datepicker('getDate')
-	lte.contract       = $("#lte_contract").val().trim()
-	lte.memo           = $("#lte_memo").val().trim()
-	lte.orderSeq       = $("#lte_orderSeq").val().trim()
+	lte.idKey      = $("#lte_idKey").val().trim()
+	lte.idString   = $("#lte_idString").val().trim()
+	lte.modelName  = $("#lte_modelName").val().trim()
+	lte.serialNo   = $("#lte_werialNo").val().trim()
+	lte.usimNo     = $("#lte_usimNo").val().trim()
+	lte.telephone  = $("#lte_telephoneNo").val().trim()
+	lte.gateId     = $("#lte_gateId").val().trim()
+	lte.gatePw     = $("#lte_gatePw").val().trim()
+	lte.wifiId     = $("#lte_wifiId").val().trim()
+	lte.wifiPw     = $("#lte_wifiPw").val().trim()
+	lte.registDate = $("#lte_registDate").datepicker('getDate')
+	lte.startDate  = $("#lte_startDate").datepicker('getDate')
+	lte.endDate    = $("#lte_endDate").datepicker('getDate')
+	lte.contract   = $("#lte_contract").val().trim()
+	lte.memo       = $("#lte_memo").val().trim()
+	lte.orderSeq   = $("#lte_orderSeq").val().trim()
 	
 	var url = ""
 	var method = ""
@@ -244,11 +237,7 @@ function saveEdit() {
 			<table class="tbsty">
 				<tr>
 					<th>LTE ID</th>
-					<td><input type="text" name="lte_lteId" id="lte_lteId" style="width:90%"></td>
-				</tr>
-				<tr>
-					<th>프로젝트</th>
-					<td><select name="lte_projectIdKey" id="lte_projectIdKey"></select></td>
+					<td><input type="text" name="lte_idString" id="lte_idString" style="width:90%"></td>
 				</tr>
 				<tr>
 					<th>모델명</th>
@@ -256,31 +245,31 @@ function saveEdit() {
 				</tr>
 				<tr>
 					<th>기기일련번호</th>
-					<td><input type="text" name="lte_deviceSerialNo" id="lte_deviceSerialNo" style="width:90%"></td>
+					<td><input type="text" name="lte_serialNo" id="lte_serialNo" style="width:90%"></td>
 				</tr>
 				<tr>
 					<th>USIM일련번호</th>
-					<td><input type="text" name="lte_usimSerialNo" id="lte_usimSerialNo" style="width:90%"></td>
+					<td><input type="text" name="lte_usimNo" id="lte_usimNo" style="width:90%"></td>
 				</tr>
 				<tr>
 					<th>전화번호</th>
-					<td><input type="text" name="lte_telephoneNo" id="lte_telephoneNo" style="width:90%"></td>
+					<td><input type="text" name="lte_telephone" id="lte_telephone" style="width:90%"></td>
 				</tr>
 				<tr>
 					<th>LTE_GATE_ID</th>
-					<td><input type="text" name="lte_lteGateId" id="lte_lteGateId" style="width:90%"></td>
+					<td><input type="text" name="lte_gateId" id="lte_gateId" style="width:90%"></td>
 				</tr>
 				<tr>
 					<th>LTE_GATE_PW</th>
-					<td><input type="text" name="lte_lteGatePw" id="lte_lteGatePw" style="width:90%"></td>
+					<td><input type="text" name="lte_gatePw" id="lte_gatePw" style="width:90%"></td>
 				</tr>
 				<tr>
 					<th>LTE_WIFI_ID</th>
-					<td><input type="text" name="lte_lteWifiId" id="lte_lteWifiId" style="width:90%"></td>
+					<td><input type="text" name="lte_wifiId" id="lte_wifiId" style="width:90%"></td>
 				</tr>
 				<tr>
 					<th>LTE_WIFI_PW</th>
-					<td><input type="text" name="lte_lteWifiPw" id="lte_lteWifiPw" style="width:90%"></td>
+					<td><input type="text" name="lte_wifiPw" id="lte_wifiPw" style="width:90%"></td>
 				</tr>
 				<tr>
 					<th>등록일</th>
@@ -296,7 +285,7 @@ function saveEdit() {
 				</tr>
 				<tr>
 					<th>약정</th>
-					<td><input name="lte_contract" id="lte_contract" style="width:90%"></td>
+					<td><input type="text" name="lte_contract" id="lte_contract" style="width:90%"></td>
 				</tr>
 				<tr>
 					<th>메모</th>

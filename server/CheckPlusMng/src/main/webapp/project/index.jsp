@@ -4,8 +4,8 @@
 <script>
 var $gridLayout
 startFuncs[startFuncs.length] = function() {
-	fillUpSelectByUrl("${contextPath}/svc/v1/company/list/0?q=" + getAuthToken(), "project_saleCompanyIdKey", "idKey", "name")
-	fillUpSelectByUrl("${contextPath}/svc/v1/company/list/0?q=" + getAuthToken(), "project_contractCompanyIdKey", "idKey", "name")
+	fillUpSelectByUrl("${contextPath}/svc/v1/company/list/0?q=" + getAuthToken(), "project_brokerIdKey", "idKey", "name")
+	fillUpSelectByUrl("${contextPath}/svc/v1/company/list/0?q=" + getAuthToken(), "project_customerIdKey", "idKey", "name")
 	createDatePicker('project_contractDate')
 	var buttons = [
 			{type:'search', callback: 'detailOne'},
@@ -16,17 +16,17 @@ startFuncs[startFuncs.length] = function() {
 			container:"listLayout",
 			showCheckBox: false,
 			colModel: [
-					{ name: 'idKey'               , hidden: true, },
-					{ name: 'saleCompanyIdKey'    , hidden: true, },
-					{ name: 'contractCompanyIdKey', hidden: true, },
-					{ name: 'no'                  , label: 'NO'      , width: 50 , align: 'center',},
-					{ name: 'projectId'           , label: '아이디'  , width: 200, align: 'center',},
-					{ name: 'projectName'         , label: '이름'    , width: 200, align: 'center',},
-					{ name: 'saleCompanyName'     , label: '판매업체', width: 120, align: 'center',},
-					{ name: 'contractCompanyName' , label: '설치업체', width: 100, align: 'center',},
-					{ name: 'contractDate'        , label: '계약일'  , width: 80 , align: 'center', formatter: getGridDateFormatClosure()},
-					{ name: 'memo'                , label: '메모'    , width: 380, align: 'center',},
-					{ name: 'action'              , label: 'ACTION'  ,             align: 'center', formatter: getGridButtonClosure(buttons)},
+					{ name: 'idKey'        , hidden: true, },
+					{ name: 'brokerIdKey'  , hidden: true, },
+					{ name: 'customerIdKey', hidden: true, },
+					{ name: 'no'           , label: 'NO'      , width: 50 , align: 'center',},
+					{ name: 'idString'     , label: '아이디'  , width: 200, align: 'center',},
+					{ name: 'name'         , label: '이름'    , width: 200, align: 'center',},
+					{ name: 'brokerName'   , label: '판매업체', width: 120, align: 'center',},
+					{ name: 'customerName' , label: '설치업체', width: 100, align: 'center',},
+					{ name: 'contractDate' , label: '계약일'  , width: 80 , align: 'center', formatter: getGridDateFormatClosure()},
+					{ name: 'memo'         , label: '메모'    , width: 380, align: 'center',},
+					{ name: 'action'       , label: 'ACTION'  ,             align: 'center', formatter: getGridButtonClosure(buttons)},
 			],
 			stretchColumn:"action",
 	})
@@ -98,11 +98,11 @@ function openPopupForUpdate(idKey) {
 				$("#layertitle").html("프로젝트수정")
 				openPopup('defaultPopupLayout', 600, 600)
 				$("#project_idKey").val(data.idKey)
-				$("#project_projectId").val(data.projectId)
-				$("#project_projectId").prop('readonly', true)
-				$("#project_projectName").val(data.projectName)
-				$("#project_saleCompanyIdKey").val(data.saleCompanyIdKey)
-				$("#project_contractCompanyIdKey").val(data.contractCompanyIdKey)
+				$("#project_idString").val(data.projectId)
+				$("#project_idString").prop('readonly', true)
+				$("#project_name").val(data.projectName)
+				$("#project_brokerIdKey").val(data.brokerIdKey)
+				$("#project_customerIdKey").val(data.customerIdKey)
 				$("#project_contractDate").datepicker('setDate', data.contractDate)
 				$("#project_memo").val(data.memo)
 				$("#project_orderSeq").val(data.orderSeq)
@@ -124,7 +124,7 @@ function getNewId() {
 	nesAjax("${contextPath}/svc/v1/project/newId?format=PROJ_%2504d&q=" + getAuthToken(),
 			null,
 			function(data) {
-				$("#project_projectId").val(data.projectId)
+				$("#project_idString").val(data.projectId)
 			},
 			function(data) {
 				alert(JSON.stringify(data))
@@ -134,11 +134,11 @@ function getNewId() {
 
 function resetEdit() {
 	$("#project_idKey").val('')
-	$("#project_projectId").val('')
-	$("#project_projectId").prop('readonly', false)
-	$("#project_projectName").val('')
-	$("#project_saleCompanyIdKey").val('')
-	$("#project_contractCompanyIdKey").val('')
+	$("#project_idString").val('')
+	$("#project_idString").prop('readonly', false)
+	$("#project_name").val('')
+	$("#project_brokerIdKey").val('')
+	$("#project_customerIdKey").val('')
 	$("#project_contractDate").val('')
 	$("#project_memo").val('')
 	$("#project_orderSeq").val('')
@@ -150,22 +150,17 @@ function cancelEdit() {
 }
 
 function saveEdit() {
-	if ($("#project_projectId").val().trim() == "") {
+	if ($("#project_idString").val().trim() == "") {
 		alert("프로젝아이디를 입력해 주세요.")
-		$("#project_projectId").focus()
+		$("#project_idString").focus()
 		return
 	}
-	if ($("#project_projectName").val().trim() == "") {
+	if ($("#project_name").val().trim() == "") {
 		alert("프로젝트이름을 입력해 주세요.")
 		$("#project_projectName").focus()
 		return
 	}
-	if ($("#project_saleCompanyIdKey").val() == undefined || $("#project_saleCompanyIdKey").val().trim() == "" || $("#project_saleCompanyIdKey").val() == "0") {
-		alert("판매업체를 선택해 주세요.")
-		$("#project_saleCompanyIdKey").focus()
-		return;
-	}
-	if ($("#project_contractCompanyIdKey").val() == undefined || $("#project_contractCompanyIdKey").val().trim() == "" || $("#project_contractCompanyIdKey").val() == "0") {
+	if ($("#project_customerIdKey").val() == undefined || $("#project_customerIdKey").val().trim() == "" || $("#project_customerIdKey").val() == "0") {
 		alert("설치업체를 선택해 주세요.")
 		$("#project_contractCompanyIdKey").focus()
 		return;
@@ -178,14 +173,14 @@ function saveEdit() {
 	
 	var project = {};
 	project.authToken = getAuthToken()
-	project.idKey                = $("#project_idKey").val().trim()
-	project.projectId            = $("#project_projectId").val().trim()
-	project.projectName          = $("#project_projectName").val().trim()
-	project.saleCompanyIdKey     = $("#project_saleCompanyIdKey").val().trim()
-	project.contractCompanyIdKey = $("#project_contractCompanyIdKey").val()
-	project.contractDate         = $("#project_contractDate").datepicker('getDate')
-	project.memo                 = $("#project_memo").val().trim()
-	project.orderSeq             = $("#project_orderSeq").val().trim()
+	project.idKey         = $("#project_idKey").val().trim()
+	project.idString      = $("#project_idString").val().trim()
+	project.name          = $("#project_name").val().trim()
+	project.brokerIdKey   = $("#project_brokerIdKey").val().trim()
+	project.customerIdKey = $("#project_customerIdKey").val()
+	project.contractDate  = $("#project_contractDate").datepicker('getDate')
+	project.memo          = $("#project_memo").val().trim()
+	project.orderSeq      = $("#project_orderSeq").val().trim()
 	
 	var url = ""
 	var method = ""
@@ -223,19 +218,19 @@ function saveEdit() {
 			<table class="tbsty">
 				<tr>
 					<th>프로젝트ID</th>
-					<td><input type="text" name="project_projectId" id="project_projectId" style="width:90%"></td>
+					<td><input type="text" name="project_idString" id="project_idString" style="width:90%"></td>
 				</tr>
 				<tr>
 					<th>프로젝트이름</th>
-					<td><input type="text" name="project_projectName" id="project_projectName" style="width:90%"></td>
+					<td><input type="text" name="project_name" id="project_name" style="width:90%"></td>
 				</tr>
 				<tr>
 					<th>판매업체</th>
-					<td><select name="project_saleCompanyIdKey" id="project_saleCompanyIdKey"></select></td>
+					<td><select name="project_brokerIdKey" id="project_brokerIdKey"></select></td>
 				</tr>
 				<tr>
 					<th>설치업체</th>
-					<td><select name="project_contractCompanyIdKey" id="project_contractCompanyIdKey"></select></td>
+					<td><select name="project_customerIdKey" id="project_customerIdKey"></select></td>
 				</tr>
 				<tr>
 					<th>계약일</th>

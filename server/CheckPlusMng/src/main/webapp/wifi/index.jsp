@@ -4,8 +4,6 @@
 <script>
 var $gridLayout
 startFuncs[startFuncs.length] = function() {
-	fillUpSelectByUrl("${contextPath}/svc/v1/project/list/0?q=" + getAuthToken(), "wifi_projectIdKey", "idKey", "projectName")
-	
 	var buttons = [
 			{type:'search', callback: 'detailOne'},
 			{type:'del'   , callback: 'deleteOne'},
@@ -15,21 +13,18 @@ startFuncs[startFuncs.length] = function() {
 			container:"listLayout",
 			showCheckBox: false,
 			colModel: [
-					{ name: 'idKey'              , hidden: true, },
-					{ name: 'projectIdKey'       , hidden: true, },
-					{ name: 'no'                 , label: 'NO'        , width: 50 , align: 'center',},
-					{ name: 'wifiId'             , label: '아이디'    , width: 100, align: 'center',},
-					{ name: 'projectName'        , label: '프로젝트'  , width: 100, align: 'center',},
-					{ name: 'contractCompanyName', label: '설치업체'  , width: 100, align: 'center',},
-					{ name: 'modelName'          , label: '모델명'    , width: 100, align: 'center',},
-					{ name: 'serialNo'           , label: 'Serial No' , width: 100, align: 'center',},
-					{ name: 'macAddress'         , label: 'MAC Addr'  , width: 120, align: 'center',},
-					{ name: 'apGateId'           , label: 'AP_GATE_ID', width: 100, align: 'center',},
-					{ name: 'apGatePw'           , label: 'AP_GATE_PW', width: 100, align: 'center',},
-					{ name: 'apWifiId'           , label: 'AP_WIFI_ID', width: 100, align: 'center',},
-					{ name: 'apWifiPw'           , label: 'AP_WIFI_PW', width: 100, align: 'center',},
-					{ name: 'memo'               , label: '메모'      , width: 280, align: 'center',},
-					{ name: 'action'             , label: 'ACTION'    ,             align: 'center', formatter: getGridButtonClosure(buttons)},
+					{ name: 'idKey'     , hidden: true, },
+					{ name: 'no'        , label: 'NO'        , width: 50 , align: 'center',},
+					{ name: 'idString'  , label: '아이디'    , width: 100, align: 'center',},
+					{ name: 'modelName' , label: '모델명'    , width: 100, align: 'center',},
+					{ name: 'serialNo'  , label: 'Serial No' , width: 100, align: 'center',},
+					{ name: 'macAddress', label: 'MAC Addr'  , width: 120, align: 'center',},
+					{ name: 'gateId'    , label: 'AP_GATE_ID', width: 100, align: 'center',},
+					{ name: 'gatePw'    , label: 'AP_GATE_PW', width: 100, align: 'center',},
+					{ name: 'wifiId'    , label: 'AP_WIFI_ID', width: 100, align: 'center',},
+					{ name: 'wifiPw'    , label: 'AP_WIFI_PW', width: 100, align: 'center',},
+					{ name: 'memo'      , label: '메모'      , width: 280, align: 'center',},
+					{ name: 'action'    , label: 'ACTION'    ,             align: 'center', formatter: getGridButtonClosure(buttons)},
 			],
 			stretchColumn:"action",
 	})
@@ -95,16 +90,15 @@ function openPopupForUpdate(idKey) {
 				$("#layertitle").html("WIFI기기정보수정")
 				openPopup('defaultPopupLayout', 600, 600)
 				$("#wifi_idKey").val(data.idKey)
-				$("#wifi_wifiId").val(data.wifiId)
-				$("#wifi_wifiId").prop('readonly', true)
-				$("#wifi_projectIdKey").val(data.projectIdKey)
+				$("#wifi_idString").val(data.wifiId)
+				$("#wifi_idString").prop('readonly', true)
 				$("#wifi_modelName").val(data.modelName)
 				$("#wifi_serialNo").val(data.serialNo)
 				$("#wifi_macAddress").val(data.macAddress)
-				$("#wifi_apGateId").val(data.apGateId)
-				$("#wifi_apGatePw").val(data.apGatePw)
-				$("#wifi_apWifiId").val(data.apWifiId)
-				$("#wifi_apWifiPw").val(data.apWifiPw)
+				$("#wifi_gateId").val(data.gateId)
+				$("#wifi_gatePw").val(data.gatePw)
+				$("#wifi_wifiId").val(data.wifiId)
+				$("#wifi_wifiPw").val(data.wifiPw)
 				$("#wifi_memo").val(data.memo)
 				$("#wifi_orderSeq").val(data.orderSeq)
 			},
@@ -125,7 +119,7 @@ function getNewId() {
 	nesAjax("${contextPath}/svc/v1/wifi/newId?format=WIFI_%2504d&q=" + getAuthToken(),
 			null,
 			function(data) {
-				$("#wifi_wifiId").val(data.wifiId)
+				$("#wifi_idString").val(data.wifiId)
 			},
 			function(data) {
 				alert(JSON.stringify(data))
@@ -135,16 +129,16 @@ function getNewId() {
 
 function resetEdit() {
 	$("#wifi_idKey").val('')
-	$("#wifi_wifiId").val('')
-	$("#wifi_wifiId").prop('readonly', false)
+	$("#wifi_idString").val('')
+	$("#wifi_idString").prop('readonly', false)
 	$("#wifi_projectIdKey").val('')
 	$("#wifi_modelName").val('')
 	$("#wifi_serialNo").val('')
 	$("#wifi_macAddress").val('')
-	$("#wifi_apGateId").val('')
-	$("#wifi_apGatePw").val('')
-	$("#wifi_apWifiId").val('')
-	$("#wifi_apWifiPw").val('')
+	$("#wifi_gateId").val('')
+	$("#wifi_gatePw").val('')
+	$("#wifi_wifiId").val('')
+	$("#wifi_wifiPw").val('')
 	$("#wifi_memo").val('')
 	$("#wifi_orderSeq").val('')
 }
@@ -155,16 +149,11 @@ function cancelEdit() {
 }
 
 function saveEdit() {
-	if ($("#wifi_wifiId").val().trim() == "") {
+	if ($("#wifi_idString").val().trim() == "") {
 		alert("아이디를 입력해 주세요.")
-		$("#wifi_wifiId").focus()
+		$("#wifi_idString").focus()
 		return
 	}
-//	if ($("#wifi_projectIdKey").val() == undefined || $("#wifi_projectIdKey").val().trim() == "" || $("#wifi_projectIdKey").val() == "0") {
-//		alert("프로젝트를 선택해 주세요.")
-//		$("#wifi_projectIdKey").focus()
-//		return;
-//	}
 	if ($("#wifi_modelName").val().trim() == "") {
 		alert("모델명을 입력해 주세요.")
 		$("#wifi_modelName").focus()
@@ -173,18 +162,17 @@ function saveEdit() {
 	
 	var wifi = {};
 	wifi.authToken = getAuthToken()
-	wifi.idKey        = $("#wifi_idKey").val().trim()
-	wifi.wifiId       = $("#wifi_wifiId").val().trim()
-	wifi.projectIdKey = $("#wifi_projectIdKey").val().trim()
-	wifi.modelName    = $("#wifi_modelName").val().trim()
-	wifi.serialNo     = $("#wifi_serialNo").val().trim()
-	wifi.macAddress   = $("#wifi_macAddress").val().trim()
-	wifi.apGateId     = $("#wifi_apGateId").val().trim()
-	wifi.apGatePw     = $("#wifi_apGatePw").val().trim()
-	wifi.apWifiId     = $("#wifi_apWifiId").val().trim()
-	wifi.apWifiPw     = $("#wifi_apWifiPw").val().trim()
-	wifi.memo         = $("#wifi_memo").val().trim()
-	wifi.orderSeq     = $("#wifi_orderSeq").val().trim()
+	wifi.idKey      = $("#wifi_idKey").val().trim()
+	wifi.idString   = $("#wifi_idString").val().trim()
+	wifi.modelName  = $("#wifi_modelName").val().trim()
+	wifi.serialNo   = $("#wifi_serialNo").val().trim()
+	wifi.macAddress = $("#wifi_macAddress").val().trim()
+	wifi.gateId   = $("#wifi_gateId").val().trim()
+	wifi.gatePw   = $("#wifi_gatePw").val().trim()
+	wifi.wifiId   = $("#wifi_wifiId").val().trim()
+	wifi.wifiPw   = $("#wifi_wifiPw").val().trim()
+	wifi.memo       = $("#wifi_memo").val().trim()
+	wifi.orderSeq   = $("#wifi_orderSeq").val().trim()
 	
 	var url = ""
 	var method = ""
@@ -222,11 +210,7 @@ function saveEdit() {
 			<table class="tbsty">
 				<tr>
 					<th>WIFI ID</th>
-					<td><input type="text" name="wifi_wifiId" id="wifi_wifiId" style="width:90%"></td>
-				</tr>
-				<tr>
-					<th>프로젝트</th>
-					<td><select name="wifi_projectIdKey" id="wifi_projectIdKey"></select></td>
+					<td><input type="text" name="wifi_idString" id="wifi_idString" style="width:90%"></td>
 				</tr>
 				<tr>
 					<th>모델명</th>
@@ -242,19 +226,19 @@ function saveEdit() {
 				</tr>
 				<tr>
 					<th>AP_GATE_ID</th>
-					<td><input type="text" name="wifi_apGateId" id="wifi_apGateId" style="width:90%"></td>
+					<td><input type="text" name="wifi_gateId" id="wifi_gateId" style="width:90%"></td>
 				</tr>
 				<tr>
 					<th>AP_GATE_PW</th>
-					<td><input type="text" name="wifi_apGatePw" id="wifi_apGatePw" style="width:90%"></td>
+					<td><input type="text" name="wifi_gatePw" id="wifi_gatePw" style="width:90%"></td>
 				</tr>
 				<tr>
 					<th>AP_WIFI_ID</th>
-					<td><input type="text" name="wifi_apWifiId" id="wifi_apWifiId" style="width:90%"></td>
+					<td><input type="text" name="wifi_wifiId" id="wifi_wifiId" style="width:90%"></td>
 				</tr>
 				<tr>
 					<th>AP_WIFI_PW</th>
-					<td><input name="wifi_apWifiPw" id="wifi_apWifiPw" style="width:90%"></td>
+					<td><input type="text" name="wifi_wifiPw" id="wifi_wifiPw" style="width:90%"></td>
 				</tr>
 				<tr>
 					<th>메모</th>

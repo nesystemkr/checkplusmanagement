@@ -4,8 +4,6 @@
 <script>
 var $gridLayout
 startFuncs[startFuncs.length] = function() {
-	fillUpSelect('${contextPath}', 'company_status', 'COMPANYSTATUS')
-	
 	var buttons = [
 			{type:'search', callback: 'detailOne'},
 			{type:'del'   , callback: 'deleteOne'},
@@ -15,17 +13,16 @@ startFuncs[startFuncs.length] = function() {
 			container:"listLayout",
 			showCheckBox: false,
 			colModel: [
-					{ name: 'idKey'               , hidden: true, },
-					{ name: 'no'                  , label: 'NO'      , width: 50 , align: 'center',},
-					{ name: 'companyId'           , label: '아이디'  , width: 100, align: 'center',},
-					{ name: 'name'                , label: '이름'    , width: 100, align: 'center',},
-					{ name: 'telephone1'          , label: '전화번호', width: 120, align: 'center',},
-					{ name: 'mainOfficer'         , label: '주담당자', width: 100, align: 'center',},
-					{ name: 'mainOfficerPosition' , label: '직책'    , width: 80 , align: 'center',},
-					{ name: 'mainOfficerTelephone', label: '전화번호', width: 120, align: 'center',},
-					{ name: 'mainOfficerEmail'    , label: '이메일'  , width: 140, align: 'center',},
-					{ name: 'memo'                , label: '메모'    , width: 280, align: 'center',},
-					{ name: 'action'              , label: 'ACTION'  ,             align: 'center', formatter: getGridButtonClosure(buttons)},
+					{ name: 'idKey'     , hidden: true, },
+					{ name: 'no'        , label: 'NO'      , width: 50 , align: 'center',},
+					{ name: 'idString'  , label: '아이디'  , width: 100, align: 'center',},
+					{ name: 'name'      , label: '이름'    , width: 100, align: 'center',},
+					{ name: 'telephone' , label: '전화번호', width: 120, align: 'center',},
+					{ name: 'eEmail'    , label: '이메일'  , width: 140, align: 'center',},
+					{ name: 'officer'   , label: '주담당자', width: 100, align: 'center',},
+					{ name: 'officerTel', label: '담당자T' , width: 120, align: 'center',},
+					{ name: 'memo'      , label: '메모'    , width: 280, align: 'center',},
+					{ name: 'action'    , label: 'ACTION'  ,             align: 'center', formatter: getGridButtonClosure(buttons)},
 			],
 			stretchColumn:"action",
 	})
@@ -91,23 +88,15 @@ function openPopupForUpdate(idKey) {
 				$("#layertitle").html("업체정보수정")
 				openPopup('defaultPopupLayout', 600, 600)
 				$("#company_idKey").val(data.idKey)
-				$("#company_companyId").val(data.companyId)
-				$("#company_companyId").prop('readonly', true)
+				$("#company_IdString").val(data.idString)
+				$("#company_IdString").prop('readonly', true)
 				$("#company_name").val(data.name)
-				$("#company_address1").val(data.address1)
-				$("#company_telephone1").val(data.telephone1)
-				$("#company_address2").val(data.address2)
-				$("#company_telephone2").val(data.telephone2)
-				$("#company_mainOfficer").val(data.mainOfficer)
-				$("#company_mainOfficerPosition").val(data.mainOfficerPosition)
-				$("#company_mainOfficerTelephone").val(data.mainOfficerTelephone)
-				$("#company_mainOfficerEmail").val(data.mainOfficerEmail)
-				$("#company_subOfficer").val(data.subOfficer)
-				$("#company_subOfficerPosition").val(data.subOfficerPosition)
-				$("#company_subOfficerTelephone").val(data.subOfficerTelephone)
-				$("#company_subOfficerEmail").val(data.subOfficerEmail)
+				$("#company_address").val(data.address)
+				$("#company_telephone").val(data.telephone)
+				$("#company_email").val(data.email)
+				$("#company_officer").val(data.officer)
+				$("#company_officerTel").val(data.officerTel)
 				$("#company_memo").val(data.memo)
-				$("#company_status").val(data.status)
 				$("#company_orderSeq").val(data.orderSeq)
 			},
 			function(data) {
@@ -124,23 +113,15 @@ function openPopupForRegist() {
 
 function resetEdit() {
 	$("#company_idKey").val('')
-	$("#company_companyId").val('')
-	$("#company_companyId").prop('readonly', false)
+	$("#company_IdString").val('')
+	$("#company_IdString").prop('readonly', false)
 	$("#company_name").val('')
-	$("#company_address1").val('')
-	$("#company_telephone1").val('')
-	$("#company_address2").val('')
-	$("#company_telephone2").val('')
-	$("#company_mainOfficer").val('')
-	$("#company_mainOfficerPosition").val('')
-	$("#company_mainOfficerTelephone").val('')
-	$("#company_mainOfficerEmail").val('')
-	$("#company_subOfficer").val('')
-	$("#company_subOfficerPosition").val('')
-	$("#company_subOfficerTelephone").val('')
-	$("#company_subOfficerEmail").val('')
+	$("#company_address").val('')
+	$("#company_telephone").val('')
+	$("#company_email").val('')
+	$("#company_officer").val('')
+	$("#company_officerTel").val('')
 	$("#company_memo").val('')
-	$("#company_status").val('1')
 	$("#company_orderSeq").val('')
 }
 
@@ -150,9 +131,9 @@ function cancelEdit() {
 }
 
 function saveEdit() {
-	if ($("#company_companyId").val().trim() == "") {
+	if ($("#company_IdString").val().trim() == "") {
 		alert("아이디를 입력해 주세요.")
-		$("#company_companyId").focus()
+		$("#company_IdString").focus()
 		return
 	}
 	if ($("#company_name").val().trim() == "") {
@@ -160,41 +141,33 @@ function saveEdit() {
 		$("#company_name").focus()
 		return
 	}
-	if ($("#company_address1").val().trim() == "") {
+	if ($("#company_address").val().trim() == "") {
 		alert("주소를 입력해 주세요.")
-		$("#company_address1").focus()
+		$("#company_address").focus()
 		return;
 	}
-	if ($("#company_telephone1").val().trim() == "") {
+	if ($("#company_telephone").val().trim() == "") {
 		alert("전화번호를 입력해 주세요.")
-		$("#company_telephone1").focus()
+		$("#company_telephone").focus()
 		return;
 	}
-	if ($("#company_mainOfficer").val().trim() == "") {
+	if ($("#company_officer").val().trim() == "") {
 		alert("주 담당자를 입력해 주세요.")
-		$("#company_mainOfficer").focus()
+		$("#company_officer").focus()
 		return;
 	}
 	
 	var company = {};
 	company.authToken = getAuthToken()
 	company.idKey      = $("#company_idKey").val().trim()
-	company.companyId  = $("#company_companyId").val().trim()
+	company.idString   = $("#company_IdString").val().trim()
 	company.name       = $("#company_name").val().trim()
-	company.address1   = $("#company_address1").val().trim()
-	company.telephone1 = $("#company_telephone1").val().trim()
-	company.address2   = $("#company_address2").val().trim()
-	company.telephone2 = $("#company_telephone2").val().trim()
-	company.mainOfficer          = $("#company_mainOfficer").val().trim()
-	company.mainOfficerPosition  = $("#company_mainOfficerPosition").val().trim()
-	company.mainOfficerTelephone = $("#company_mainOfficerTelephone").val().trim()
-	company.mainOfficerEmail     = $("#company_mainOfficerEmail").val().trim()
-	company.subOfficer           = $("#company_subOfficer").val().trim()
-	company.subOfficerPosition   = $("#company_subOfficerPosition").val().trim()
-	company.subOfficerTelephone  = $("#company_subOfficerTelephone").val().trim()
-	company.subOfficerEmail      = $("#company_subOfficerEmail").val().trim()
+	company.address    = $("#company_address").val().trim()
+	company.telephone  = $("#company_telephone").val().trim()
+	company.email      = $("#company_email").val().trim()
+	company.officer    = $("#company_officer").val().trim()
+	company.officerTel = $("#company_officerTel").val().trim()
 	company.memo   = $("#company_memo").val().trim()
-	company.status = $("#company_status").val().trim()
 	company.orderSeq = $("#company_orderSeq").val().trim()
 	
 	var url = ""
@@ -233,67 +206,35 @@ function saveEdit() {
 			<table class="tbsty">
 				<tr>
 					<th>업체ID</th>
-					<td><input type="text" name="company_companyId" id="company_companyId" style="width:90%"></td>
+					<td><input type="text" name="company_idString" id="company_idString" style="width:90%"></td>
 				</tr>
 				<tr>
 					<th>이름</th>
 					<td><input type="text" name="company_name" id="company_name" style="width:90%"></td>
 				</tr>
 				<tr>
-					<th>주소1</th>
-					<td><input name="company_address1" id="company_address1" style="width:90%"></td>
+					<th>주소</th>
+					<td><input name="company_address" id="company_address" style="width:90%"></td>
 				</tr>
 				<tr>
-					<th>전화번호1</th>
-					<td><input name="company_telephone1" id="company_telephone1" style="width:90%"></td>
+					<th>전화번호</th>
+					<td><input name="company_telephone" id="company_telephone" style="width:90%"></td>
 				</tr>
 				<tr>
-					<th>주소2</th>
-					<td><input name="company_address2" id="company_address2" style="width:90%"></td>
+					<th>이메일</th>
+					<td><input name="company_email" id="company_email" style="width:90%"></td>
 				</tr>
 				<tr>
-					<th>전화번호2</th>
-					<td><input name="company_telephone2" id="company_telephone2" style="width:90%"></td>
-				</tr>
-				<tr>
-					<th>주담당자이름</th>
-					<td><input name="company_mainOfficer" id="company_mainOfficer" style="width:90%"></td>
-				</tr>
-				<tr>
-					<th>주담당자직책</th>
-					<td><input name="company_mainOfficerPosition" id="company_mainOfficerPosition" style="width:90%"></td>
+					<th>주담당자</th>
+					<td><input name="company_officer" id="company_officer" style="width:90%"></td>
 				</tr>
 				<tr>
 					<th>주담당자전화번호</th>
-					<td><input name="company_mainOfficerTelephone" id="company_mainOfficerTelephone" style="width:90%"></td>
-				</tr>
-				<tr>
-					<th>주담당자이메일</th>
-					<td><input name="company_mainOfficerEmail" id="company_mainOfficerEmail" style="width:90%"></td>
-				</tr>
-				<tr>
-					<th>부담당자이름</th>
-					<td><input name="company_subOfficer" id="company_subOfficer" style="width:90%"></td>
-				</tr>
-				<tr>
-					<th>부담당자직책</th>
-					<td><input name="company_subOfficerPosition" id="company_subOfficerPosition" style="width:90%"></td>
-				</tr>
-				<tr>
-					<th>부담당자전화번호</th>
-					<td><input name="company_subOfficerTelephone" id="company_subOfficerTelephone" style="width:90%"></td>
-				</tr>
-				<tr>
-					<th>부담당자이메일</th>
-					<td><input name="company_subOfficerEmail" id="company_subOfficerEmail" style="width:90%"></td>
+					<td><input name="company_officerTel" id="company_officerTel" style="width:90%"></td>
 				</tr>
 				<tr>
 					<th>메모</th>
 					<td><textarea name="company_memo" id="company_memo" style="width:90%" rows="4"></textarea>
-				</tr>
-				<tr>
-					<th>상태</th>
-					<td><select name="company_status" id="company_status" style="width:90%"></select></td>
 				</tr>
 				<tr>
 					<th>순서</th>
