@@ -12,6 +12,7 @@ public class MW_Wifi extends MW_IDBaseModel {
 	private String gatePw;
 	private String wifiId;
 	private String wifiPw;
+	private long currentActivityIdKey;
 	public String getModelName() {
 		return modelName;
 	}
@@ -54,6 +55,12 @@ public class MW_Wifi extends MW_IDBaseModel {
 	public void setWifiPw(String wifiPw) {
 		this.wifiPw = wifiPw;
 	}
+	public long getCurrentActivityIdKey() {
+		return currentActivityIdKey;
+	}
+	public void setCurrentActivityIdKey(long currentActivityIdKey) {
+		this.currentActivityIdKey = currentActivityIdKey;
+	}
 	@Override
 	public FullEntity<?> toEntity(KeyFactory keyFactory) {
 		return super.builder(keyFactory)
@@ -64,6 +71,7 @@ public class MW_Wifi extends MW_IDBaseModel {
 				.set("gatePw", N2Z(gatePw))
 				.set("wifiId", N2Z(wifiId))
 				.set("wifiPw", N2Z(wifiPw))
+				.set("currentActivityIdKey", currentActivityIdKey)
 				.build();
 	}
 	@Override
@@ -76,6 +84,7 @@ public class MW_Wifi extends MW_IDBaseModel {
 				.set("gatePw", N2Z(gatePw))
 				.set("wifiId", N2Z(wifiId))
 				.set("wifiPw", N2Z(wifiPw))
+				.set("currentActivityIdKey", currentActivityIdKey)
 				.build();
 	}
 	@Override
@@ -88,6 +97,7 @@ public class MW_Wifi extends MW_IDBaseModel {
 		setGatePw(entity.getString("gatePw"));
 		setWifiId(entity.getString("wifiId"));
 		setWifiPw(entity.getString("wifiPw"));
+		setCurrentActivityIdKey(entity.getLong("currentActivityIdKey"));
 		return this;
 	}
 }

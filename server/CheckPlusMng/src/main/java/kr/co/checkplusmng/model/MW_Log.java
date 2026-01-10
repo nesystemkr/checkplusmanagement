@@ -7,6 +7,7 @@ import com.google.cloud.datastore.FullEntity;
 import com.google.cloud.datastore.KeyFactory;
 
 import kr.nesystem.appengine.common.model.GAEAutoIncModel;
+import kr.nesystem.appengine.common.model.ModelHandler;
 
 public class MW_Log extends GAEAutoIncModel {
 	private String tableName;
@@ -74,5 +75,20 @@ public class MW_Log extends GAEAutoIncModel {
 		setLogData(entity.getString("logData"));
  		return this;
  	}
-
+	static public MW_Log fromBaseModel(long userIdKey, String operation, MW_BaseModel model) {
+		if (model != null) {
+			try {
+				MW_Log ret = new MW_Log();
+				ret.setTableName(model.getClass().getName());
+				ret.setLogDate(new Date());
+				ret.setUserIdKey(userIdKey);
+				ret.setOperation(operation);
+				ret.setLogData((new ModelHandler<MW_BaseModel>(MW_BaseModel.class)).convertToJson(model));
+				return ret;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
 }

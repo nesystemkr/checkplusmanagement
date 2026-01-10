@@ -1,7 +1,6 @@
 package kr.co.checkplusmng.model;
 
 import java.util.Date;
-
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.FullEntity;
 import com.google.cloud.datastore.KeyFactory;
@@ -19,6 +18,7 @@ public class MW_LTE extends MW_IDBaseModel {
 	private Date startDate;
 	private Date endDate;
 	private String contract;
+	private long currentActivityIdKey;
 	public String getModelName() {
 		return modelName;
 	}
@@ -91,6 +91,12 @@ public class MW_LTE extends MW_IDBaseModel {
 	public void setContract(String contract) {
 		this.contract = contract;
 	}
+	public long getCurrentActivityIdKey() {
+		return currentActivityIdKey;
+	}
+	public void setCurrentActivityIdKey(long currentActivityIdKey) {
+		this.currentActivityIdKey = currentActivityIdKey;
+	}
 	@Override
 	public FullEntity<?> toEntity(KeyFactory keyFactory) {
 		return super.builder(keyFactory)
@@ -106,6 +112,7 @@ public class MW_LTE extends MW_IDBaseModel {
 				.set("startDate", D2Z(startDate))
 				.set("endDate", D2Z(endDate))
 				.set("contract", N2Z(contract))
+				.set("currentActivityIdKey", currentActivityIdKey)
 				.build();
 	}
 	@Override
@@ -123,6 +130,7 @@ public class MW_LTE extends MW_IDBaseModel {
 				.set("startDate", D2Z(startDate))
 				.set("endDate", D2Z(endDate))
 				.set("contract", N2Z(contract))
+				.set("currentActivityIdKey", currentActivityIdKey)
 				.build();
 	}
 	@Override
@@ -140,6 +148,7 @@ public class MW_LTE extends MW_IDBaseModel {
 		setStartDate(L2D(entity.getLong("startDate")));
 		setEndDate(L2D(entity.getLong("endDate")));
 		setContract(entity.getString("contract"));
+		setCurrentActivityIdKey(entity.getLong("currentActivityIdKey"));
 		return this;
 	}
 }

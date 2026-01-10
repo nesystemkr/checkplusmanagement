@@ -3,3 +3,5 @@ server/my-gae-app/.settings
 server/my-gae-app/target
 server/CheckPlusMng/.settings
 server/DataStoreTest/datastore/.settings
+server/helloworld/.gradle
+server/helloworld_v8/.gradle

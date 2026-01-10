@@ -61,12 +61,6 @@ function getDefaultList(page) {
 
 <jsp:include page="/common/paging.jsp"/>
 
-<div id="projectLayout">
-	<table id="projectGrid" style="width:100%;"></table>
-	<table id="projectGrid" style="width:100%;"></table>
-	<table id="projectGrid" style="width:100%;"></table>
-</div>
-
 <jsp:include page="/common/footer.jsp"/>
 
 <script>
@@ -151,7 +145,7 @@ function cancelEdit() {
 
 function saveEdit() {
 	if ($("#project_idString").val().trim() == "") {
-		alert("프로젝아이디를 입력해 주세요.")
+		alert("프로젝트아이디를 입력해 주세요.")
 		$("#project_idString").focus()
 		return
 	}

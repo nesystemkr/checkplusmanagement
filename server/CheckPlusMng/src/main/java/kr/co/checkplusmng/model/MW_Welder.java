@@ -8,6 +8,7 @@ public class MW_Welder extends MW_IDBaseModel {
 	private String modelName;
 	private String weldType;
 	private String customized;
+	private long currentActivityIdKey;
 	public String getModelName() {
 		return modelName;
 	}
@@ -26,12 +27,19 @@ public class MW_Welder extends MW_IDBaseModel {
 	public void setCustomized(String customized) {
 		this.customized = customized;
 	}
+	public long getCurrentActivityIdKey() {
+		return currentActivityIdKey;
+	}
+	public void setCurrentActivityIdKey(long currentActivityIdKey) {
+		this.currentActivityIdKey = currentActivityIdKey;
+	}
 	@Override
 	public FullEntity<?> toEntity(KeyFactory keyFactory) {
 		return super.builder(keyFactory)
 				.set("modelName", N2Z(modelName))
 				.set("weldType", N2Z(weldType))
 				.set("customized", N2Z(customized))
+				.set("currentActivityIdKey", currentActivityIdKey)
 				.build();
 	}
 	@Override
@@ -40,6 +48,7 @@ public class MW_Welder extends MW_IDBaseModel {
 				.set("modelName", N2Z(modelName))
 				.set("weldType", N2Z(weldType))
 				.set("customized", N2Z(customized))
+				.set("currentActivityIdKey", currentActivityIdKey)
 				.build();
 	}
 	@Override
@@ -48,6 +57,7 @@ public class MW_Welder extends MW_IDBaseModel {
 		setModelName(entity.getString("modelName"));
 		setWeldType(entity.getString("weldType"));
 		setCustomized(entity.getString("customized"));
+		setCurrentActivityIdKey(entity.getLong("currentActivityIdKey"));
 		return this;
 	}
 }

@@ -40,5 +40,4 @@ public class MW_Invoice_Element extends MW_BaseModel {
 		setElementIdKey(entity.getLong("elementIdKey"));
 		return this;
 	}
-
 }

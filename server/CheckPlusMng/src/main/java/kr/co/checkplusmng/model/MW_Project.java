@@ -1,7 +1,6 @@
 package kr.co.checkplusmng.model;
 
 import java.util.Date;
-
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.FullEntity;
 import com.google.cloud.datastore.KeyFactory;
@@ -70,8 +69,8 @@ public class MW_Project extends MW_IDBaseModel {
 				.set("customerIdKey", customerIdKey)
 				.set("brokerIdKey", brokerIdKey)
 				.set("contractDate", D2Z(contractDate))
-				.set("checkPlusId", checkPlusId)
-				.set("checkPlusPw", checkPlusPw)
+				.set("checkPlusId", N2Z(checkPlusId))
+				.set("checkPlusPw", N2Z(checkPlusPw))
 				.build();
 	}
 	@Override
@@ -81,8 +80,8 @@ public class MW_Project extends MW_IDBaseModel {
 				.set("customerIdKey", customerIdKey)
 				.set("brokerIdKey", brokerIdKey)
 				.set("contractDate", D2Z(contractDate))
-				.set("checkPlusId", checkPlusId)
-				.set("checkPlusPw", checkPlusPw)
+				.set("checkPlusId", N2Z(checkPlusId))
+				.set("checkPlusPw", N2Z(checkPlusPw))
 				.build();
 	}
 	@Override
