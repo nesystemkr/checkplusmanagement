@@ -98,7 +98,7 @@ function openPopupForUpdate(idKey) {
 				$("#layertitle").html("LTE기기정보수정")
 				openPopup('defaultPopupLayout', 600, 600)
 				$("#lte_idKey").val(data.idKey)
-				$("#lte_idString").val(data.lteId)
+				$("#lte_idString").val(data.idString)
 				$("#lte_idString").prop('readonly', true)
 				$("#lte_modelName").val(data.modelName)
 				$("#lte_serialNo").val(data.serialNo)
@@ -129,10 +129,10 @@ function openPopupForRegist() {
 }
 
 function getNewId() {
-	nesAjax("${contextPath}/svc/v1/lte/newId?format=LTE_%2504d&q=" + getAuthToken(),
+	nesAjax("${contextPath}/svc/v1/lte/newId?q=" + getAuthToken(),
 			null,
 			function(data) {
-				$("#lte_idString").val(data.lteId)
+				$("#lte_idString").val(data.idString)
 			},
 			function(data) {
 				alert(JSON.stringify(data))
@@ -171,11 +171,6 @@ function saveEdit() {
 		$("#lte_idString").focus()
 		return
 	}
-//	if ($("#lte_projectIdKey").val() == undefined || $("#lte_projectIdKey").val().trim() == "" || $("#lte_projectIdKey").val() == "0") {
-//		alert("프로젝트를 선택해 주세요.")
-//		$("#lte_projectIdKey").focus()
-//		return;
-//	}
 	if ($("#lte_modelName").val().trim() == "") {
 		alert("모델명을 입력해 주세요.")
 		$("#lte_modelName").focus()
@@ -187,9 +182,9 @@ function saveEdit() {
 	lte.idKey      = $("#lte_idKey").val().trim()
 	lte.idString   = $("#lte_idString").val().trim()
 	lte.modelName  = $("#lte_modelName").val().trim()
-	lte.serialNo   = $("#lte_werialNo").val().trim()
+	lte.serialNo   = $("#lte_serialNo").val().trim()
 	lte.usimNo     = $("#lte_usimNo").val().trim()
-	lte.telephone  = $("#lte_telephoneNo").val().trim()
+	lte.telephone  = $("#lte_telephone").val().trim()
 	lte.gateId     = $("#lte_gateId").val().trim()
 	lte.gatePw     = $("#lte_gatePw").val().trim()
 	lte.wifiId     = $("#lte_wifiId").val().trim()

@@ -40,7 +40,7 @@ public class LTEService {
 			if (lte.getIdString() == null || lte.getIdString().length() == 0) {
 				return ResponseUtil.getResponse(Status.BAD_REQUEST);
 			}
-			MW_LTE existOne = dao.selectByLTEId(null, lte.getIdString());
+			MW_LTE existOne = dao.selectByIdString(null, lte.getIdString());
 			if (existOne != null) {
 				return ResponseUtil.getResponse(Status.CONFLICT);
 			}
@@ -174,8 +174,7 @@ public class LTEService {
 	@POST
 	@Produces({MediaType.APPLICATION_JSON})
 	@Path("/newId")
-	public Response newId(@QueryParam("format") String format,
-						  @QueryParam("q") String authToken) {
+	public Response newId(@QueryParam("q") String authToken) {
 		try {
 			if (AuthToken.isValidToken(authToken) == false) {
 				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
@@ -184,6 +183,7 @@ public class LTEService {
 			int index = 1;
 			String compId;
 			boolean isFound;
+			String format = "LTE_%05d";
 			if (list != null) {
 				while (true) {
 					compId = String.format(format, index);

@@ -88,8 +88,8 @@ function openPopupForUpdate(idKey) {
 				$("#layertitle").html("업체정보수정")
 				openPopup('defaultPopupLayout', 600, 600)
 				$("#company_idKey").val(data.idKey)
-				$("#company_IdString").val(data.idString)
-				$("#company_IdString").prop('readonly', true)
+				$("#company_idString").val(data.idString)
+				$("#company_idString").prop('readonly', true)
 				$("#company_name").val(data.name)
 				$("#company_address").val(data.address)
 				$("#company_telephone").val(data.telephone)
@@ -109,12 +109,25 @@ function openPopupForRegist() {
 	$("#layertitle").html("업체추가");
 	resetEdit()
 	openPopup('defaultPopupLayout', 600, 600);
+	getNewId()
+}
+
+function getNewId() {
+	nesAjax("${contextPath}/svc/v1/company/newId?q=" + getAuthToken(),
+			null,
+			function(data) {
+				$("#company_idString").val(data.idString)
+			},
+			function(data) {
+				alert(JSON.stringify(data))
+			},
+			"POST")
 }
 
 function resetEdit() {
 	$("#company_idKey").val('')
-	$("#company_IdString").val('')
-	$("#company_IdString").prop('readonly', false)
+	$("#company_idString").val('')
+	$("#company_idString").prop('readonly', false)
 	$("#company_name").val('')
 	$("#company_address").val('')
 	$("#company_telephone").val('')
@@ -131,9 +144,9 @@ function cancelEdit() {
 }
 
 function saveEdit() {
-	if ($("#company_IdString").val().trim() == "") {
+	if ($("#company_idString").val().trim() == "") {
 		alert("아이디를 입력해 주세요.")
-		$("#company_IdString").focus()
+		$("#company_idString").focus()
 		return
 	}
 	if ($("#company_name").val().trim() == "") {
@@ -160,7 +173,7 @@ function saveEdit() {
 	var company = {};
 	company.authToken = getAuthToken()
 	company.idKey      = $("#company_idKey").val().trim()
-	company.idString   = $("#company_IdString").val().trim()
+	company.idString   = $("#company_idString").val().trim()
 	company.name       = $("#company_name").val().trim()
 	company.address    = $("#company_address").val().trim()
 	company.telephone  = $("#company_telephone").val().trim()

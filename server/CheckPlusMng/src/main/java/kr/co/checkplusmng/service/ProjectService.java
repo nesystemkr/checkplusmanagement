@@ -42,7 +42,7 @@ public class ProjectService {
 				project.getName() == null || project.getName().length() == 0) {
 				return ResponseUtil.getResponse(Status.BAD_REQUEST);
 			}
-			MW_Project existOne = dao.selectByProjectId(null, project.getIdString());
+			MW_Project existOne = dao.selectByIdString(null, project.getIdString());
 			if (existOne != null) {
 				return ResponseUtil.getResponse(Status.CONFLICT);
 			}
@@ -172,8 +172,7 @@ public class ProjectService {
 	@POST
 	@Produces({MediaType.APPLICATION_JSON})
 	@Path("/newId")
-	public Response newId(@QueryParam("format") String format,
-						  @QueryParam("q") String authToken) {
+	public Response newId(@QueryParam("q") String authToken) {
 		try {
 			if (AuthToken.isValidToken(authToken) == false) {
 				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
@@ -182,6 +181,7 @@ public class ProjectService {
 			int index = 1;
 			String compId;
 			boolean isFound;
+			String format = "PRO_%05d";
 			if (list != null) {
 				while (true) {
 					compId = String.format(format, index);

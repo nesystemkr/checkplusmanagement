@@ -24,6 +24,6 @@ public class L10NDao extends BaseDeleteAllDao<CM_L10N> {
 															  PropertyFilter.lt("defaultString", nextSearch));
 			filter = CompositeFilter.or(leftFilter, rightFilter);
 		}
-		return super.pagingList(session, filter, offset, size);
+		return super.pagingList(session, filter, offset, size, "idString");
 	}
 }

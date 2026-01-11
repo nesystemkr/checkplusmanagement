@@ -213,7 +213,7 @@ function openPopupForRegist() {
 }
 
 function getNewId() {
-	nesAjax("${contextPath}/svc/v1/activity/newId?format=ACTV_%2504d&q=" + getAuthToken(),
+	nesAjax("${contextPath}/svc/v1/activity/newId?q=" + getAuthToken(),
 			null,
 			function(data) {
 				$("#activity_idString").val(data.idString)

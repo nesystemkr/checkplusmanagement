@@ -37,10 +37,10 @@ public class WifiService {
 			if (AuthToken.isValidToken(wifi.getAuthToken()) == false) {
 				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
 			}
-			if (wifi.getWifiId() == null || wifi.getWifiId().length() == 0) {
+			if (wifi.getIdString() == null || wifi.getIdString().length() == 0) {
 				return ResponseUtil.getResponse(Status.BAD_REQUEST);
 			}
-			MW_Wifi existOne = dao.selectByWifiId(null, wifi.getWifiId());
+			MW_Wifi existOne = dao.selectByIdString(null, wifi.getIdString());
 			if (existOne != null) {
 				return ResponseUtil.getResponse(Status.CONFLICT);
 			}
@@ -66,7 +66,7 @@ public class WifiService {
 			if (idKey != wifi.getIdKey()) {
 				return ResponseUtil.getResponse(Status.BAD_REQUEST);
 			}
-			if (wifi.getWifiId() == null || wifi.getWifiId().length() == 0) {
+			if (wifi.getIdString() == null || wifi.getIdString().length() == 0) {
 				return ResponseUtil.getResponse(Status.BAD_REQUEST);
 			}
 			MW_Wifi existOne = dao.select(null, idKey);
@@ -167,8 +167,7 @@ public class WifiService {
 	@POST
 	@Produces({MediaType.APPLICATION_JSON})
 	@Path("/newId")
-	public Response newId(@QueryParam("format") String format,
-						  @QueryParam("q") String authToken) {
+	public Response newId(@QueryParam("q") String authToken) {
 		try {
 			if (AuthToken.isValidToken(authToken) == false) {
 				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
@@ -177,12 +176,13 @@ public class WifiService {
 			int index = 1;
 			String compId;
 			boolean isFound;
+			String format = "APW_%05d";
 			if (list != null) {
 				while (true) {
 					compId = String.format(format, index);
 					isFound = false;
 					for (int ii = 0; ii < list.size(); ii++) {
-						if (compId.equals(list.get(ii).getWifiId())) {
+						if (compId.equals(list.get(ii).getIdString())) {
 							isFound = true;
 							break;
 						}
@@ -196,7 +196,7 @@ public class WifiService {
 				compId = String.format(format, index);
 			}
 			MW_Wifi ret = new MW_Wifi();
-			ret.setWifiId(compId);
+			ret.setIdString(compId);
 			return ResponseUtil.getResponse((new ModelHandler<MW_Wifi>(MW_Wifi.class)).convertToJson(ret));
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -44,7 +44,7 @@ public class CompanyService {
 				company.getOfficer() == null || company.getOfficer().length() == 0) {
 				return ResponseUtil.getResponse(Status.BAD_REQUEST);
 			}
-			MW_Company existOne = dao.selectByCompanyId(null, company.getIdString());
+			MW_Company existOne = dao.selectByIdString(null, company.getIdString());
 			if (existOne != null) {
 				return ResponseUtil.getResponse(Status.CONFLICT);
 			}
@@ -162,8 +162,7 @@ public class CompanyService {
 	@POST
 	@Produces({MediaType.APPLICATION_JSON})
 	@Path("/newId")
-	public Response newId(@QueryParam("format") String format,
-						  @QueryParam("q") String authToken) {
+	public Response newId(@QueryParam("q") String authToken) {
 		try {
 			if (AuthToken.isValidToken(authToken) == false) {
 				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
@@ -172,6 +171,7 @@ public class CompanyService {
 			int index = 1;
 			String compId;
 			boolean isFound;
+			String format = "CUS_%05d";
 			if (list != null) {
 				while (true) {
 					compId = String.format(format, index);

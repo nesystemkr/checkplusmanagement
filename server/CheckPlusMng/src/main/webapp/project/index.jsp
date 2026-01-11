@@ -92,9 +92,9 @@ function openPopupForUpdate(idKey) {
 				$("#layertitle").html("프로젝트수정")
 				openPopup('defaultPopupLayout', 600, 600)
 				$("#project_idKey").val(data.idKey)
-				$("#project_idString").val(data.projectId)
+				$("#project_idString").val(data.idString)
 				$("#project_idString").prop('readonly', true)
-				$("#project_name").val(data.projectName)
+				$("#project_name").val(data.name)
 				$("#project_brokerIdKey").val(data.brokerIdKey)
 				$("#project_customerIdKey").val(data.customerIdKey)
 				$("#project_contractDate").datepicker('setDate', data.contractDate)
@@ -115,10 +115,10 @@ function openPopupForRegist() {
 }
 
 function getNewId() {
-	nesAjax("${contextPath}/svc/v1/project/newId?format=PROJ_%2504d&q=" + getAuthToken(),
+	nesAjax("${contextPath}/svc/v1/project/newId?q=" + getAuthToken(),
 			null,
 			function(data) {
-				$("#project_idString").val(data.projectId)
+				$("#project_idString").val(data.idString)
 			},
 			function(data) {
 				alert(JSON.stringify(data))
@@ -151,7 +151,7 @@ function saveEdit() {
 	}
 	if ($("#project_name").val().trim() == "") {
 		alert("프로젝트이름을 입력해 주세요.")
-		$("#project_projectName").focus()
+		$("#project_name").focus()
 		return
 	}
 	if ($("#project_customerIdKey").val() == undefined || $("#project_customerIdKey").val().trim() == "" || $("#project_customerIdKey").val() == "0") {
@@ -170,7 +170,9 @@ function saveEdit() {
 	project.idKey         = $("#project_idKey").val().trim()
 	project.idString      = $("#project_idString").val().trim()
 	project.name          = $("#project_name").val().trim()
-	project.brokerIdKey   = $("#project_brokerIdKey").val().trim()
+	if ($("#project_brokerIdKey").val()) {
+		project.brokerIdKey   = $("#project_brokerIdKey").val().trim()
+	}
 	project.customerIdKey = $("#project_customerIdKey").val()
 	project.contractDate  = $("#project_contractDate").datepicker('getDate')
 	project.memo          = $("#project_memo").val().trim()

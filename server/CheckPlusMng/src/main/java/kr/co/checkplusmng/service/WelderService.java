@@ -38,7 +38,7 @@ public class WelderService {
 			if (welder.getIdString() == null || welder.getIdString().length() == 0) {
 				return ResponseUtil.getResponse(Status.BAD_REQUEST);
 			}
-			MW_Welder existOne = dao.selectByWelderId(null, welder.getIdString());
+			MW_Welder existOne = dao.selectByIdString(null, welder.getIdString());
 			if (existOne != null) {
 				return ResponseUtil.getResponse(Status.CONFLICT);
 			}

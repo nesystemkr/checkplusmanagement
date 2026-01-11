@@ -90,7 +90,7 @@ function openPopupForUpdate(idKey) {
 				$("#layertitle").html("WIFI기기정보수정")
 				openPopup('defaultPopupLayout', 600, 600)
 				$("#wifi_idKey").val(data.idKey)
-				$("#wifi_idString").val(data.wifiId)
+				$("#wifi_idString").val(data.idString)
 				$("#wifi_idString").prop('readonly', true)
 				$("#wifi_modelName").val(data.modelName)
 				$("#wifi_serialNo").val(data.serialNo)
@@ -116,10 +116,10 @@ function openPopupForRegist() {
 }
 
 function getNewId() {
-	nesAjax("${contextPath}/svc/v1/wifi/newId?format=WIFI_%2504d&q=" + getAuthToken(),
+	nesAjax("${contextPath}/svc/v1/wifi/newId?q=" + getAuthToken(),
 			null,
 			function(data) {
-				$("#wifi_idString").val(data.wifiId)
+				$("#wifi_idString").val(data.idString)
 			},
 			function(data) {
 				alert(JSON.stringify(data))
@@ -131,7 +131,6 @@ function resetEdit() {
 	$("#wifi_idKey").val('')
 	$("#wifi_idString").val('')
 	$("#wifi_idString").prop('readonly', false)
-	$("#wifi_projectIdKey").val('')
 	$("#wifi_modelName").val('')
 	$("#wifi_serialNo").val('')
 	$("#wifi_macAddress").val('')

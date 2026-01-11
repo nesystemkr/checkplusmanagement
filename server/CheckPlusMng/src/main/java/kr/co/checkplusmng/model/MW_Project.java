@@ -87,7 +87,7 @@ public class MW_Project extends MW_IDBaseModel {
 	@Override
 	public MW_Project fromEntity(Entity entity) {
 		super.fromEntity(entity);
-		setName(entity.getString("projectName"));
+		setName(entity.getString("name"));
 		setCustomerIdKey(entity.getLong("customerIdKey"));
 		setBrokerIdKey(entity.getLong("brokerIdKey"));
 		setContractDate(L2D(entity.getLong("contractDate")));

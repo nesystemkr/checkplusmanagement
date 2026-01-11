@@ -15,7 +15,7 @@ startFuncs[startFuncs.length] = function() {
 			colModel: [
 					{ name: 'idKey'      , hidden: true, },
 					{ name: 'no'         , label: 'NO'          , width: 50 , align: 'center',},
-					{ name: 'welderId'   , label: '아이디'      , width: 100, align: 'center',},
+					{ name: 'idString'   , label: '아이디'      , width: 100, align: 'center',},
 					{ name: 'modelName'  , label: '모델명'      , width: 100, align: 'center',},
 					{ name: 'weldType'   , label: '용접종류'    , width: 100, align: 'center',},
 					{ name: 'customized' , label: '커스터마이징', width: 220, align: 'center',},
@@ -86,7 +86,7 @@ function openPopupForUpdate(idKey) {
 				$("#layertitle").html("용접기정보수정")
 				openPopup('defaultPopupLayout', 600, 600)
 				$("#welder_idKey").val(data.idKey)
-				$("#welder_idString").val(data.welderId)
+				$("#welder_idString").val(data.idString)
 				$("#welder_idString").prop('readonly', true)
 				$("#welder_modelName").val(data.modelName)
 				$("#welder_weldType").val(data.weldType)
@@ -128,11 +128,6 @@ function saveEdit() {
 		$("#welder_idString").focus()
 		return
 	}
-//	if ($("#welder_projectIdKey").val() == undefined || $("#welder_projectIdKey").val().trim() == "" || $("#welder_projectIdKey").val() == "0") {
-//		alert("프로젝트를 선택해 주세요.")
-//		$("#welder_projectIdKey").focus()
-//		return;
-//	}
 	if ($("#welder_modelName").val().trim() == "") {
 		alert("모델명을 입력해 주세요.")
 		$("#welder_modelName").focus()
