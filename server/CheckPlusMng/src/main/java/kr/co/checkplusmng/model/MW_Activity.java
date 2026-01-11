@@ -13,6 +13,9 @@ public class MW_Activity extends MW_IDBaseModel {
 	private Date deliveryDate;
 	private double swTotalAmount;
 	private double swActualAmount;
+	private String projectIdString;
+	private String brokerName;
+	private String customerName;
 	public long getProjectIdKey() {
 		return projectIdKey;
 	}
@@ -48,6 +51,24 @@ public class MW_Activity extends MW_IDBaseModel {
 	}
 	public void setSwActualAmount(double swActualAmount) {
 		this.swActualAmount = swActualAmount;
+	}
+	public String getProjectIdString() {
+		return projectIdString;
+	}
+	public void setProjectIdString(String projectIdString) {
+		this.projectIdString = projectIdString;
+	}
+	public String getBrokerName() {
+		return brokerName;
+	}
+	public void setBrokerName(String brokerName) {
+		this.brokerName = brokerName;
+	}
+	public String getCustomerName() {
+		return customerName;
+	}
+	public void setCustomerName(String customerName) {
+		this.customerName = customerName;
 	}
 	@Override
 	public FullEntity<?> toEntity(KeyFactory keyFactory) {
