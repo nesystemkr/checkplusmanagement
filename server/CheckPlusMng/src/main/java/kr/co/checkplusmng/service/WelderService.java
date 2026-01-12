@@ -118,7 +118,7 @@ public class WelderService {
 				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
 			}
 			int offset = (page - 1) * Constant.DEFAULT_SIZE;
-			CM_PagingList<MW_Welder> paging = dao.pagingList(request.getSession(), null, offset, Constant.DEFAULT_SIZE, "orderSeq");
+			CM_PagingList<MW_Welder> paging = dao.pagingList(request.getSession(), null, offset, Constant.DEFAULT_SIZE);
 			if (paging != null && paging.getList() != null) {
 				for (int ii = 0; ii < paging.getList().size(); ii++) {
 					MW_Welder item = paging.getList().get(ii);

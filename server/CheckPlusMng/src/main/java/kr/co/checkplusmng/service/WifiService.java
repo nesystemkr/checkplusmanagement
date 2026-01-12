@@ -124,7 +124,7 @@ public class WifiService {
 				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
 			}
 			int offset = (page - 1) * Constant.DEFAULT_SIZE;
-			CM_PagingList<MW_Wifi> paging = dao.pagingList(request.getSession(), null, offset, Constant.DEFAULT_SIZE, "orderSeq");
+			CM_PagingList<MW_Wifi> paging = dao.pagingList(request.getSession(), null, offset, Constant.DEFAULT_SIZE);
 			if (paging != null && paging.getList() != null) {
 				for (int ii = 0; ii < paging.getList().size(); ii++) {
 					MW_Wifi item = paging.getList().get(ii);

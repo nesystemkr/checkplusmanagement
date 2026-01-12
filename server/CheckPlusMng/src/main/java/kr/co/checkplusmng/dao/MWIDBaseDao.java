@@ -5,11 +5,10 @@ import java.util.List;
 import com.google.cloud.datastore.StructuredQuery.PropertyFilter;
 
 import jakarta.servlet.http.HttpSession;
-import kr.nesystem.appengine.common.dao.BaseDao;
 import kr.nesystem.appengine.common.model.GAEModel;
 
-public class IDBaseDao<T extends GAEModel> extends BaseDao<T> {
-	public IDBaseDao(Class<T> clazz) {
+public class MWIDBaseDao<T extends GAEModel> extends MWBaseDao<T> {
+	public MWIDBaseDao(Class<T> clazz) {
 		super(clazz);
 	}
 

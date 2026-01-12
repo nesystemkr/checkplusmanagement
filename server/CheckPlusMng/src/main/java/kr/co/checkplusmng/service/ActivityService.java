@@ -17,8 +17,16 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 import kr.co.checkplusmng.dao.ActivityDao;
+import kr.co.checkplusmng.dao.ActivityElementDao;
+import kr.co.checkplusmng.dao.LTEDao;
+import kr.co.checkplusmng.dao.WelderDao;
+import kr.co.checkplusmng.dao.WifiDao;
 import kr.co.checkplusmng.model.MW_Activity;
+import kr.co.checkplusmng.model.MW_Activity_Element;
+import kr.co.checkplusmng.model.MW_LTE;
 import kr.co.checkplusmng.model.MW_Project;
+import kr.co.checkplusmng.model.MW_Welder;
+import kr.co.checkplusmng.model.MW_Wifi;
 import kr.co.checkplusmng.util.CompanyStore;
 import kr.co.checkplusmng.util.ProjectStore;
 import kr.nesystem.appengine.common.Constant;
@@ -125,7 +133,7 @@ public class ActivityService {
 				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
 			}
 			int offset = (page - 1) * Constant.DEFAULT_SIZE;
-			CM_PagingList<MW_Activity> paging = dao.pagingList(request.getSession(), null, offset, Constant.DEFAULT_SIZE, "orderSeq");
+			CM_PagingList<MW_Activity> paging = dao.pagingList(request.getSession(), null, offset, Constant.DEFAULT_SIZE);
 			if (paging != null && paging.getList() != null) {
 				for (int ii = 0; ii < paging.getList().size(); ii++) {
 					MW_Activity item = paging.getList().get(ii);
@@ -208,4 +216,57 @@ public class ActivityService {
 			return ResponseUtil.internalError(e.getMessage());
 		}
 	}
+	
+	@SuppressWarnings("rawtypes")
+	@POST
+	@Consumes({MediaType.APPLICATION_JSON})
+	@Produces({MediaType.APPLICATION_JSON})
+	@Path("/elements")
+	public Response insertOrUpdateElements(CM_PagingList<MW_Activity_Element> paging) throws Exception {
+		try {
+			if (AuthToken.isValidToken(paging.getAuthToken()) == false) {
+				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
+			}
+			if (paging.getList() == null || paging.getList().size() == 0) {
+				return ResponseUtil.getResponse(Status.BAD_REQUEST);
+			}
+			for (int ii = 0; ii < paging.getList().size(); ii++) {
+				if (paging.getList().get(ii).getActivityIdKey() == 0) {
+					return ResponseUtil.getResponse(Status.BAD_REQUEST);
+				}
+			}
+			ActivityElementDao elementDao = new ActivityElementDao();
+			elementDao.insertOrUpdate(paging.getList());
+			WifiDao wifiDao = new WifiDao();
+			LTEDao lteDao = new LTEDao();
+			WelderDao welderDao = new WelderDao();
+			for (int ii = 0; ii < paging.getList().size(); ii++) {
+				MW_Activity_Element item = paging.getList().get(ii);
+				if ("2".equals(item.getElementType())) { //WIFI
+					MW_Wifi tempItem = wifiDao.select(null, item.getElementIdKey());
+					if (tempItem != null) {
+						tempItem.setCurrentActivityIdKey(item.getActivityIdKey());
+					}
+					wifiDao.update(tempItem);
+				} else if ("3".equals(item.getElementType())) { //LTE
+					MW_LTE tempItem = lteDao.select(null, item.getElementIdKey());
+					if (tempItem != null) {
+						tempItem.setCurrentActivityIdKey(item.getActivityIdKey());
+					}
+					lteDao.update(tempItem);
+				} else if ("4".equals(item.getElementType())) { //WELDER
+					MW_Welder tempItem = welderDao.select(null, item.getElementIdKey());
+					if (tempItem != null) {
+						tempItem.setCurrentActivityIdKey(item.getActivityIdKey());
+					}
+					welderDao.update(tempItem);
+				}
+			}
+			return ResponseUtil.getResponse((new ModelHandler<CM_PagingList>(CM_PagingList.class)).convertToJson(paging));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseUtil.internalError(e.getMessage());
+		}
+	}
 }
+ 

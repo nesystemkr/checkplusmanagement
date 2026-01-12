@@ -32,12 +32,6 @@ public class CM_BoardContent extends GAEAutoIncModel {
 	private CM_AttachmentGroup attachmentGroup;
 	private List<CM_BoardContent> answers;
 	private List<CM_BoardContentReply> replies;
-	public long getIdKey() {
-		return idKey;
-	}
-	public void setIdKey(long idKey) {
-		this.idKey = idKey;
-	}
 	public long getBoardIdKey() {
 		return boardIdKey;
 	}
