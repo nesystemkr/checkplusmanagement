@@ -11,7 +11,7 @@ startFuncs[startFuncs.length] = function() {
 	$gridLayout = initializeGrid({
 			id:"gridLayout",
 			container:"listLayout",
-			showCheckBox: false,
+			showCheckbox: false,
 			colModel: [
 					{ name: 'idKey'     , hidden: true, },
 					{ name: 'no'        , label: 'NO'      , width: 50 , align: 'center',},

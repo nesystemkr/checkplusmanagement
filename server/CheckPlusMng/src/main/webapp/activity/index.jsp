@@ -20,7 +20,7 @@ startFuncs[startFuncs.length] = function() {
 	$gridLayout = initializeGrid({
 			id:"gridLayout",
 			container:"listLayout",
-			showCheckBox: false,
+			showCheckbox: false,
 			colModel: [
 					{ name: 'idKey'          , hidden: true, },
 					{ name: 'brokerIdKey'    , hidden: true, },
@@ -43,20 +43,21 @@ startFuncs[startFuncs.length] = function() {
 	$elementGridLayout = initializeGrid({
 			id:"elementGridLayout",
 			container:"elementListLayout",
-			showCheckBox: true,
+			showCheckbox: true,
+			cellEdit: true,
 			colModel: [
 					{ name: 'idKey'        , hidden: true, },
 					{ name: 'activityIdKey', hidden: true, },
 					{ name: 'elementType'  , hidden: true, },
 					{ name: 'elementIdKey' , hidden: true, },
-					{ name: 'orderSeq    ' , hidden: true, },
+					{ name: 'orderSeq'     , hidden: true, },
 					{ name: 'no'           , label: 'NO'      , width: 50 , align: 'center',},
 					{ name: 'idString'     , label: '아이디'  , width: 200, align: 'center',},
-					{ name: 'elementTitle' , label: '설명'    , width: 580, editable: true, edittype:'text', align: 'center',},
-					{ name: 'unitPrice'    , label: '단가'    , width: 120, editable: true, edittype:'text', align: 'center',},
-					{ name: 'startDate'    , label: '시작일자', width: 80 , editable: true, edittype:'text', align: 'center', formatter: getGridDateFormatClosure()},
-					{ name: 'endDate'      , label: '종료일자', width: 80 , editable: true, edittype:'text', align: 'center', formatter: getGridDateFormatClosure()},
-					{ name: 'memo'         , label: '메모'    , width: 440, editable: true, edittype:'text', align: 'center',},
+					{ name: 'elementTitle' , label: '설명'    , width: 580, edittype:'text', align: 'center',},
+					{ name: 'unitPrice'    , label: '단가'    , width: 120, edittype:'text', align: 'center',},
+					{ name: 'startDate'    , label: '시작일자', width: 80 , edittype:'text', align: 'center', formatter: getGridDateFormatClosure()},
+					{ name: 'endDate'      , label: '종료일자', width: 80 , edittype:'text', align: 'center', formatter: getGridDateFormatClosure()},
+					{ name: 'memo'         , label: '메모'    , width: 440, edittype:'text', align: 'center',},
 					{ name: 'action'       , label: 'ACTION'  ,                             align: 'center', formatter: getGridButtonClosure(buttons2)},
 			],
 			stretchColumn:"action",
@@ -68,19 +69,20 @@ startFuncs[startFuncs.length] = function() {
 	$invoiceGridLayout = initializeGrid({
 			id:"invoiceGridLayout",
 			container:"invoiceListLayout",
-			showCheckBox: true,
+			showCheckbox: true,
+			cellEdit: true,
 			colModel: [
 					{ name: 'idKey'        , hidden: true, },
 					{ name: 'activityIdKey', hidden: true, },
-					{ name: 'orderSeq    ' , hidden: true, },
+					{ name: 'orderSeq'     , hidden: true, },
 					{ name: 'no'           , label: 'NO'      , width: 50 , align: 'center',},
 					{ name: 'idString'     , label: '아이디'  , width: 200, align: 'center',},
 					{ name: 'invoiceType'  , label: '종류'    , width: 250, align: 'center',},
-					{ name: 'issueDate'    , label: '발행일'  , width: 120, editable: true, edittype:'text', align: 'center', formatter: getGridDateFormatClosure()},
-					{ name: 'issueAmount'  , label: '발행금액', width: 100, editable: true, edittype:'text', align: 'center',},
-					{ name: 'approvalNo'   , label: '발행번호', width: 160, editable: true, edittype:'text', align: 'center',},
-					{ name: 'entrydate '   , label: '입금일'  , width: 80 , editable: true, edittype:'text', align: 'center', formatter: getGridDateFormatClosure()},
-					{ name: 'memo'         , label: '메모'    , width: 590, editable: true, edittype:'text', align: 'center',},
+					{ name: 'issueDate'    , label: '발행일'  , width: 120, edittype:'text', align: 'center', formatter: getGridDateFormatClosure()},
+					{ name: 'issueAmount'  , label: '발행금액', width: 100, edittype:'text', align: 'center',},
+					{ name: 'approvalNo'   , label: '발행번호', width: 160, edittype:'text', align: 'center',},
+					{ name: 'entrydate'    , label: '입금일'  , width: 80 , edittype:'text', align: 'center', formatter: getGridDateFormatClosure()},
+					{ name: 'memo'         , label: '메모'    , width: 590, edittype:'text', align: 'center',},
 					{ name: 'action'       , label: 'ACTION'  ,                             align: 'center', formatter: getGridButtonClosure(buttons3)},
 			],
 			stretchColumn:"action",
@@ -166,11 +168,11 @@ function getDefaultList() {
 <div style="height:2px;background-color:#000;margin-top:25px;"></div>
 
 <div class="btn_box" style="padding-top:10px;padding-bottom:5px;">
-	<button class="btn_type small" style="float:left;margin-left:5px;" onclick="openServicePopup()" >설치용역추가  </button>
+	<button class="btn_type small" style="float:left;margin-left:5px;" onclick="addNewServiceRow()" >설치용역추가  </button>
 	<button class="btn_type small" style="float:left;margin-left:5px;" onclick="openWifiPopup()"    >WIFI추가      </button>
 	<button class="btn_type small" style="float:left;margin-left:5px;" onclick="openLTEPopup()"     >LTE추가       </button>
 	<button class="btn_type small" style="float:left;margin-left:5px;" onclick="openWelderPopup()"  >용접기추가    </button>
-	<button class="btn_type small" style="float:left;margin-left:5px;" onclick="openSoftwarePopup()">소프트웨어추가</button>
+	<button class="btn_type small" style="float:left;margin-left:5px;" onclick="addNewSoftwareRow()">소프트웨어추가</button>
 	<button class="btn_type small" onclick="sumElements()">총액재계산</button>
 	&nbsp;&nbsp;
 	<button class="btn_type small" onclick="saveElements()">저장</button>
@@ -224,18 +226,44 @@ function openPopupForUpdate(idKey) {
 				$("#activity_projectIdKey").val(data.projectIdKey)
 				$("#activity_idString").val(data.idString)
 				$("#activity_idString").prop('readonly', true)
-				$("#activity_deliveryDate").datepicker('setDate', (data.deliveryDate))
+				$("#activity_deliveryDate").datepicker('setDate', data.deliveryDate)
 				$("#activity_hwTotalAmount").val(data.hwTotalAmount)
 				$("#activity_hwActualAmount").val(data.hwActualAmount)
 				$("#activity_swTotalAmount").val(data.swTotalAmount)
 				$("#activity_swActualAmount").val(data.swActualAmount)
 				$("#activity_memo").val(data.memo)
 				$("#activity_orderSeq").val(data.orderSeq)
-				//Element 리스트 조회를 호출한다.
-				//Invoice 리스트 조회를 호출한다.
+				getElements(data.idKey)
+				getInvoices(data.idKey)
 			},
 			function(data) {
 				alert("조회에 실패했습니다.")
+			},
+			"GET")
+}
+
+function getElements(activityIdKey) {
+	var url = "${contextPath}/svc/v1/activity/" + activityIdKey + "/elements?q=" + getAuthToken()
+	nesAjax(url,
+			null,
+			function(data) {
+				$elementGridLayout.setDataList(data.list)
+			},
+			function(data) {
+				alert(JSON.stringify(data))
+			},
+			"GET")
+}
+
+function getInvoices(activityIdKey) {
+	var url = "${contextPath}/svc/v1/activity/" + activityIdKey + "/invoices?q=" + getAuthToken()
+	nesAjax(url,
+			null,
+			function(data) {
+				$invoiceGridLayout.setDataList(data.list)
+			},
+			function(data) {
+				alert(JSON.stringify(data))
 			},
 			"GET")
 }
@@ -345,7 +373,7 @@ function saveElements() {
 	finalizeEditingGrid($elementGridLayout);
 	var touchedList = getGridTouchedList($elementGridLayout)
 	for (var ii=0; ii<touchedList.length; ii++) {
-		if (!touchedList[ii].type || touchedList[ii].type.trim() == "") {
+		if (!touchedList[ii].elementType || touchedList[ii].elementType.trim() == "") {
 			touchedList.splice(ii, 1)
 			ii--
 		}
@@ -353,7 +381,7 @@ function saveElements() {
 	if (!touchedList || touchedList.length == 0) {
 		return
 	}
-	var url = "${contextPath}/svc/v1/activity/list"
+	var url = "${contextPath}/svc/v1/activity/elements"
 	var paging = {}
 	paging.authToken = getAuthToken()
 	paging.list = touchedList;
@@ -449,14 +477,46 @@ function delInvoices() {
 var __wifiList;
 var __lteList;
 var __welderList;
+var __serviceRowId;
+var __serviceRowData;
 
-function openServicePopup() {
+function addNewElement(elementIdKey, elementType, elementTitle) {
+	if ($("#activity_projectIdKey").val().trim() == "") {
+		alert("프로젝트를 선택 해 주세요(3).")
+		$("#projectIdKey").focus()
+		return
+	}
+	if ($("#activity_idKey").val().trim() == "") {
+		alert("거래내역을 선택 해 주세요(3).")
+		return
+	}
+	
+	var element = {}
+	element.touch = "I"
+	element.activityIdKey = $("#activity_idKey").val()
+	element.elementType = elementType
+	element.elementTitle = elementTitle
+	element.elementIdKey = elementIdKey
+	element.idString = ""
+	$elementGridLayout.addRowData(undefined, element, "last")
+}
+
+function addNewServiceRow() {
+	addNewElement(0, "1", "용역수행비")
+}
+
+function addNewSoftwareRow() {
+	addNewElement(0, "1", "Software사용료")
 }
 
 function openWifiPopup() {
 	if ($("#activity_projectIdKey").val().trim() == "") {
 		alert("프로젝트를 선택 해 주세요(3).")
 		$("#projectIdKey").focus()
+		return
+	}
+	if ($("#activity_idKey").val().trim() == "") {
+		alert("거래내역을 선택 해 주세요(3).")
 		return
 	}
 
@@ -492,20 +552,7 @@ function selectWifiElement(idKey) {
 	if (!selected) {
 		return
 	}
-	
-	var element = {}
-	element.touch = "I"
-	element.activityIdKey = $("#activity_projectIdKey").val()
-	element.elementType = "2" //WIFI
-	element.elementIdKey = idKey
-	element.idString = selected.idString
-	element.elementTitle = "WIFI " + selected.idString
-	
-	$elementGridLayout.addRowData(undefined, element, "last")
-	var lastRowIndex = getGridLastRowIndex($elementGridLayout)
-	if (lastRowIndex) {
-		$elementGridLayout.editCell(lastRowIndex, 4, true)
-	}
+	addNewElement(idKey, "2", "WIFI기기 : " + selected.idString)
 	closeWifiPopup()
 }
 
@@ -513,6 +560,10 @@ function openLTEPopup() {
 	if ($("#activity_projectIdKey").val().trim() == "") {
 		alert("프로젝트를 선택 해 주세요(3).")
 		$("#projectIdKey").focus()
+		return
+	}
+	if ($("#activity_idKey").val().trim() == "") {
+		alert("거래내역을 선택 해 주세요(3).")
 		return
 	}
 
@@ -548,20 +599,7 @@ function selectLTEElement(idKey) {
 	if (!selected) {
 		return
 	}
-	
-	var element = {}
-	element.touch = "I"
-	element.activityIdKey = $("#activity_projectIdKey").val()
-	element.elementType = "3" //LTE
-	element.elementIdKey = idKey
-	element.idString = selected.idString
-	element.elementTitle = "LTE " + selected.idString
-	
-	$elementGridLayout.addRowData(undefined, element, "last")
-	var lastRowIndex = getGridLastRowIndex($elementGridLayout)
-	if (lastRowIndex) {
-		$elementGridLayout.editCell(lastRowIndex, 4, true)
-	}
+	addNewElement(idKey, "3", "LTE기기 : " + selected.idString)
 	closeLTEPopup()
 }
 
@@ -569,6 +607,10 @@ function openWelderPopup() {
 	if ($("#activity_projectIdKey").val().trim() == "") {
 		alert("프로젝트를 선택 해 주세요(3).")
 		$("#projectIdKey").focus()
+		return
+	}
+	if ($("#activity_idKey").val().trim() == "") {
+		alert("거래내역을 선택 해 주세요(3).")
 		return
 	}
 
@@ -604,24 +646,8 @@ function selectWelderElement(idKey) {
 	if (!selected) {
 		return
 	}
-	
-	var element = {}
-	element.touch = "I"
-	element.activityIdKey = $("#activity_projectIdKey").val()
-	element.elementType = "4" //Welder
-	element.elementIdKey = idKey
-	element.idString = selected.idString
-	element.elementTitle = "Welder " + selected.idString
-	
-	$elementGridLayout.addRowData(undefined, element, "last")
-	var lastRowIndex = getGridLastRowIndex($elementGridLayout)
-	if (lastRowIndex) {
-		$elementGridLayout.editCell(lastRowIndex, 4, true)
-	}
+	addNewElement(idKey, "4", "용접기 : " + selected.idString)
 	closeWelderPopup()
-}
-
-function openSoftwarePopup() {
 }
 </script>
 
@@ -763,11 +789,12 @@ function openPopupForElement(rowId, rowData) {
 	__elementRowData = rowData
 	$("#element_idKey").val(rowData.idKey)
 	$("#element_idString").val(rowData.idString)
+	$("#element_title").val(rowData.elementTitle)
 	$("#element_unitPrice").val(rowData.unitPrice)
-	$("#element_startDate").val(rowData.startDate)
-	$("#element_endDate").val(rowData.endDate)
+	$("#element_startDate").datepicker('setDate', rowData.startDate)
+	$("#element_endDate").datepicker('setDate', rowData.endDate)
 	$("#element_memo").val(rowData.memo)
-	$("#element_orderSeq").val(rowData.memo)
+	$("#element_orderSeq").val(rowData.orderSeq)
 	openPopup('elementPopupLayout', 600, 600)
 }
 
@@ -776,6 +803,7 @@ function resetElement() {
 	__elementRowData = undefined
 	$("#element_idKey").val('')
 	$("#element_idString").val('')
+	$("#element_title").val('')
 	$("#element_unitPrice").val('')
 	$("#element_startDate").val('')
 	$("#element_endDate").val('')
@@ -792,11 +820,12 @@ function saveElement() {
 	if (!__elementRowData) {
 		return
 	}
-	__elementRowData.unitPrice = $("#element_unitPrice").val().trim()
-	__elementRowData.startDate = $("#element_startDate").val().trim()
-	__elementRowData.endDate   = $("#element_endDate").val().trim()
-	__elementRowData.memo      = $("#element_memo").val().trim()
-	__elementRowData.orderSeq  = $("#element_orderSeq").val().trim()
+	__elementRowData.elementTitle = $("#element_title").val().trim()
+	__elementRowData.unitPrice    = $("#element_unitPrice").val().trim()
+	__elementRowData.startDate    = $("#element_startDate").datepicker('getDate')
+	__elementRowData.endDate      = $("#element_endDate").datepicker('getDate')
+	__elementRowData.memo         = $("#element_memo").val().trim()
+	__elementRowData.orderSeq     = $("#element_orderSeq").val().trim()
 	if (__elementRowData.idKey) {
 		__elementRowData.touch = "U"
 	} else {
@@ -819,6 +848,10 @@ function saveElement() {
 				<tr>
 					<th>아이디</th>
 					<td><input type="text" name="element_idString" id="element_idString" style="width:90%" readonly></td>
+				</tr>
+				<tr>
+					<th>설명</th>
+					<td><input type="text" name="element_title" id="element_title" style="width:90%"></td>
 				</tr>
 				<tr>
 					<th>단가</th>
@@ -869,10 +902,10 @@ function openPopupForInvoice(rowId, rowData) {
 	__invoiceRowData = rowData
 	$("#invoice_idKey").val(rowData.idKey)
 	$("#invoice_idString").val(rowData.idString)
-	$("#invoice_invoiceType").val(rowData.unitPrice)
-	$("#invoice_issueAmount").val(rowData.startDate)
-	$("#invoice_issueDate").val(rowData.endDate)
-	$("#invoice_entryDate").val(rowData.memo)
+	$("#invoice_invoiceType").val(rowData.invoiceType)
+	$("#invoice_issueAmount").val(rowData.issueAmount)
+	$("#invoice_issueDate").datepicker('setDate', rowData.issueDate)
+	$("#invoice_entryDate").datepicker('setDate', rowData.entryDate)
 	$("#invoice_memo").val(rowData.memo)
 	$("#invoice_orderSeq").val(rowData.memo)
 	openPopup('invoicePopupLayout', 600, 600)
@@ -903,8 +936,8 @@ function saveInvoice() {
 	}
 	__invoiceRowData.invoiceType = $("#invoice_invoiceType").val().trim()
 	__invoiceRowData.issueAmount = $("#invoice_issueAmount").val().trim()
-	__invoiceRowData.issueDate   = $("#invoice_issueDate").val().trim()
-	__invoiceRowData.entryDate   = $("#invoice_entryDate").val().trim()
+	__invoiceRowData.issueDate   = $("#invoice_issueDate").datepicker('getDate')
+	__invoiceRowData.entryDate   = $("#invoice_entryDate").datepicker('getDate')
 	__invoiceRowData.memo        = $("#invoice_memo").val().trim()
 	__invoiceRowData.orderSeq    = $("#invoice_orderSeq").val().trim()
 	if (__invoiceRowId) {
@@ -917,7 +950,6 @@ function saveInvoice() {
 		if (lastRowIndex) {
 			$invoiceGridLayout.editCell(lastRowIndex, 2, true)
 		}
-
 	}
 	cancelInvoice()
 }

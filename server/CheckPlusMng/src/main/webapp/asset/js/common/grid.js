@@ -21,7 +21,7 @@ function initializeGrid(options) {
 	
 	var retGrid = $("#" + options.id).jqGrid({
 		colModel: options.colModel,  // 컬럼정보 assign
-		multiselect: options.showCheckBox == undefined ? true : options.showCheckBox, // checkbox 표시여부
+		multiselect: options.showCheckbox == undefined ? true : options.showCheckbox, // checkbox 표시여부
 		multiselectWidth: 30, // checkbox width
 		autowidth: options.stretchColumn ? false : true,
 		shrinkToFit: false,
@@ -107,7 +107,7 @@ function resizeToFitGridContainer(gridLayout, options) {
 	setTimeout(function() {
 			if (options.stretchColumn) {
 				var newWidth = $("#" + options.container).width()
-				if (options.showCheckBox == undefined || options.showCheckBox == true) {
+				if (options.showCheckbox == undefined || options.showCheckbox == true) {
 					newWidth -= 30
 				}
 				for (var ii=0; ii<options.colModel.length; ii++) {

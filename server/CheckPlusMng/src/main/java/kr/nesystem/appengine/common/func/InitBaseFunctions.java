@@ -319,7 +319,7 @@ public class InitBaseFunctions {
 //		PO999002_1.getRows().add(new CM_PopupRow("PO999002_SERVICEURL", "serviceUrl", CM_PopupRow.DATATYPE_STRING, "Y", "조회URL을 입력하세요."));
 //		PO999002_1.getRows().add(new CM_PopupRow("PO999002_NEEDAUTH", "needAuth", "BOOLEANYN", "Y"));
 //		PO999002_1.getRows().add(new CM_PopupRow("PO999002_JGGRID", "jqGrid", "BOOLEANYN", "Y"));
-//		PO999002_1.getRows().add(new CM_PopupRow("PO999002_SHOWCHECKBOX", "showCheckBox", "BOOLEANYN", "N"));
+//		PO999002_1.getRows().add(new CM_PopupRow("PO999002_SHOWCHECKBOX", "showCheckbox", "BOOLEANYN", "N"));
 //		PO999002_1.getRows().add(new CM_PopupRow("PO999002_STRETCHCOLUMN", "stretchColumn", CM_PopupRow.DATATYPE_STRING));
 //		PO999002_1.getRows().add(new CM_PopupRow("PO999002_PAGING", "paging", "BOOLEANYN", "Y"));
 //		PO999002_1.getRows().add(new CM_PopupRow("PO999002_POPUPFRAGMENTID", "popupFragmentId", CM_PopupRow.DATATYPE_STRING));

@@ -412,7 +412,7 @@ FragmentBuilder.GridBuilder = function(options) {
 					}
 				}
 			}
-			gridOptions.showCheckBox = (vFragmentModel.showCheckBox == "Y")
+			gridOptions.showCheckbox = (vFragmentModel.showCheckbox == "Y")
 			gridOptions.stretchColumn = vFragmentModel.stretchColumn 
 			gridOptions.id = vGridId
 			gridOptions.container = "container_" + (Math.floor(Math.random() * 100000) + 1)

@@ -1,0 +1,3 @@
+index.ymal에 생성할 인덱스를 지정하고 다음의 명령어를 실행한다.
+
+gcloud datastore indexes create index.yaml

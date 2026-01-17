@@ -2,6 +2,8 @@ package kr.co.checkplusmng.service;
 
 import java.util.List;
 
+import com.google.cloud.datastore.StructuredQuery.PropertyFilter;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -18,11 +20,13 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 import kr.co.checkplusmng.dao.ActivityDao;
 import kr.co.checkplusmng.dao.ActivityElementDao;
+import kr.co.checkplusmng.dao.InvoiceDao;
 import kr.co.checkplusmng.dao.LTEDao;
 import kr.co.checkplusmng.dao.WelderDao;
 import kr.co.checkplusmng.dao.WifiDao;
 import kr.co.checkplusmng.model.MW_Activity;
 import kr.co.checkplusmng.model.MW_Activity_Element;
+import kr.co.checkplusmng.model.MW_Invoice;
 import kr.co.checkplusmng.model.MW_LTE;
 import kr.co.checkplusmng.model.MW_Project;
 import kr.co.checkplusmng.model.MW_Welder;
@@ -217,6 +221,70 @@ public class ActivityService {
 		}
 	}
 	
+	public String getNewElementId(ActivityElementDao elementDao, List<MW_Activity_Element> elements) throws Exception {
+		List<MW_Activity_Element> list =  elementDao.list(null, null, -1, 0);
+		int index = 1;
+		String compId;
+		boolean isFound;
+		String format = "ELE_%05d";
+		if (list != null || elements != null) {
+			while (true) {
+				compId = String.format(format, index);
+				isFound = false;
+				if (list != null) {
+					for (int ii = 0; ii < list.size(); ii++) {
+						if (compId.equals(list.get(ii).getIdString())) {
+							isFound = true;
+							break;
+						}
+					}
+				}
+				if (elements != null) {
+					for (int ii = 0; ii < elements.size(); ii++) {
+						if (compId.equals(elements.get(ii).getIdString())) {
+							isFound = true;
+							break;
+						}
+					}
+				}
+				if (isFound == false) {
+					break;
+				}
+				index++;
+			}
+		} else {
+			compId = String.format(format, index);
+		}
+		return compId;
+	}
+	
+	@SuppressWarnings("rawtypes")
+	@GET
+	@Produces({MediaType.APPLICATION_JSON})
+	@Path("/{activityIdKey}/elements")
+	public Response getElements(@Context HttpServletRequest request,
+								@PathParam("activityIdKey") long activityIdKey,
+								@QueryParam("q") String authToken) {
+		try {
+			if (AuthToken.isValidToken(authToken) == false) {
+				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
+			}
+			ActivityElementDao elementDao = new ActivityElementDao();
+			PropertyFilter filter = PropertyFilter.eq("activityIdKey", activityIdKey);
+			CM_PagingList<MW_Activity_Element> paging = elementDao.pagingList(request.getSession(), filter, -1, 0);
+			if (paging != null && paging.getList() != null) {
+				for (int ii = 0; ii < paging.getList().size(); ii++) {
+					MW_Activity_Element item = paging.getList().get(ii);
+//					fillupSubData(item);
+				}
+			}
+			return ResponseUtil.getResponse((new ModelHandler<CM_PagingList>(CM_PagingList.class)).convertToJson(paging));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseUtil.internalError(e.getMessage());
+		}
+	}
+	
 	@SuppressWarnings("rawtypes")
 	@POST
 	@Consumes({MediaType.APPLICATION_JSON})
@@ -230,12 +298,16 @@ public class ActivityService {
 			if (paging.getList() == null || paging.getList().size() == 0) {
 				return ResponseUtil.getResponse(Status.BAD_REQUEST);
 			}
+			ActivityElementDao elementDao = new ActivityElementDao();
 			for (int ii = 0; ii < paging.getList().size(); ii++) {
 				if (paging.getList().get(ii).getActivityIdKey() == 0) {
 					return ResponseUtil.getResponse(Status.BAD_REQUEST);
 				}
+				if (paging.getList().get(ii).getIdString() == null || paging.getList().get(ii).getIdString().isEmpty()) {
+					paging.getList().get(ii).setIdString(getNewElementId(elementDao, paging.getList()));
+				}
 			}
-			ActivityElementDao elementDao = new ActivityElementDao();
+			
 			elementDao.insertOrUpdate(paging.getList());
 			WifiDao wifiDao = new WifiDao();
 			LTEDao lteDao = new LTEDao();
@@ -260,6 +332,33 @@ public class ActivityService {
 						tempItem.setCurrentActivityIdKey(item.getActivityIdKey());
 					}
 					welderDao.update(tempItem);
+				}
+			}
+			return ResponseUtil.getResponse((new ModelHandler<CM_PagingList>(CM_PagingList.class)).convertToJson(paging));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseUtil.internalError(e.getMessage());
+		}
+	}
+	
+	@SuppressWarnings("rawtypes")
+	@GET
+	@Produces({MediaType.APPLICATION_JSON})
+	@Path("/{activityIdKey}/invoices")
+	public Response getInvoices(@Context HttpServletRequest request,
+								@PathParam("activityIdKey") long activityIdKey,
+								@QueryParam("q") String authToken) {
+		try {
+			if (AuthToken.isValidToken(authToken) == false) {
+				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
+			}
+			InvoiceDao invoiceDao = new InvoiceDao();
+			PropertyFilter filter = PropertyFilter.eq("activityIdKey", activityIdKey);
+			CM_PagingList<MW_Invoice> paging = invoiceDao.pagingList(request.getSession(), filter, -1, 0);
+			if (paging != null && paging.getList() != null) {
+				for (int ii = 0; ii < paging.getList().size(); ii++) {
+					MW_Invoice item = paging.getList().get(ii);
+//					fillupSubData(item);
 				}
 			}
 			return ResponseUtil.getResponse((new ModelHandler<CM_PagingList>(CM_PagingList.class)).convertToJson(paging));

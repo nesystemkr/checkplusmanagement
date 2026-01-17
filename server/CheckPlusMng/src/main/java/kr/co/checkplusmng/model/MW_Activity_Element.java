@@ -6,7 +6,7 @@ import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.FullEntity;
 import com.google.cloud.datastore.KeyFactory;
 
-public class MW_Activity_Element extends MW_BaseModel {
+public class MW_Activity_Element extends MW_IDBaseModel {
 	private long activityIdKey;
 	private String elementType;
 	private long elementIdKey;
