@@ -3,14 +3,18 @@ package kr.co.checkplusmng.service;
 import java.util.List;
 
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
+import kr.co.checkplusmng.dao.ActivityElementDao;
 import kr.co.checkplusmng.dao.InvoiceDao;
+import kr.co.checkplusmng.model.MW_Activity_Element;
 import kr.co.checkplusmng.model.MW_Invoice;
 import kr.nesystem.appengine.common.model.CM_PagingList;
 import kr.nesystem.appengine.common.model.ModelHandler;
@@ -82,6 +86,27 @@ public class InvoiceService {
 			InvoiceDao invoiceDao = new InvoiceDao();
 			invoiceDao.insertOrUpdate(paging.getList());
 			return ResponseUtil.getResponse((new ModelHandler<CM_PagingList>(CM_PagingList.class)).convertToJson(paging));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseUtil.internalError(e.getMessage());
+		}
+	}
+	
+	@DELETE
+	@Produces({MediaType.APPLICATION_JSON})
+	@Path("/{idKey}")
+	public Response deleteInvoice(@PathParam("idKey") long idKey,
+								  @QueryParam("q") String authToken) {
+		try {
+			if (AuthToken.isValidToken(authToken) == false) {
+				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
+			}
+			MW_Invoice existOne = dao.select(null, idKey);
+			if (existOne == null) {
+				return ResponseUtil.getResponse(Status.NOT_FOUND);
+			}
+			dao.delete(existOne);
+			return ResponseUtil.getResponse((new ModelHandler<MW_Invoice>(MW_Invoice.class)).convertToJson(existOne));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseUtil.internalError(e.getMessage());

@@ -103,7 +103,6 @@ public class ActivityService {
 		}
 	}
 	
-	//Update User
 	@DELETE
 	@Produces({MediaType.APPLICATION_JSON})
 	@Path("/{idKey}")
@@ -335,6 +334,28 @@ public class ActivityService {
 				}
 			}
 			return ResponseUtil.getResponse((new ModelHandler<CM_PagingList>(CM_PagingList.class)).convertToJson(paging));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseUtil.internalError(e.getMessage());
+		}
+	}
+	
+	@DELETE
+	@Produces({MediaType.APPLICATION_JSON})
+	@Path("/element/{idKey}")
+	public Response deleteElement(@PathParam("idKey") long idKey,
+								  @QueryParam("q") String authToken) {
+		try {
+			if (AuthToken.isValidToken(authToken) == false) {
+				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
+			}
+			ActivityElementDao elementDao = new ActivityElementDao();
+			MW_Activity_Element existOne = elementDao.select(null, idKey);
+			if (existOne == null) {
+				return ResponseUtil.getResponse(Status.NOT_FOUND);
+			}
+			elementDao.delete(existOne);
+			return ResponseUtil.getResponse((new ModelHandler<MW_Activity_Element>(MW_Activity_Element.class)).convertToJson(existOne));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseUtil.internalError(e.getMessage());

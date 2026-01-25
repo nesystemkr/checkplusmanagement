@@ -60,8 +60,9 @@ public class MW_Activity_Element extends MW_IDBaseModel {
 	public FullEntity<?> toEntity(KeyFactory keyFactory) {
 		return super.builder(keyFactory)
 				.set("activityIdKey", activityIdKey)
-				.set("elementType", elementType)
-				.set("elementTitle", elementTitle)
+				.set("elementType", N2Z(elementType))
+				.set("elementIdKey", elementIdKey)
+				.set("elementTitle",  N2Z(elementTitle))
 				.set("unitPrice", unitPrice)
 				.set("startDate", D2Z(startDate))
 				.set("endDate", D2Z(endDate))
@@ -71,8 +72,9 @@ public class MW_Activity_Element extends MW_IDBaseModel {
 	public Entity toEntity(Entity existOne) {
 		return super.builder(existOne)
 				.set("activityIdKey", activityIdKey)
-				.set("elementType", elementType)
-				.set("elementTitle", elementTitle)
+				.set("elementType", N2Z(elementType))
+				.set("elementIdKey", elementIdKey)
+				.set("elementTitle", N2Z(elementTitle))
 				.set("unitPrice", unitPrice)
 				.set("startDate", D2Z(startDate))
 				.set("endDate", D2Z(endDate))
@@ -83,6 +85,7 @@ public class MW_Activity_Element extends MW_IDBaseModel {
 		super.fromEntity(entity);
 		setActivityIdKey(entity.getLong("activityIdKey"));
 		setElementType(entity.getString("elementType"));
+		setElementIdKey(entity.getLong("elementIdKey"));
 		setElementTitle(entity.getString("elementTitle"));
 		setUnitPrice(entity.getDouble("unitPrice"));
 		setStartDate(L2D(entity.getLong("startDate")));

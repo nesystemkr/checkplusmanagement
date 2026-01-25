@@ -8,22 +8,22 @@ import com.google.cloud.datastore.KeyFactory;
 
 public class MW_Invoice extends MW_IDBaseModel {
 	private long activityIdKey;
-	private String invoideType;
+	private String invoiceType;
 	private Date issueDate;
 	private double issueAmount;
 	private String approvalNo;
-	private Date entiryDate;
+	private Date entryDate;
 	public long getActivityIdKey() {
 		return activityIdKey;
 	}
 	public void setActivityIdKey(long activityIdKey) {
 		this.activityIdKey = activityIdKey;
 	}
-	public String getInvoideType() {
-		return invoideType;
+	public String getInvoiceType() {
+		return invoiceType;
 	}
-	public void setInvoideType(String invoideType) {
-		this.invoideType = invoideType;
+	public void setInvoiceType(String invoiceType) {
+		this.invoiceType = invoiceType;
 	}
 	public Date getIssueDate() {
 		return issueDate;
@@ -43,43 +43,43 @@ public class MW_Invoice extends MW_IDBaseModel {
 	public void setApprovalNo(String approvalNo) {
 		this.approvalNo = approvalNo;
 	}
-	public Date getEntiryDate() {
-		return entiryDate;
+	public Date getEntryDate() {
+		return entryDate;
 	}
-	public void setEntiryDate(Date entiryDate) {
-		this.entiryDate = entiryDate;
+	public void setEntryDate(Date entryDate) {
+		this.entryDate = entryDate;
 	}
 	@Override
 	public FullEntity<?> toEntity(KeyFactory keyFactory) {
 		return super.builder(keyFactory)
 				.set("activityIdKey", activityIdKey)
-				.set("invoideType", invoideType)
+				.set("invoiceType", N2Z(invoiceType))
 				.set("issueDate", D2Z(issueDate))
 				.set("issueAmount", issueAmount)
-				.set("approvalNo", approvalNo)
-				.set("entiryDate", D2Z(entiryDate))
+				.set("approvalNo", N2Z(approvalNo))
+				.set("entryDate", D2Z(entryDate))
 				.build();
 	}
 	@Override
 	public Entity toEntity(Entity existOne) {
 		return super.builder(existOne)
 				.set("activityIdKey", activityIdKey)
-				.set("invoideType", invoideType)
+				.set("invoiceType", N2Z(invoiceType))
 				.set("issueDate", D2Z(issueDate))
 				.set("issueAmount", issueAmount)
-				.set("approvalNo", approvalNo)
-				.set("entiryDate", D2Z(entiryDate))
+				.set("approvalNo", N2Z(approvalNo))
+				.set("entryDate", D2Z(entryDate))
 				.build();
 	}
 	@Override
 	public MW_Invoice fromEntity(Entity entity) {
 		super.fromEntity(entity);
 		setActivityIdKey(entity.getLong("activityIdKey"));
-		setInvoideType(entity.getString("invoideType"));
+		setInvoiceType(entity.getString("invoiceType"));
 		setIssueDate(L2D(entity.getLong("issueDate")));
 		setIssueAmount(entity.getDouble("issueAmount"));
 		setApprovalNo(entity.getString("approvalNo"));
-		setEntiryDate(L2D(entity.getLong("entiryDate")));
+		setEntryDate(L2D(entity.getLong("entryDate")));
 		return this;
 	}
 }
