@@ -144,7 +144,7 @@ function getDefaultList() {
 			<td><input type="text" name="activity_idString" id="activity_idString" style="width:90%;"></td>
 			<th>납품일</th>
 			<td><input type="text" name="activity_deliveryDate" id="activity_deliveryDate" style="width:90%;"></td>
-			<th>일련번호</th>
+			<th>순서</th>
 			<td><input type="text" name="activity_orderSeq" id="activity_orderSeq" style="width:90%;"></td>
 			<th></th><td></td>
 		</tr>
