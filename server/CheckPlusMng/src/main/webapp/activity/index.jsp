@@ -80,7 +80,7 @@ startFuncs[startFuncs.length] = function() {
 					{ name: 'invoiceType'  , label: '종류'    , width: 250, align: 'center',},
 					{ name: 'issueDate'    , label: '발행일'  , width: 120, edittype:'text', align: 'center', formatter: getGridDateFormatClosure()},
 					{ name: 'issueAmount'  , label: '발행금액', width: 140, edittype:'text', align: 'center', formatter: getGridCommaNumberFormatClosure()},
-					{ name: 'approvalNo'   , label: '발행번호', width: 200, edittype:'text', align: 'center',},
+					{ name: 'approvalNo'   , label: '승인번호', width: 200, edittype:'text', align: 'center',},
 					{ name: 'entryDate'    , label: '입금일'  , width: 120, edittype:'text', align: 'center', formatter: getGridDateFormatClosure()},
 					{ name: 'memo'         , label: '메모'    , width: 570, edittype:'text', align: 'center',},
 					{ name: 'action'       , label: 'ACTION'  ,                              align: 'center', formatter: getGridButtonClosure(buttons3)},
