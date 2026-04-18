@@ -1,12 +1,41 @@
 indexes:
+
 - kind: MW_Activity_Element
   properties:
   - name: activityIdKey
   - name: orderSeq
-
 
 - kind: MW_Invoice
   properties:
   - name: activityIdKey
   - name: orderSeq
 
+- kind: MW_Company
+  properties:
+  - name: idString
+  - name: orderSeq
+
+- kind: MW_Project
+  properties:
+  - name: idString
+  - name: orderSeq
+
+- kind: MW_Invoice
+  properties:
+  - name: idString
+  - name: orderSeq
+
+- kind: MW_LTE
+  properties:
+  - name: idString
+  - name: orderSeq
+
+- kind: MW_Welder
+  properties:
+  - name: idString
+  - name: orderSeq
+
+- kind: MW_Wifi
+  properties:
+  - name: idString
+  - name: orderSeq
