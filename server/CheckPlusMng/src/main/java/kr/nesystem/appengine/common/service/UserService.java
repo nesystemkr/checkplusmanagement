@@ -35,9 +35,10 @@ public class UserService {
 	public Response insertUser(CM_User user) throws Exception {
 		try {
 			if (user.getAuthToken() == null || !user.getAuthToken().equals("signupbyuser")) {
-				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
+				if (AuthToken.isValidToken(user.getAuthToken()) == false) {
+					return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
+				}
 			}
-			
 			if (user.getUserId() == null || user.getUserId().length() == 0 ||
 				user.getUserName() == null || user.getUserName().length() == 0 ||
 				user.getPassword() == null || user.getPassword().length() == 0) {

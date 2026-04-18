@@ -157,7 +157,7 @@ function saveEdit() {
 	}
 	
 	var user = {};
-	user.reqToken = getAuthToken();
+	user.authToken = getAuthToken();
 	user.idKey = $("#user_idKey").val().trim();
 	user.userId = $("#user_userId").val().trim();
 	user.password = $("#user_password").val().trim();
@@ -194,7 +194,7 @@ function initLoginFailCount() {
 	var url = "${contextPath}/svc/v1/user/" + $("#user_idKey").val().trim() + "/initLoginFaileCount";
 	var method = "PUT";
 	var user = {};
-	user.reqToken = getAuthToken();
+	user.authToken = getAuthToken();
 	user.idKey = $("#user_idKey").val().trim();
 	
 	nesAjax(url,
@@ -290,7 +290,7 @@ function savePwEdit() {
 	}
 	
 	var user = {};
-	user.reqToken = getAuthToken();
+	user.authToken = getAuthToken();
 	user.idKey = $("#changePw_idKey").val().trim();
 	user.userId = $("#changePw_userId").val().trim();
 	user.password = $("#changePw_password").val().trim();

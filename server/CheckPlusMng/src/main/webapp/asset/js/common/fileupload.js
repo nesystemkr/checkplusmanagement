@@ -593,7 +593,7 @@ JSFileUpload.fileUploader =  function(options) {
 		for (var ii=0; ii<files.length; ii++) {
 			formData.append("uploadfiles", files[ii]);
 		}
-		formData.append("reqToken", getAuthToken());
+		formData.append("authToken", getAuthToken());
 		$.ajax({
 			type: 'POST',
 			url: $url,

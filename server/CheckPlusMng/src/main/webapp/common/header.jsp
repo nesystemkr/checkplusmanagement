@@ -119,7 +119,7 @@ function saveMyInfo() {
 	}
 	
 	var user = {};
-	user.reqToken = getAuthToken();
+	user.authToken = getAuthToken();
 	user.idKey = $("#myInfo_idKey").val().trim();
 	user.userId = $("#myInfo_userId").val().trim();
 	user.userName = $("#myInfo_userName").val().trim();
@@ -222,7 +222,7 @@ function saveMyPwEdit() {
 	}
 	
 	var user = {};
-	user.reqToken = getAuthToken();
+	user.authToken = getAuthToken();
 	user.idKey = $("#changeMyPw_idKey").val().trim();
 	user.userId = $("#changeMyPw_userId").val().trim();
 	user.zipCode = $("#changeMyPw_oldpassword").val().trim();

@@ -285,7 +285,7 @@ FragmentBuilder.GridBuilder = function(options) {
 		}
 		var url = vContextPath + vFragmentModel.gridSaveUrl
 		var paging = {}
-		paging.reqToken = getAuthToken()
+		paging.authToken = getAuthToken()
 		paging.list = touchedList;
 		nesAjax(url,
 				JSON.stringify(paging),
@@ -1137,7 +1137,7 @@ FragmentBuilder.PopupBuilder = function(options) {
 				}
 			}
 		}
-		ret.reqToken = getAuthToken()
+		ret.authToken = getAuthToken()
 		if (vGridBuilder && vGridBuilder.getJQGridTable()) {
 			if (ret.list) {
 				alert("그리드 데이터를 가져올 수 없음 List변수 중복!!!")

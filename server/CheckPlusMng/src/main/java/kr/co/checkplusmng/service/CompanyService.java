@@ -81,6 +81,7 @@ public class CompanyService {
 			if (existOne == null) {
 				return ResponseUtil.getResponse(Status.NOT_FOUND);
 			}
+			existOne.setName(company.getName());
 			existOne.setAddress(company.getAddress());
 			existOne.setTelephone(company.getTelephone());
 			existOne.setEmail(company.getEmail());
