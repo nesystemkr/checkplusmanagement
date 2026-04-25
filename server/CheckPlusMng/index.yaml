@@ -39,3 +39,8 @@ indexes:
   properties:
   - name: idString
   - name: orderSeq
+
+- kind: MW_Device
+  properties:
+  - name: idString
+  - name: orderSeq

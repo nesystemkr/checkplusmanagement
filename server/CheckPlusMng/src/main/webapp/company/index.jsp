@@ -21,6 +21,7 @@ startFuncs[startFuncs.length] = function() {
 					{ name: 'email'     , label: '이메일'  , width: 160, align: 'center',},
 					{ name: 'officer'   , label: '주담당자', width: 120, align: 'center',},
 					{ name: 'officerTel', label: '담당자T' , width: 140, align: 'center',},
+					{ name: 'taxid'     , label: '사업자등록번호' , width: 240, align: 'center',},
 					{ name: 'memo'      , label: '메모'    , width: 480, align: 'center',},
 					{ name: 'action'    , label: 'ACTION'  ,             align: 'center', formatter: getGridButtonClosure(buttons)},
 			],
@@ -96,6 +97,7 @@ function openPopupForUpdate(idKey) {
 				$("#company_email").val(data.email)
 				$("#company_officer").val(data.officer)
 				$("#company_officerTel").val(data.officerTel)
+				$("#company_taxid").val(data.taxid)
 				$("#company_memo").val(data.memo)
 				$("#company_orderSeq").val(data.orderSeq)
 			},
@@ -134,6 +136,7 @@ function resetEdit() {
 	$("#company_email").val('')
 	$("#company_officer").val('')
 	$("#company_officerTel").val('')
+	$("#company_taxid").val('')
 	$("#company_memo").val('')
 	$("#company_orderSeq").val('')
 }
@@ -180,8 +183,9 @@ function saveEdit() {
 	company.email      = $("#company_email").val().trim()
 	company.officer    = $("#company_officer").val().trim()
 	company.officerTel = $("#company_officerTel").val().trim()
-	company.memo   = $("#company_memo").val().trim()
-	company.orderSeq = $("#company_orderSeq").val().trim()
+	company.taxid      = $("#company_taxid").val().trim()
+	company.memo       = $("#company_memo").val().trim()
+	company.orderSeq   = $("#company_orderSeq").val().trim()
 	
 	var url = ""
 	var method = ""
@@ -244,6 +248,10 @@ function saveEdit() {
 				<tr>
 					<th>주담당자전화번호</th>
 					<td><input name="company_officerTel" id="company_officerTel" style="width:90%"></td>
+				</tr>
+				<tr>
+					<th>사업자등록번호</th>
+					<td><input name="company_taxid" id="company_taxid" style="width:90%"></td>
 				</tr>
 				<tr>
 					<th>메모</th>

@@ -11,6 +11,7 @@ public class MW_Company extends MW_IDBaseModel {
 	private String email;
 	private String officer;
 	private String officerTel;
+	private String taxid;
 	public String getName() {
 		return name;
 	}
@@ -47,6 +48,12 @@ public class MW_Company extends MW_IDBaseModel {
 	public void setOfficerTel(String officerTel) {
 		this.officerTel = officerTel;
 	}
+	public String getTaxid() {
+		return taxid;
+	}
+	public void setTaxid(String taxid) {
+		this.taxid = taxid;
+	}
 	@Override
 	public FullEntity<?> toEntity(KeyFactory keyFactory) {
 		return super.builder(keyFactory)
@@ -56,6 +63,7 @@ public class MW_Company extends MW_IDBaseModel {
 				.set("email", N2Z(email))
 				.set("officer", N2Z(officer))
 				.set("officerTel", N2Z(officerTel))
+				.set("taxid", N2Z(taxid))
 				.build();
 	}
 	@Override
@@ -67,6 +75,7 @@ public class MW_Company extends MW_IDBaseModel {
 				.set("email", N2Z(email))
 				.set("officer", N2Z(officer))
 				.set("officerTel", N2Z(officerTel))
+				.set("taxid", N2Z(taxid))
 				.build();
 	}
 	@Override
@@ -78,6 +87,9 @@ public class MW_Company extends MW_IDBaseModel {
 		setEmail(entity.getString("email"));
 		setOfficer(entity.getString("officer"));
 		setOfficerTel(entity.getString("officerTel"));
+		if (entity.contains("taxid")) {
+			setTaxid(entity.getString("taxid"));
+		}
 		return this;
 	}
 }

@@ -16,8 +16,8 @@ startFuncs[startFuncs.length] = function() {
 					{ name: 'idKey'      , hidden: true, },
 					{ name: 'no'         , label: 'NO'          , width: 50 , align: 'center',},
 					{ name: 'idString'   , label: '아이디'      , width: 200, align: 'center',},
+					{ name: 'modelType'  , label: '모델종류'    , width: 240, align: 'center',},
 					{ name: 'modelName'  , label: '모델명'      , width: 200, align: 'center',},
-					{ name: 'weldType'   , label: '용접종류'    , width: 140, align: 'center',},
 					{ name: 'customized' , label: '커스터마이징', width: 400, align: 'center',},
 					{ name: 'memo'       , label: '메모'        , width: 580, align: 'center',},
 					{ name: 'action'     , label: 'ACTION'      ,             align: 'center', formatter: getGridButtonClosure(buttons)},
@@ -32,7 +32,7 @@ function refreshList() {
 }
 
 function getDefaultList(page) {
-	var url = "${contextPath}/svc/v1/welder/list/" + page + "?q=" + getAuthToken();
+	var url = "${contextPath}/svc/v1/device/list/" + page + "?q=" + getAuthToken();
 	nesAjax(url,
 			null,
 			function(data) {
@@ -45,12 +45,12 @@ function getDefaultList(page) {
 			"GET")
 }
 </script>
-<h1>용접기관리</h1>
+<h1>디바이스관리</h1>
 <div id="listLayout">
 	<table id="gridLayout" style="width:100%;"></table>
 </div>
 <div class="btn_box">
-	<button class="btn_type normal" onclick="openPopupForRegist()">용접기추가</button><br>
+	<button class="btn_type normal" onclick="openPopupForRegist()">디바이스추가</button><br>
 </div>
 
 <jsp:include page="/common/paging.jsp"/>
@@ -59,17 +59,17 @@ function getDefaultList(page) {
 
 <script>
 function deleteOne(rowId, rowData) {
-	if (false == confirm("용접기를 삭제 처리하시겠습니까? - 삭제처리를 추후 복구가 불가능합니다.")) {
+	if (false == confirm("디바이스를 삭제 처리하시겠습니까? - 삭제처리를 추후 복구가 불가능합니다.")) {
 		return;
 	}
-	var url = "${contextPath}/svc/v1/welder/" + rowData.idKey + "?q=" + getAuthToken()
+	var url = "${contextPath}/svc/v1/device/" + rowData.idKey + "?q=" + getAuthToken()
 	nesAjax(url,
 			null,
 			function(data) {
 				refreshList()
 			},
 			function(data) {
-				alert("용접기 삭제에 실패했습니다.")
+				alert("디바이스 삭제에 실패했습니다.")
 			},
 			"DELETE")
 }
@@ -79,20 +79,20 @@ function detailOne(rowId, rowData) {
 }
 
 function openPopupForUpdate(idKey) {
-	var url = "${contextPath}/svc/v1/welder/" + idKey + "?q=" + getAuthToken()
+	var url = "${contextPath}/svc/v1/device/" + idKey + "?q=" + getAuthToken()
 	nesAjax(url,
 			null,
 			function(data) {
-				$("#layertitle").html("용접기정보수정")
+				$("#layertitle").html("디바이스정보수정")
 				openPopup('defaultPopupLayout', 600, 600)
-				$("#welder_idKey").val(data.idKey)
-				$("#welder_idString").val(data.idString)
-				$("#welder_idString").prop('readonly', true)
-				$("#welder_modelName").val(data.modelName)
-				$("#welder_weldType").val(data.weldType)
-				$("#welder_customized").val(data.customized)
-				$("#welder_memo").val(data.memo)
-				$("#welder_orderSeq").val(data.orderSeq)
+				$("#device_idKey").val(data.idKey)
+				$("#device_idString").val(data.idString)
+				$("#device_idString").prop('readonly', true)
+				$("#device_modelName").val(data.modelName)
+				$("#device_modelType").val(data.modelType)
+				$("#device_customized").val(data.customized)
+				$("#device_memo").val(data.memo)
+				$("#device_orderSeq").val(data.orderSeq)
 			},
 			function(data) {
 				alert("조회에 실패했습니다.")
@@ -101,20 +101,33 @@ function openPopupForUpdate(idKey) {
 }
 
 function openPopupForRegist() {
-	$("#layertitle").html("용접기추가");
+	$("#layertitle").html("디바이스추가");
 	resetEdit()
 	openPopup('defaultPopupLayout', 600, 600);
+	getNewId()
+}
+
+function getNewId() {
+	nesAjax("${contextPath}/svc/v1/device/newId?q=" + getAuthToken(),
+			null,
+			function(data) {
+				$("#device_idString").val(data.idString)
+			},
+			function(data) {
+				alert(JSON.stringify(data))
+			},
+			"POST")
 }
 
 function resetEdit() {
-	$("#welder_idKey").val('')
-	$("#welder_idString").val('')
-	$("#welder_idString").prop('readonly', false)
-	$("#welder_modelName").val('')
-	$("#welder_weldType").val('')
-	$("#welder_customized").val('')
-	$("#welder_memo").val('')
-	$("#welder_orderSeq").val('')
+	$("#device_idKey").val('')
+	$("#device_idString").val('')
+	$("#device_idString").prop('readonly', false)
+	$("#device_modelType").val('')
+	$("#device_modelName").val('')
+	$("#device_customized").val('')
+	$("#device_memo").val('')
+	$("#device_orderSeq").val('')
 }
 
 function cancelEdit() {
@@ -123,45 +136,50 @@ function cancelEdit() {
 }
 
 function saveEdit() {
-	if ($("#welder_idString").val().trim() == "") {
+	if ($("#device_idString").val().trim() == "") {
 		alert("아이디를 입력해 주세요.")
-		$("#welder_idString").focus()
+		$("#device_idString").focus()
 		return
 	}
-	if ($("#welder_modelName").val().trim() == "") {
+	if ($("#device_modelType").val().trim() == "") {
+		alert("모델종류를 입력해 주세요.")
+		$("#device_modelType").focus()
+		return
+	}
+	if ($("#device_modelName").val().trim() == "") {
 		alert("모델명을 입력해 주세요.")
-		$("#welder_modelName").focus()
+		$("#device_modelName").focus()
 		return
 	}
 	
-	var welder = {};
-	welder.authToken = getAuthToken()
-	welder.idKey      = $("#welder_idKey").val().trim()
-	welder.idString   = $("#welder_idString").val().trim()
-	welder.modelName  = $("#welder_modelName").val().trim()
-	welder.weldType   = $("#welder_weldType").val().trim()
-	welder.customized = $("#welder_customized").val().trim()
-	welder.memo       = $("#welder_memo").val().trim()
-	welder.orderSeq   = $("#welder_orderSeq").val().trim()
+	var device = {};
+	device.authToken = getAuthToken()
+	device.idKey      = $("#device_idKey").val().trim()
+	device.idString   = $("#device_idString").val().trim()
+	device.modelName  = $("#device_modelName").val().trim()
+	device.modelType  = $("#device_modelType").val().trim()
+	device.customized = $("#device_customized").val().trim()
+	device.memo       = $("#device_memo").val().trim()
+	device.orderSeq   = $("#device_orderSeq").val().trim()
 	
 	var url = ""
 	var method = ""
-	if (welder.idKey == "") {
-		url = "${contextPath}/svc/v1/welder"
+	if (device.idKey == "") {
+		url = "${contextPath}/svc/v1/device"
 		method = "POST"
 	} else {
-		url = "${contextPath}/svc/v1/welder/" + welder.idKey
+		url = "${contextPath}/svc/v1/device/" + device.idKey
 		method = "PUT"
 	}
 	nesAjax(url,
-			JSON.stringify(welder),
+			JSON.stringify(device),
 			function(data) {
 				cancelEdit()
 				refreshList()
 			},
 			function(data) {
 				if (data.status == 409) {
-					alert("동일한 아이디의 용접기가 존재합니다.")
+					alert("동일한 아이디의 디바이스가 존재합니다.")
 				} else {
 					alert("입력에 실패했습니다.")
 				}
@@ -176,31 +194,31 @@ function saveEdit() {
 			<a href="#none" class="pop_close white" onClick="cancelEdit();return false;"><span>닫기</span></a>
 		</div>
 		<div class="pop_body">
-			<input type="hidden" name="welder_idKey" id="welder_idKey">
+			<input type="hidden" name="device_idKey" id="device_idKey">
 			<table class="tbsty">
 				<tr>
-					<th>용접기 ID</th>
-					<td><input type="text" name="welder_idString" id="welder_idString" style="width:90%"></td>
+					<th>디바이스ID</th>
+					<td><input type="text" name="device_idString" id="device_idString" style="width:90%"></td>
+				</tr>
+				<tr>
+					<th>모델종류</th>
+					<td><input type="text" name="device_modelType" id="device_modelType" style="width:90%"></td>
 				</tr>
 				<tr>
 					<th>모델명</th>
-					<td><input type="text" name="welder_modelName" id="welder_modelName" style="width:90%"></td>
-				</tr>
-				<tr>
-					<th>용접조건</th>
-					<td><input type="text" name="welder_weldType" id="welder_weldType" style="width:90%"></td>
+					<td><input type="text" name="device_modelName" id="device_modelName" style="width:90%"></td>
 				</tr>
 				<tr>
 					<th>커스터마이징</th>
-					<td><input type="text" name="welder_customized" id="welder_customized" style="width:90%"></td>
+					<td><input type="text" name="device_customized" id="device_customized" style="width:90%"></td>
 				</tr>
 				<tr>
 					<th>메모</th>
-					<td><textarea name="welder_memo" id="welder_memo" style="width:90%" rows="4"></textarea>
+					<td><textarea name="device_memo" id="device_memo" style="width:90%" rows="4"></textarea>
 				</tr>
 				<tr>
 					<th>순서</th>
-					<td><input type="text" name="welder_orderSeq" id="welder_orderSeq" style="width:90%"></td>
+					<td><input type="text" name="device_orderSeq" id="device_orderSeq" style="width:90%"></td>
 				</tr>
 			</table>
 		</div>

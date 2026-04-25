@@ -5,9 +5,9 @@ import java.util.List;
 import com.google.cloud.datastore.StructuredQuery.PropertyFilter;
 
 import jakarta.servlet.http.HttpSession;
-import kr.nesystem.appengine.common.model.GAEModel;
+import kr.co.checkplusmng.model.MW_IDBaseModel;
 
-public class MWIDBaseDao<T extends GAEModel> extends MWBaseDao<T> {
+public class MWIDBaseDao<T extends MW_IDBaseModel> extends MWBaseDao<T> {
 	public MWIDBaseDao(Class<T> clazz) {
 		super(clazz);
 	}

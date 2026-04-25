@@ -40,184 +40,29 @@ import kr.nesystem.appengine.common.util.AuthToken;
 import kr.nesystem.appengine.common.util.ResponseUtil;
 
 @Path("/{version}/activity")
-public class ActivityService {
-	ActivityDao dao = new ActivityDao();
-	
-	// SignUp
-	@POST
-	@Consumes({MediaType.APPLICATION_JSON})
-	@Produces({MediaType.APPLICATION_JSON})
-	public Response insert(MW_Activity activiy) throws Exception {
-		try {
-			if (AuthToken.isValidToken(activiy.getAuthToken()) == false) {
-				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
-			}
-			if (activiy.getIdString() == null || activiy.getIdString().length() == 0) {
-				return ResponseUtil.getResponse(Status.BAD_REQUEST);
-			}
-			MW_Activity existOne = dao.selectByIdString(null, activiy.getIdString());
-			if (existOne != null) {
-				return ResponseUtil.getResponse(Status.CONFLICT);
-			}
-			dao.insert(activiy);
-			return ResponseUtil.getResponse((new ModelHandler<MW_Activity>(MW_Activity.class)).convertToJson(activiy));
-		} catch (Exception e) {
-			e.printStackTrace();
-			return ResponseUtil.internalError(e.getMessage());
-		}
+public class ActivityService extends BaseService<MW_Activity> {
+	public ActivityService() {
+		super(MW_Activity.class, "ACT");
+		_dao = new ActivityDao();
 	}
 	
-	//Update User
-	@PUT
-	@Consumes({MediaType.APPLICATION_JSON})
-	@Produces({MediaType.APPLICATION_JSON})
-	@Path("/{idKey}")
-	public Response update(@PathParam("idKey") long idKey,
-						   MW_Activity activity) {
-		try {
-			if (AuthToken.isValidToken(activity.getAuthToken()) == false) {
-				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
-			}
-			if (idKey != activity.getIdKey()) {
-				return ResponseUtil.getResponse(Status.BAD_REQUEST);
-			}
-			if (activity.getIdString() == null || activity.getIdString().length() == 0) {
-				return ResponseUtil.getResponse(Status.BAD_REQUEST);
-			}
-			MW_Activity existOne = dao.select(null, idKey);
-			if (existOne == null) {
-				return ResponseUtil.getResponse(Status.NOT_FOUND);
-			}
-			existOne.setHwTotalAmount(activity.getHwTotalAmount());
-			existOne.setHwActualAmount(activity.getHwActualAmount());
-			existOne.setDeliveryDate(activity.getDeliveryDate());
-			existOne.setSwTotalAmount(activity.getSwTotalAmount());
-			existOne.setSwActualAmount(activity.getSwActualAmount());
-			existOne.setMemo(activity.getMemo());
-			existOne.setOrderSeq(activity.getOrderSeq());
-			dao.update(existOne);
-			return ResponseUtil.getResponse((new ModelHandler<MW_Activity>(MW_Activity.class)).convertToJson(existOne));
-		} catch (Exception e) {
-			e.printStackTrace();
-			return ResponseUtil.internalError(e.getMessage());
-		}
+	@Override
+	protected void updateItem(MW_Activity existOne, MW_Activity newOne) {
+		existOne.setHwTotalAmount(newOne.getHwTotalAmount());
+		existOne.setHwActualAmount(newOne.getHwActualAmount());
+		existOne.setDeliveryDate(newOne.getDeliveryDate());
+		existOne.setSwTotalAmount(newOne.getSwTotalAmount());
+		existOne.setSwActualAmount(newOne.getSwActualAmount());
+		existOne.setMemo(newOne.getMemo());
+		existOne.setOrderSeq(newOne.getOrderSeq());
 	}
 	
-	@DELETE
-	@Produces({MediaType.APPLICATION_JSON})
-	@Path("/{idKey}")
-	public Response delete(@PathParam("idKey") long idKey,
-						   @QueryParam("q") String authToken) {
-		try {
-			if (AuthToken.isValidToken(authToken) == false) {
-				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
-			}
-			MW_Activity existOne = dao.select(null, idKey);
-			if (existOne == null) {
-				return ResponseUtil.getResponse(Status.NOT_FOUND);
-			}
-			dao.delete(existOne);
-			return ResponseUtil.getResponse((new ModelHandler<MW_Activity>(MW_Activity.class)).convertToJson(existOne));
-		} catch (Exception e) {
-			e.printStackTrace();
-			return ResponseUtil.internalError(e.getMessage());
-		}
-	}
-	
-	@SuppressWarnings("rawtypes")
-	@GET
-	@Produces({MediaType.APPLICATION_JSON})
-	@Path("/list/{page}")
-	public Response list(@Context HttpServletRequest request,
-						 @PathParam("page") int page,
-						 @QueryParam("q") String authToken) {
-		try {
-			if (AuthToken.isValidToken(authToken) == false) {
-				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
-			}
-			int offset = (page - 1) * Constant.DEFAULT_SIZE;
-			CM_PagingList<MW_Activity> paging = dao.pagingList(request.getSession(), null, offset, Constant.DEFAULT_SIZE);
-			if (paging != null && paging.getList() != null) {
-				for (int ii = 0; ii < paging.getList().size(); ii++) {
-					MW_Activity item = paging.getList().get(ii);
-					fillupSubData(item);
-				}
-			}
-			return ResponseUtil.getResponse((new ModelHandler<CM_PagingList>(CM_PagingList.class)).convertToJson(paging));
-		} catch (Exception e) {
-			e.printStackTrace();
-			return ResponseUtil.internalError(e.getMessage());
-		}
-	}
-	
-	@GET
-	@Produces({MediaType.APPLICATION_JSON})
-	@Path("/{idKey}")
-	public Response one(@Context HttpServletRequest request,
-						@PathParam("idKey") long idKey,
-						@QueryParam("q") String authToken) {
-		try {
-			if (AuthToken.isValidToken(authToken) == false) {
-				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
-			}
-			MW_Activity existOne = dao.select(request.getSession(), idKey);
-			if (existOne == null) {
-				return ResponseUtil.getResponse(Status.NOT_FOUND);
-			}
-			fillupSubData(existOne);
-			return ResponseUtil.getResponse((new ModelHandler<MW_Activity>(MW_Activity.class)).convertToJson(existOne));
-		} catch (Exception e) {
-			e.printStackTrace();
-			return ResponseUtil.internalError(e.getMessage());
-		}
-	}
-	
-	
-	private void fillupSubData(MW_Activity item) {
+	@Override
+	protected void fillupSubData(MW_Activity item) {
 		MW_Project project = ProjectStore.get(item.getProjectIdKey());
 		item.setProjectIdString(project.getIdString());
 		item.setCustomerName(CompanyStore.getName(project.getCustomerIdKey()));
 		item.setBrokerName(CompanyStore.getName(project.getBrokerIdKey()));
-	}
-	
-	@POST
-	@Produces({MediaType.APPLICATION_JSON})
-	@Path("/newId")
-	public Response newId(@QueryParam("q") String authToken) {
-		try {
-			if (AuthToken.isValidToken(authToken) == false) {
-				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
-			}
-			List<MW_Activity> list = dao.list(null, null, -1, 0);
-			int index = 1;
-			String compId;
-			boolean isFound;
-			String format = "ACT_%05d";
-			if (list != null) {
-				while (true) {
-					compId = String.format(format, index);
-					isFound = false;
-					for (int ii = 0; ii < list.size(); ii++) {
-						if (compId.equals(list.get(ii).getIdString())) {
-							isFound = true;
-							break;
-						}
-					}
-					if (isFound == false) {
-						break;
-					}
-					index++;
-				}
-			} else {
-				compId = String.format(format, index);
-			}
-			MW_Activity ret = new MW_Activity();
-			ret.setIdString(compId);
-			return ResponseUtil.getResponse((new ModelHandler<MW_Activity>(MW_Activity.class)).convertToJson(ret));
-		} catch (Exception e) {
-			e.printStackTrace();
-			return ResponseUtil.internalError(e.getMessage());
-		}
 	}
 	
 	public String getNewElementId(ActivityElementDao elementDao, List<MW_Activity_Element> elements) throws Exception {
