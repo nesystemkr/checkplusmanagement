@@ -19,32 +19,53 @@ public class MWBaseDao <T extends MW_BaseModel> extends BaseDao<T> {
 	
 	@Override
 	public CM_PagingList<T> pagingList(HttpSession session, Filter filter) throws Exception {
-		return pagingList(session, filter, -1, 0, null, "orderSeq", "asc");
+		return pagingList(session, filter, -1, 0, null, null, null);
 	}
 	
 	@Override
 	public CM_PagingList<T> pagingList(HttpSession session, Filter filter, int offset, int size) throws Exception {
-		return pagingList(session, filter, offset, size, null, "orderSeq", "asc");
+		return pagingList(session, filter, offset, size, null, null, null);
 	}
 	
 	@Override
 	public CM_PagingList<T> pagingList(HttpSession session, Filter filter, int offset, int size, String search) throws Exception {
-		return pagingList(session, filter, offset, size, search, "orderSeq", "asc");
+		return pagingList(session, filter, offset, size, search, null, null);
+	}
+	
+	@Override
+	public CM_PagingList<T> pagingList(HttpSession session, Filter filter, int offset, int size, String search, String sortField, String sortOrder) throws Exception {
+		if (sortField == null) {
+			sortField = "orderSeq";
+		}
+		if (sortOrder == null) {
+			sortOrder = "asc";
+		}
+		return super.pagingList(session, filter, offset, size, search, sortField, sortOrder);
 	}
 	
 	@Override
 	public List<T> list(HttpSession session, Filter filter) throws Exception {
-		return list(session, filter, -1, 0, null, "orderSeq", "asc");
+		return list(session, filter, -1, 0, null, null, null);
 	}
 	
 	@Override
 	public List<T> list(HttpSession session, Filter filter, int offset, int size) throws Exception {
-		return list(session, filter, offset, size, null, "orderSeq", "asc");
+		return list(session, filter, offset, size, null, null, null);
 	}
 	
 	@Override
 	public List<T> list(HttpSession session, Filter filter, int offset, int size, String search) throws Exception {
-		return list(session, filter, offset, size, search, "orderSeq", "asc");
+		return list(session, filter, offset, size, search, null, null);
+	}
+	
+	public List<T> list(HttpSession session, Filter filter, int offset, int size, String search, String sortField, String sortOrder) throws Exception {
+		if (sortField == null) {
+			sortField = "orderSeq";
+		}
+		if (sortOrder == null) {
+			sortOrder = "asc";
+		}
+		return super.list(session, filter, offset, size, search, sortField, sortOrder);
 	}
 	
 	@Override
