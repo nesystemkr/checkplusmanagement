@@ -39,7 +39,7 @@ public class CodeTypeService {
 				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
 			}
 			int offset = (page - 1) * Constant.DEFAULT_SIZE;
-			CM_PagingList<CM_CodeType> paging = dao.selectCodeTypes(request.getSession(), offset, Constant.DEFAULT_SIZE);
+			CM_PagingList<CM_CodeType> paging = dao.selectCodeTypes(request.getSession(), offset, Constant.DEFAULT_SIZE, null);
 			if (paging.getList() != null) {
 				CM_CodeType item;
 				for (int ii=0; ii<paging.getList().size(); ii++) {

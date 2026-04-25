@@ -43,7 +43,7 @@ public class CodeService {
 				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
 			}
 			int offset = (page - 1) * Constant.DEFAULT_SIZE;
-			CM_PagingList<CM_Code> paging = dao.selectCodes(request.getSession(), offset, Constant.DEFAULT_SIZE);
+			CM_PagingList<CM_Code> paging = dao.selectCodes(request.getSession(), offset, Constant.DEFAULT_SIZE, null);
 			return ResponseUtil.getResponse((new ModelHandler<CM_PagingList>(CM_PagingList.class)).convertToJson(paging));
 		} catch (Exception e) {
 			e.printStackTrace();

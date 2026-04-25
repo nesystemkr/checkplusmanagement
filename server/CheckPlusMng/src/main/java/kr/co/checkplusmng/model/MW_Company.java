@@ -92,4 +92,19 @@ public class MW_Company extends MW_IDBaseModel {
 		}
 		return this;
 	}
+	@Override
+	public boolean match(String search) {
+		if (search == null) {
+			return true;
+		}
+		if (name.contains(search) == false &&
+			address.contains(search) == false &&
+			telephone.contains(search) == false &&
+			email.contains(search) == false &&
+			officer.contains(search) == false &&
+			officerTel.contains(search) == false) {
+			return false;
+		}
+		return true;
+	}
 }

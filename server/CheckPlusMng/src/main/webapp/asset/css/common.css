@@ -238,3 +238,13 @@ table.tbsty input:read-only { border:1px solid rgb(59, 59, 59); background-color
 	background:#eee;
 	color:#000;
 }
+
+.search-area {
+	height:40px;
+}
+
+.search-keyword {
+	width:400px;
+	height:22px;
+	display:inline-block;
+}

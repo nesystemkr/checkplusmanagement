@@ -46,23 +46,23 @@ public class BaseDao<T extends GAEModel> {
 		}
 	}
 	
-	public CM_PagingList<T> pagingList(HttpSession session, Filter filter, int offset, int size) throws Exception {
-		return pagingList(session, filter, offset, size, null);
+	public CM_PagingList<T> pagingList(HttpSession session, Filter filter, int offset, int size, String search) throws Exception {
+		return pagingList(session, filter, offset, size, null, search);
 	}
-	public CM_PagingList<T> pagingList(HttpSession session, Filter filter, int offset, int size, String sortField) throws Exception {
-		List<T> list = list(session, filter, offset, size, sortField);
+	public CM_PagingList<T> pagingList(HttpSession session, Filter filter, int offset, int size, String sortField, String search) throws Exception {
+		List<T> list = list(session, filter, offset, size, sortField, search);
 		CM_PagingList<T> ret = new CM_PagingList<>();
 		ret.setList(list);
-		ret.getPaging().setTotalCount(totalCount(filter));
+		ret.getPaging().setTotalCount(totalCount(filter, search));
 		ret.numbering(offset);
 		return ret;
 	}
 	
-	public List<T> list(HttpSession session, Filter filter, int offset, int size) throws Exception {
-		return list(session, filter, offset, size, null);
+	public List<T> list(HttpSession session, Filter filter, int offset, int size, String search) throws Exception {
+		return list(session, filter, offset, size, null, search);
 	}
 	
-	public List<T> list(HttpSession session, Filter filter, int offset, int size, String sortField) throws Exception {
+	public List<T> list(HttpSession session, Filter filter, int offset, int size, String sortField, String search) throws Exception {
 		List<T> ret = new ArrayList<>();
 		Builder builder = Query.newEntityQueryBuilder().setKind(tableName);
 		if (filter != null) {
@@ -76,18 +76,20 @@ public class BaseDao<T extends GAEModel> {
 		}
 		Query<Entity> query = builder.build();
 		QueryResults<Entity> results = datastore.run(query);
+		Constructor<T> constructor = clazz.getDeclaredConstructor();
 		while (results.hasNext()) {
 			Entity entity = results.next();
-			Constructor<T> constructor = clazz.getDeclaredConstructor();
 			T model = constructor.newInstance();
 			model.fromEntity(entity);
-			model.l10n(session);
-			ret.add(model);
+			if (model.match(search)) {
+				model.l10n(session);
+				ret.add(model);
+			}
 		}
 		return ret;
 	}
 	
-	public int totalCount(Filter filter) throws Exception {
+	public int totalCount(Filter filter, String search) throws Exception {
 		int ret = 0;
 		Builder builder = Query.newEntityQueryBuilder().setKind(tableName);
 		if (filter != null) {
@@ -95,9 +97,14 @@ public class BaseDao<T extends GAEModel> {
 		}
 		Query<Entity> query = builder.build();
 		QueryResults<Entity> results = datastore.run(query);
+		Constructor<T> constructor = clazz.getDeclaredConstructor();
 		while (results.hasNext()) {
-			results.next();
-			ret++;
+			Entity entity = results.next();
+			T model = constructor.newInstance();
+			model.fromEntity(entity);
+			if (model.match(search)) {
+				ret++;
+			}
 		}
 		return ret;
 	}

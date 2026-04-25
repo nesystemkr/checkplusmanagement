@@ -109,7 +109,7 @@ function getDefaultList() {
 	if ($("#projectIdKey").val() == "") {
 		return
 	}
-	var url = "${contextPath}/svc/v1/activity/list/0?q=" + getAuthToken() + "&projectIdKey=" + $("#projectIdKey").val()
+	var url = "${contextPath}/svc/v1/activity/" + $("#projectIdKey").val() + "/list/0?q=" + getAuthToken() 
 	nesAjax(url,
 			null,
 			function(data) {

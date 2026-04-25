@@ -9,7 +9,7 @@ public class CodeTypeDao extends BaseDao<CM_CodeType> {
 		super(CM_CodeType.class);
 	}
 	
-	public CM_PagingList<CM_CodeType> selectCodeTypes(HttpSession session, int offset, int size) throws Exception {
-		return super.pagingList(session, null, offset, size);
+	public CM_PagingList<CM_CodeType> selectCodeTypes(HttpSession session, int offset, int size, String search) throws Exception {
+		return super.pagingList(session, null, offset, size, search);
 	}
 }

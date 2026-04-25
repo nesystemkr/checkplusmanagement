@@ -44,3 +44,8 @@ indexes:
   properties:
   - name: idString
   - name: orderSeq
+
+- kind: MW_Activity
+  properties:
+  - name: projectIdKey
+  - name: orderSeq

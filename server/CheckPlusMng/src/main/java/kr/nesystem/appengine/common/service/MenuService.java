@@ -47,7 +47,7 @@ public class MenuService {
 				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
 			}
 			int offset = (page - 1) * Constant.DEFAULT_SIZE;
-			CM_PagingList<CM_Menu> paging = dao.pagingList(request.getSession(), null, offset, Constant.DEFAULT_SIZE);
+			CM_PagingList<CM_Menu> paging = dao.pagingList(request.getSession(), null, offset, Constant.DEFAULT_SIZE, null);
 			if (paging.getList() != null) {
 				for (int ii=0; ii<paging.getList().size(); ii++) {
 					CM_Menu menu = paging.getList().get(ii);
@@ -93,7 +93,7 @@ public class MenuService {
 			if (AuthToken.isValidToken(authToken) == false) {
 				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
 			}
-			List<CM_Menu> list = dao.list(request.getSession(), null, -1, 0);
+			List<CM_Menu> list = dao.list(request.getSession(), null, -1, 0, null);
 			for (int ii = 0; ii < list.size(); ii++) {
 				CM_Menu menu = list.get(ii);
 				menu.setMenuAuths(authDao.selectMenuAuthWithMenu(request.getSession(), menu));

@@ -1,5 +1,7 @@
 package kr.co.checkplusmng.service;
 
+import java.util.ArrayList;
+
 import jakarta.ws.rs.Path;
 import kr.co.checkplusmng.dao.CompanyDao;
 import kr.co.checkplusmng.model.MW_Company;
@@ -9,6 +11,10 @@ public class CompanyService extends BaseService<MW_Company> {
 	public CompanyService() {
 		super(MW_Company.class, "CUS");
 		_dao = new CompanyDao();
+		_searchFields = new ArrayList<>();
+		_searchFields.add("name");
+		_searchFields.add("telephone");
+		_searchFields.add("officerTel");
 	}
 	
 	@Override

@@ -17,11 +17,11 @@ public class MWBaseDao <T extends MW_BaseModel> extends BaseDao<T> {
 		super(clazz);
 	}
 	
-	public CM_PagingList<T> pagingList(HttpSession session, Filter filter, int offset, int size) throws Exception {
-		return pagingList(session, filter, offset, size, "orderSeq");
+	public CM_PagingList<T> pagingList(HttpSession session, Filter filter, int offset, int size, String search) throws Exception {
+		return pagingList(session, filter, offset, size, "orderSeq", search);
 	}
-	public List<T> list(HttpSession session, Filter filter, int offset, int size) throws Exception {
-		return list(session, filter, offset, size, "orderSeq");
+	public List<T> list(HttpSession session, Filter filter, int offset, int size, String search) throws Exception {
+		return list(session, filter, offset, size, "orderSeq", search);
 	}
 	
 	@Override

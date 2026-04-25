@@ -15,7 +15,7 @@ public class UserDao extends BaseDao<CM_User> {
 	
 	public CM_User selectByUserId(HttpSession session, String userId) throws Exception {
 		PropertyFilter filter = PropertyFilter.eq("userId", userId);
-		List<CM_User> list = super.list(session, filter, -1, 0);
+		List<CM_User> list = super.list(session, filter, -1, 0, null);
 		if (list == null || list.size() == 0) {
 			return null;
 		}
@@ -27,6 +27,6 @@ public class UserDao extends BaseDao<CM_User> {
 		if (userType != null) {
 			filter = PropertyFilter.eq("userType", userType);
 		}
-		return super.pagingList(session, filter, offset, size);
+		return super.pagingList(session, filter, offset, size, null);
 	}
 }

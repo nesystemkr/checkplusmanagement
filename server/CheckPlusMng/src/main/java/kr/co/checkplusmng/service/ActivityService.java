@@ -9,7 +9,6 @@ import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
-import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
@@ -65,8 +64,36 @@ public class ActivityService extends BaseService<MW_Activity> {
 		item.setBrokerName(CompanyStore.getName(project.getBrokerIdKey()));
 	}
 	
+	@SuppressWarnings("rawtypes")
+	@GET
+	@Produces({MediaType.APPLICATION_JSON})
+	@Path("{projectIdKey}/list/{page}")
+	public Response listInProject(@Context HttpServletRequest request,
+								  @PathParam("page") int page,
+								  @QueryParam("q") String authToken,
+								  @PathParam("projectIdKey") long projectIdKey) {
+		try {
+			if (AuthToken.isValidToken(authToken) == false) {
+				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
+			}
+			int offset = (page - 1) * Constant.DEFAULT_SIZE;
+			PropertyFilter filter = PropertyFilter.eq("projectIdKey", projectIdKey);
+			CM_PagingList<MW_Activity> paging = _dao.pagingList(request.getSession(), filter, offset, Constant.DEFAULT_SIZE, null);
+			if (paging != null && paging.getList() != null) {
+				for (int ii = 0; ii < paging.getList().size(); ii++) {
+					MW_Activity item = paging.getList().get(ii);
+					fillupSubData(item);
+				}
+			}
+			return ResponseUtil.getResponse((new ModelHandler<CM_PagingList>(CM_PagingList.class)).convertToJson(paging));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseUtil.internalError(e.getMessage());
+		}
+	}
+	
 	public String getNewElementId(ActivityElementDao elementDao, List<MW_Activity_Element> elements) throws Exception {
-		List<MW_Activity_Element> list =  elementDao.list(null, null, -1, 0);
+		List<MW_Activity_Element> list =  elementDao.list(null, null, -1, 0, null);
 		int index = 1;
 		String compId;
 		boolean isFound;
@@ -115,7 +142,7 @@ public class ActivityService extends BaseService<MW_Activity> {
 			}
 			ActivityElementDao elementDao = new ActivityElementDao();
 			PropertyFilter filter = PropertyFilter.eq("activityIdKey", activityIdKey);
-			CM_PagingList<MW_Activity_Element> paging = elementDao.pagingList(request.getSession(), filter, -1, 0);
+			CM_PagingList<MW_Activity_Element> paging = elementDao.pagingList(request.getSession(), filter, -1, 0, null);
 			if (paging != null && paging.getList() != null) {
 				for (int ii = 0; ii < paging.getList().size(); ii++) {
 					MW_Activity_Element item = paging.getList().get(ii);
@@ -220,7 +247,7 @@ public class ActivityService extends BaseService<MW_Activity> {
 			}
 			InvoiceDao invoiceDao = new InvoiceDao();
 			PropertyFilter filter = PropertyFilter.eq("activityIdKey", activityIdKey);
-			CM_PagingList<MW_Invoice> paging = invoiceDao.pagingList(request.getSession(), filter, -1, 0);
+			CM_PagingList<MW_Invoice> paging = invoiceDao.pagingList(request.getSession(), filter, -1, 0, null);
 			if (paging != null && paging.getList() != null) {
 				for (int ii = 0; ii < paging.getList().size(); ii++) {
 					MW_Invoice item = paging.getList().get(ii);

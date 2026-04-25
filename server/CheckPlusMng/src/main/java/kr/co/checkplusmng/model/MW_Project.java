@@ -95,4 +95,14 @@ public class MW_Project extends MW_IDBaseModel {
 		setCheckPlusPw(entity.getString("checkPlusPw"));
 		return this;
 	}
+	@Override
+	public boolean match(String search) {
+		if (search == null) {
+			return true;
+		}
+		if (name.contains(search) == false ) {
+			return false;
+		}
+		return true;
+	}
 }

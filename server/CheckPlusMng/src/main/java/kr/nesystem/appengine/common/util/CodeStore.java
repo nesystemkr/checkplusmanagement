@@ -22,7 +22,7 @@ public class CodeStore {
 			_stores = new HashMap<>();
 			CodeTypeDao typeDao = new CodeTypeDao();
 			CodeDao dao = new CodeDao();
-			List<CM_CodeType> listType = typeDao.list(null, null, -1, 0);
+			List<CM_CodeType> listType = typeDao.list(null, null, -1, 0, null);
 			for (int ii = 0; ii < listType.size(); ii++) {
 				CM_CodeType codeType = listType.get(ii);
 				List<CM_Code> listCode = dao.selectCodeByType(null, listType.get(ii).getType()).getList();

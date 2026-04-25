@@ -18,6 +18,7 @@ startFuncs[startFuncs.length] = function() {
 					{ name: 'idString'   , label: '아이디'      , width: 200, align: 'center',},
 					{ name: 'modelType'  , label: '모델종류'    , width: 240, align: 'center',},
 					{ name: 'modelName'  , label: '모델명'      , width: 200, align: 'center',},
+					{ name: 'weldType'   , label: '용접종류'    , width: 140, align: 'center',},
 					{ name: 'customized' , label: '커스터마이징', width: 400, align: 'center',},
 					{ name: 'memo'       , label: '메모'        , width: 580, align: 'center',},
 					{ name: 'action'     , label: 'ACTION'      ,             align: 'center', formatter: getGridButtonClosure(buttons)},
@@ -32,7 +33,10 @@ function refreshList() {
 }
 
 function getDefaultList(page) {
-	var url = "${contextPath}/svc/v1/device/list/" + page + "?q=" + getAuthToken();
+	var url = "${contextPath}/svc/v1/device/list/" + page + "?q=" + getAuthToken()
+	if ($("#search_keyword").val().trim() != "") {
+		url = url + "&search=" + $("#search_keyword").val()
+	}
 	nesAjax(url,
 			null,
 			function(data) {
@@ -46,6 +50,10 @@ function getDefaultList(page) {
 }
 </script>
 <h1>디바이스관리</h1>
+<div class="search-area">
+	<input type="text" class="search-keyword" id="search_keyword">
+	<button class="btn_type small" onclick="__currentPage=1; refreshList()">검색</button>
+</div>
 <div id="listLayout">
 	<table id="gridLayout" style="width:100%;"></table>
 </div>
@@ -88,8 +96,9 @@ function openPopupForUpdate(idKey) {
 				$("#device_idKey").val(data.idKey)
 				$("#device_idString").val(data.idString)
 				$("#device_idString").prop('readonly', true)
-				$("#device_modelName").val(data.modelName)
 				$("#device_modelType").val(data.modelType)
+				$("#device_modelName").val(data.modelName)
+				$("#device_weldType").val(data.weldType)
 				$("#device_customized").val(data.customized)
 				$("#device_memo").val(data.memo)
 				$("#device_orderSeq").val(data.orderSeq)
@@ -125,6 +134,7 @@ function resetEdit() {
 	$("#device_idString").prop('readonly', false)
 	$("#device_modelType").val('')
 	$("#device_modelName").val('')
+	$("#device_weldType").val('')
 	$("#device_customized").val('')
 	$("#device_memo").val('')
 	$("#device_orderSeq").val('')
@@ -156,8 +166,9 @@ function saveEdit() {
 	device.authToken = getAuthToken()
 	device.idKey      = $("#device_idKey").val().trim()
 	device.idString   = $("#device_idString").val().trim()
-	device.modelName  = $("#device_modelName").val().trim()
 	device.modelType  = $("#device_modelType").val().trim()
+	device.modelName  = $("#device_modelName").val().trim()
+	device.weldType   = $("#device_weldType").val().trim()
 	device.customized = $("#device_customized").val().trim()
 	device.memo       = $("#device_memo").val().trim()
 	device.orderSeq   = $("#device_orderSeq").val().trim()
@@ -207,6 +218,10 @@ function saveEdit() {
 				<tr>
 					<th>모델명</th>
 					<td><input type="text" name="device_modelName" id="device_modelName" style="width:90%"></td>
+				</tr>
+				<tr>
+					<th>용접종류</th>
+					<td><input type="text" name="device_weldType" id="device_weldType" style="width:90%"></td>
 				</tr>
 				<tr>
 					<th>커스터마이징</th>

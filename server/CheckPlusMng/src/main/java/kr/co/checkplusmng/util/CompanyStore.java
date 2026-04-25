@@ -19,7 +19,7 @@ public class CompanyStore {
 			}
 			_stores = new HashMap<>();
 			CompanyDao dao = new CompanyDao();
-			List<MW_Company> list = dao.list(null, null, -1, 0);
+			List<MW_Company> list = dao.list(null, null, -1, 0, null);
 			for (int ii = 0; ii < list.size(); ii++) {
 				MW_Company item = list.get(ii);
 				_stores.put(item.getIdKey(), item);

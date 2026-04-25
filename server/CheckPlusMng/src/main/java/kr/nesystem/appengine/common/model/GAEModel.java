@@ -47,4 +47,7 @@ public abstract class GAEModel extends Model {
 		}
 		return new Date(value);
 	}
+	public boolean match(String search) {
+		return true;
+	}
 }

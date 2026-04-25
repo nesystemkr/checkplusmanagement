@@ -70,4 +70,14 @@ public class MW_Device extends MW_IDBaseModel {
 		setCurrentActivityIdKey(entity.getLong("currentActivityIdKey"));
 		return this;
 	}
+	@Override
+	public boolean match(String search) {
+		if (search == null) {
+			return true;
+		}
+		if (modelName.contains(search) == false) {
+			return false;
+		}
+		return true;
+	}
 }

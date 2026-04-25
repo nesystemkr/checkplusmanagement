@@ -36,7 +36,10 @@ function refreshList() {
 }
 
 function getDefaultList(page) {
-	var url = "${contextPath}/svc/v1/wifi/list/" + page + "?q=" + getAuthToken();
+	var url = "${contextPath}/svc/v1/wifi/list/" + page + "?q=" + getAuthToken()
+	if ($("#search_keyword").val().trim() != "") {
+		url = url + "&search=" + $("#search_keyword").val()
+	}
 	nesAjax(url,
 			null,
 			function(data) {
@@ -50,6 +53,10 @@ function getDefaultList(page) {
 }
 </script>
 <h1>WIFI기기관리</h1>
+<div class="search-area">
+	<input type="text" class="search-keyword" id="search_keyword">
+	<button class="btn_type small" onclick="__currentPage=1; refreshList()">검색</button>
+</div>
 <div id="listLayout">
 	<table id="gridLayout" style="width:100%;"></table>
 </div>

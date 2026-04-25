@@ -108,6 +108,6 @@ public class DeviceDao  extends BaseDao<CM_Device> {
 	
 	public List<CM_Device> selectDevicesByUserIdKey(long userIdKey) throws Exception {
 		PropertyFilter filter = PropertyFilter.eq("userIdKey", userIdKey);
-		return super.list(null, filter, -1, 0);
+		return super.list(null, filter, -1, 0, null);
 	}
 }

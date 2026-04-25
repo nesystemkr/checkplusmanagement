@@ -17,13 +17,13 @@ public class BoardAuthDao extends BaseDao<CM_BoardAuth> {
 
 	public List<CM_BoardAuth> selectBoardAuthWithBoard(HttpSession session, CM_Board board) throws Exception {
 		PropertyFilter filter = PropertyFilter.eq("menuIdKey", board.getIdKey());
-		return super.list(session, filter, -1, 0);
+		return super.list(session, filter, -1, 0, null);
 	}
 	
 	public CM_BoardAuth selectBoardAuthByBoardIdKeyAndUserType(HttpSession session, long boardIdKey, String userType) throws Exception {
 		CompositeFilter filter = CompositeFilter.and(PropertyFilter.eq("boardIdKey", boardIdKey),
 													 PropertyFilter.eq("userType", userType));
-		List<CM_BoardAuth> list = super.list(session, filter, -1, 0);
+		List<CM_BoardAuth> list = super.list(session, filter, -1, 0, null);
 		if (list == null || list.size() == 0) {
 			return null;
 		}

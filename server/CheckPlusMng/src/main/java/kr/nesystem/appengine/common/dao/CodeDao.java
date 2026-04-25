@@ -12,13 +12,13 @@ public class CodeDao extends BaseDao<CM_Code> {
 		super(CM_Code.class);
 	}
 
-	public CM_PagingList<CM_Code> selectCodes(HttpSession session, int offset, int size) throws Exception {
-		return super.pagingList(session, null, offset, size);
+	public CM_PagingList<CM_Code> selectCodes(HttpSession session, int offset, int size, String search) throws Exception {
+		return super.pagingList(session, null, offset, size, search);
 	}
 
 	public CM_PagingList<CM_Code> selectCodeByType(HttpSession session, String type) throws Exception {
 		PropertyFilter filter = PropertyFilter.eq("type", type);
-		return super.pagingList(session, filter, -1, 0);
+		return super.pagingList(session, filter, -1, 0, null);
 	}
 
 	public CM_Code selectCodeByTypeNCode(HttpSession session, String type, String code) throws Exception {

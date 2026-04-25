@@ -18,19 +18,19 @@ public class BoardContentDao extends BaseDao<CM_BoardContent> {
 	public CM_PagingList<CM_BoardContent> selectBoardContents(HttpSession session, long boardIdKey, String status, int offset, int size) throws Exception {
 		CompositeFilter filter = CompositeFilter.and(PropertyFilter.eq("boardIdKey", boardIdKey),
 													 PropertyFilter.eq("status", status));
-		return super.pagingList(session, filter, offset, size);
+		return super.pagingList(session, filter, offset, size, null);
 	}
 	
 	public List<CM_BoardContent> selectBoardChildContents(HttpSession session, long boardIdKey, long parentIdKey, String status) throws Exception {
 		CompositeFilter filter = CompositeFilter.and(PropertyFilter.eq("boardIdKey", boardIdKey),
 													 PropertyFilter.eq("parentIdKey", parentIdKey));
-		return super.list(session, filter, -1, 0);
+		return super.list(session, filter, -1, 0, null);
 	}
 
 	public CM_PagingList<CM_BoardContent> selectBoardTopContents(HttpSession session, long boardIdKey, String status) throws Exception {
 		CompositeFilter filter = CompositeFilter.and(PropertyFilter.eq("boardIdKey", boardIdKey),
 													 PropertyFilter.eq("topYN", "Y"),
 													 PropertyFilter.eq("status", status));
-		return super.pagingList(session, filter, -1, 0);
+		return super.pagingList(session, filter, -1, 0, null);
 	}
 }
