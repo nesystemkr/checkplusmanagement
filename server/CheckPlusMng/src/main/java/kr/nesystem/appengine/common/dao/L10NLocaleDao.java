@@ -24,13 +24,13 @@ public class L10NLocaleDao extends BaseDeleteAllDao<CM_L10NLocale> {
 		} else if (locale != null) {
 			filter = PropertyFilter.eq("locale", locale);
 		}
-		return super.pagingList(null, filter, offset, size, null);
+		return super.pagingList(null, filter, offset, size);
 	}
 	
 	public CM_L10NLocale selectL10NLocaleByIdStringNLocale(String idString, String locale) throws Exception {
 		CompositeFilter filter = CompositeFilter.and(PropertyFilter.eq("idString", idString),
 													 PropertyFilter.eq("locale", locale));
-		List<CM_L10NLocale> list = super.list(null, filter, -1, 0, null);
+		List<CM_L10NLocale> list = super.list(null, filter);
 		if (list == null || list.size() == 0) {
 			return null;
 		}

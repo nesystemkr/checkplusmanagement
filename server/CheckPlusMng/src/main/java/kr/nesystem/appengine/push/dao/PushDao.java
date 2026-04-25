@@ -64,7 +64,7 @@ public class PushDao extends BaseDao<PS_Msg> {
 			CompositeFilter filter = CompositeFilter.and(PropertyFilter.le("reserveDate", (new Date()).getTime()),
 														 pmsStatusFilter,
 														 sendDateFilter);
-			List<PS_Msg> list = super.list(null, filter, 0, 100, null);
+			List<PS_Msg> list = super.list(null, filter, 0, 100);
 			for (int ii = 0; ii < list.size(); ii++) {
 				PS_Msg msg = list.get(ii);
 				if (msg.getPmsMaxRetryCount() > msg.getPmsTryCount()) {

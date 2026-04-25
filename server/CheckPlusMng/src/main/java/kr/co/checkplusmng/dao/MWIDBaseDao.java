@@ -14,7 +14,7 @@ public class MWIDBaseDao<T extends MW_IDBaseModel> extends MWBaseDao<T> {
 
 	public T selectByIdString(HttpSession session, String idString) throws Exception {
 		PropertyFilter filter = PropertyFilter.eq("idString", idString);
-		List<T> list = super.list(session, filter, -1, 0, null);
+		List<T> list = super.list(session, filter);
 		if (list == null || list.size() == 0) {
 			return null;
 		}

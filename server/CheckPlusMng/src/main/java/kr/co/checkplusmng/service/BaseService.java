@@ -2,9 +2,6 @@ package kr.co.checkplusmng.service;
 
 import java.util.List;
 
-import com.google.cloud.datastore.StructuredQuery.CompositeFilter;
-import com.google.cloud.datastore.StructuredQuery.PropertyFilter;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -31,7 +28,6 @@ public class BaseService<T extends MW_IDBaseModel> {
 	protected MWIDBaseDao<T> _dao;
 	protected Class<T> _entityClass;
 	protected String _prefix;
-	protected List<String> _searchFields;
 	
 	public BaseService(Class<T> entityClass, String prefix) {
 		this._entityClass = entityClass;
@@ -121,13 +117,15 @@ public class BaseService<T extends MW_IDBaseModel> {
 	public Response list(@Context HttpServletRequest request,
 						 @PathParam("page") int page,
 						 @QueryParam("q") String authToken,
-						 @QueryParam("search") String search) {
+						 @QueryParam("search") String search,
+						 @QueryParam("sortField") String sortField,
+						 @QueryParam("sortOrder") String sortOrder) {
 		try {
 			if (AuthToken.isValidToken(authToken) == false) {
 				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
 			}
 			int offset = (page - 1) * Constant.DEFAULT_SIZE;
-			CM_PagingList<T> paging = _dao.pagingList(request.getSession(), null, offset, Constant.DEFAULT_SIZE, search);
+			CM_PagingList<T> paging = _dao.pagingList(request.getSession(), null, offset, Constant.DEFAULT_SIZE, search, sortField, sortOrder);
 			if (paging != null && paging.getList() != null) {
 				for (int ii = 0; ii < paging.getList().size(); ii++) {
 					T item = paging.getList().get(ii);
@@ -175,7 +173,7 @@ public class BaseService<T extends MW_IDBaseModel> {
 			if (AuthToken.isValidToken(authToken) == false) {
 				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
 			}
-			List<T> list = _dao.list(null, null, -1, 0, null);
+			List<T> list = _dao.list(null, null);
 			int index = 1;
 			String compId;
 			boolean isFound;

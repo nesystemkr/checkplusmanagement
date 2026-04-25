@@ -46,11 +46,20 @@ public class BaseDao<T extends GAEModel> {
 		}
 	}
 	
-	public CM_PagingList<T> pagingList(HttpSession session, Filter filter, int offset, int size, String search) throws Exception {
-		return pagingList(session, filter, offset, size, null, search);
+	public CM_PagingList<T> pagingList(HttpSession session, Filter filter) throws Exception {
+		return pagingList(session, filter, -1, 0, null, null, null);
 	}
-	public CM_PagingList<T> pagingList(HttpSession session, Filter filter, int offset, int size, String sortField, String search) throws Exception {
-		List<T> list = list(session, filter, offset, size, sortField, search);
+	
+	public CM_PagingList<T> pagingList(HttpSession session, Filter filter, int offset, int size) throws Exception {
+		return pagingList(session, filter, offset, size, null, null, null);
+	}
+	
+	public CM_PagingList<T> pagingList(HttpSession session, Filter filter, int offset, int size, String search) throws Exception {
+		return pagingList(session, filter, offset, size, search, null, null);
+	}
+	
+	public CM_PagingList<T> pagingList(HttpSession session, Filter filter, int offset, int size, String search, String sortField, String sortOrder) throws Exception {
+		List<T> list = list(session, filter, offset, size, search, sortField, sortOrder);
 		CM_PagingList<T> ret = new CM_PagingList<>();
 		ret.setList(list);
 		ret.getPaging().setTotalCount(totalCount(filter, search));
@@ -58,11 +67,19 @@ public class BaseDao<T extends GAEModel> {
 		return ret;
 	}
 	
-	public List<T> list(HttpSession session, Filter filter, int offset, int size, String search) throws Exception {
-		return list(session, filter, offset, size, null, search);
+	public List<T> list(HttpSession session, Filter filter) throws Exception {
+		return list(session, filter, -1, 0, null, null, null);
 	}
 	
-	public List<T> list(HttpSession session, Filter filter, int offset, int size, String sortField, String search) throws Exception {
+	public List<T> list(HttpSession session, Filter filter, int offset, int size) throws Exception {
+		return list(session, filter, offset, size, null, null, null);
+	}
+	
+	public List<T> list(HttpSession session, Filter filter, int offset, int size, String search) throws Exception {
+		return list(session, filter, offset, size, search, null, null);
+	}
+	
+	public List<T> list(HttpSession session, Filter filter, int offset, int size, String search, String sortField, String sortOrder) throws Exception {
 		List<T> ret = new ArrayList<>();
 		Builder builder = Query.newEntityQueryBuilder().setKind(tableName);
 		if (filter != null) {
@@ -71,8 +88,12 @@ public class BaseDao<T extends GAEModel> {
 		if (size != 0 && offset >= 0) {
 			builder.setLimit(size).setOffset(offset);
 		}
-		if (sortField != null) {
-			builder.addOrderBy(OrderBy.asc(sortField));
+		if (sortField != null && sortOrder != null) {
+			if (sortOrder.equals("desc")) {
+				builder.addOrderBy(OrderBy.desc(sortField));
+			} else {
+				builder.addOrderBy(OrderBy.asc(sortField));
+			}
 		}
 		Query<Entity> query = builder.build();
 		QueryResults<Entity> results = datastore.run(query);

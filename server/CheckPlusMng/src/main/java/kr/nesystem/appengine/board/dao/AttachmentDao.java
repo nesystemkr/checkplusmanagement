@@ -15,6 +15,6 @@ public class AttachmentDao extends BaseDao<CM_Attachment> {
 
 	public List<CM_Attachment> selectAttachments(HttpSession session, long groupIdKey) throws Exception {
 		PropertyFilter filter = PropertyFilter.eq("groupIdKey", groupIdKey);
-		return super.list(session, filter, -1, 0, null);
+		return super.list(session, filter);
 	}
 }

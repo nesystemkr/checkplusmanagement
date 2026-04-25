@@ -15,7 +15,7 @@ public class DaemonContextListener implements ServletContextListener {
 	@Override
 	public void contextInitialized(ServletContextEvent sce) {
 		try {
-			List<CM_Daemon> daemons = dao.list(null, null, -1, 0, null);
+			List<CM_Daemon> daemons = dao.list(null, null);
 			if (daemons != null) {
 				CM_Daemon daemon;
 				for (int ii=0; ii<daemons.size(); ii++) {
@@ -33,7 +33,7 @@ public class DaemonContextListener implements ServletContextListener {
 	@Override
 	public void contextDestroyed(ServletContextEvent sce) {
 		try {
-			List<CM_Daemon> daemons = dao.list(null, null, -1, 0, null);
+			List<CM_Daemon> daemons = dao.list(null, null);
 			CM_Daemon daemon;
 			for (int ii=0; ii<daemons.size(); ii++) {
 				daemon = daemons.get(ii);

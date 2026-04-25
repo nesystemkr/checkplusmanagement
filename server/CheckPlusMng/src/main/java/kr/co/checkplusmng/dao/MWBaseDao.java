@@ -17,11 +17,34 @@ public class MWBaseDao <T extends MW_BaseModel> extends BaseDao<T> {
 		super(clazz);
 	}
 	
-	public CM_PagingList<T> pagingList(HttpSession session, Filter filter, int offset, int size, String search) throws Exception {
-		return pagingList(session, filter, offset, size, "orderSeq", search);
+	@Override
+	public CM_PagingList<T> pagingList(HttpSession session, Filter filter) throws Exception {
+		return pagingList(session, filter, -1, 0, null, "orderSeq", "asc");
 	}
+	
+	@Override
+	public CM_PagingList<T> pagingList(HttpSession session, Filter filter, int offset, int size) throws Exception {
+		return pagingList(session, filter, offset, size, null, "orderSeq", "asc");
+	}
+	
+	@Override
+	public CM_PagingList<T> pagingList(HttpSession session, Filter filter, int offset, int size, String search) throws Exception {
+		return pagingList(session, filter, offset, size, search, "orderSeq", "asc");
+	}
+	
+	@Override
+	public List<T> list(HttpSession session, Filter filter) throws Exception {
+		return list(session, filter, -1, 0, null, "orderSeq", "asc");
+	}
+	
+	@Override
+	public List<T> list(HttpSession session, Filter filter, int offset, int size) throws Exception {
+		return list(session, filter, offset, size, null, "orderSeq", "asc");
+	}
+	
+	@Override
 	public List<T> list(HttpSession session, Filter filter, int offset, int size, String search) throws Exception {
-		return list(session, filter, offset, size, "orderSeq", search);
+		return list(session, filter, offset, size, search, "orderSeq", "asc");
 	}
 	
 	@Override

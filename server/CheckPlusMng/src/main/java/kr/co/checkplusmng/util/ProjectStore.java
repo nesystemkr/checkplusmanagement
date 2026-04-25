@@ -19,7 +19,7 @@ public class ProjectStore {
 			}
 			_stores = new HashMap<>();
 			ProjectDao dao = new ProjectDao();
-			List<MW_Project> list = dao.list(null, null, -1, 0, null);
+			List<MW_Project> list = dao.list(null, null);
 			for (int ii = 0; ii < list.size(); ii++) {
 				MW_Project item = list.get(ii);
 				_stores.put(item.getIdKey(), item);

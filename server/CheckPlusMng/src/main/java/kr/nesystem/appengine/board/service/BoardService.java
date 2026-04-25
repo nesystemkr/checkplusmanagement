@@ -54,7 +54,7 @@ public class BoardService {
 				return ResponseUtil.getResponse(Status.EXPECTATION_FAILED);
 			}
 			int offset = (page - 1) * Constant.DEFAULT_SIZE;
-			CM_PagingList<CM_Board> paging = dao.pagingList(request.getSession(), null, offset, Constant.DEFAULT_SIZE, null);
+			CM_PagingList<CM_Board> paging = dao.pagingList(request.getSession(), null, offset, Constant.DEFAULT_SIZE);
 			if (paging.getList() != null) {
 				for (int ii=0; ii<paging.getList().size(); ii++) {
 					CM_Board board = paging.getList().get(ii);

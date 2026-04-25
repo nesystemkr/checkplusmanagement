@@ -43,7 +43,7 @@ public class DaemonService {
 			}
 			CM_PagingList<CM_Code> pagingCode = codeDao.selectCodeByType(request.getSession(), "DAEMONRUNNING");
 			int offset = (page - 1) * Constant.DEFAULT_SIZE;
-			CM_PagingList<CM_Daemon> paging = dao.pagingList(request.getSession(), null, offset, Constant.DEFAULT_SIZE, null);
+			CM_PagingList<CM_Daemon> paging = dao.pagingList(request.getSession(), null, offset, Constant.DEFAULT_SIZE);
 			if (paging.getList() != null) {
 				CM_Daemon item;
 				for (int ii=0; ii<paging.getList().size(); ii++) {

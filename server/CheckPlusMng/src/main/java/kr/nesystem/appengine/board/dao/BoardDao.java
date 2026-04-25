@@ -15,7 +15,7 @@ public class BoardDao extends BaseDao<CM_Board> {
 
 	public CM_Board selectBoardByBoardId(HttpSession session, String boardId) throws Exception {
 		PropertyFilter filter = PropertyFilter.eq("boardId", boardId);
-		List<CM_Board> list = super.list(session, filter, -1, 0, null);
+		List<CM_Board> list = super.list(session, filter);
 		if (list == null || list.size() == 0) {
 			return null;
 		}

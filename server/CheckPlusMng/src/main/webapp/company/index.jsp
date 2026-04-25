@@ -16,7 +16,7 @@ startFuncs[startFuncs.length] = function() {
 					{ name: 'idKey'     , hidden: true, },
 					{ name: 'no'        , label: 'NO'      , width: 50 , align: 'center',},
 					{ name: 'idString'  , label: '아이디'  , width: 200, align: 'center',},
-					{ name: 'name'      , label: '이름'    , width: 300, align: 'center',},
+					{ name: 'name'      , label: '이름'    , width: 300, align: 'center', sortable: true},
 					{ name: 'telephone' , label: '전화번호', width: 160, align: 'center',},
 					{ name: 'email'     , label: '이메일'  , width: 160, align: 'center',},
 					{ name: 'officer'   , label: '주담당자', width: 120, align: 'center',},
@@ -26,8 +26,19 @@ startFuncs[startFuncs.length] = function() {
 					{ name: 'action'    , label: 'ACTION'  ,             align: 'center', formatter: getGridButtonClosure(buttons)},
 			],
 			stretchColumn:"action",
+			onSortCol: sortList
 	})
 	refreshList()
+}
+
+var _sortField = undefined
+var _sortOrder = undefined
+function sortList(colName, colIdx, sortOrder) {
+	if (colName == "name") {
+		_sortField = colName
+		_sortOrder = sortOrder
+		refreshList()
+	}
 }
 
 function refreshList() {
@@ -38,6 +49,9 @@ function getDefaultList(page) {
 	var url = "${contextPath}/svc/v1/company/list/" + page + "?q=" + getAuthToken()
 	if ($("#search_keyword").val().trim() != "") {
 		url = url + "&search=" + $("#search_keyword").val()
+	}
+	if (_sortField && _sortOrder) {
+		url = url + "&sortField=" + _sortField + "&sortOrder=" + _sortOrder
 	}
 	nesAjax(url,
 			null,

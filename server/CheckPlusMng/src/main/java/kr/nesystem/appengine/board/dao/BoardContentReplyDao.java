@@ -15,6 +15,6 @@ public class BoardContentReplyDao extends BaseDao<CM_BoardContentReply> {
 
 	public List<CM_BoardContentReply> selectBoardContentReplys(HttpSession session, long boardContentIdKey, int offset, int size) throws Exception {
 		PropertyFilter filter = PropertyFilter.eq("boardContentIdKey", boardContentIdKey);
-		return super.list(session, filter, -1, 0, null);
+		return super.list(session, filter);
 	}
 }

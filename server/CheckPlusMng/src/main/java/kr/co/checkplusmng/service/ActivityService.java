@@ -78,7 +78,7 @@ public class ActivityService extends BaseService<MW_Activity> {
 			}
 			int offset = (page - 1) * Constant.DEFAULT_SIZE;
 			PropertyFilter filter = PropertyFilter.eq("projectIdKey", projectIdKey);
-			CM_PagingList<MW_Activity> paging = _dao.pagingList(request.getSession(), filter, offset, Constant.DEFAULT_SIZE, null);
+			CM_PagingList<MW_Activity> paging = _dao.pagingList(request.getSession(), filter, offset, Constant.DEFAULT_SIZE);
 			if (paging != null && paging.getList() != null) {
 				for (int ii = 0; ii < paging.getList().size(); ii++) {
 					MW_Activity item = paging.getList().get(ii);
@@ -93,7 +93,7 @@ public class ActivityService extends BaseService<MW_Activity> {
 	}
 	
 	public String getNewElementId(ActivityElementDao elementDao, List<MW_Activity_Element> elements) throws Exception {
-		List<MW_Activity_Element> list =  elementDao.list(null, null, -1, 0, null);
+		List<MW_Activity_Element> list =  elementDao.list(null, null);
 		int index = 1;
 		String compId;
 		boolean isFound;
@@ -142,7 +142,7 @@ public class ActivityService extends BaseService<MW_Activity> {
 			}
 			ActivityElementDao elementDao = new ActivityElementDao();
 			PropertyFilter filter = PropertyFilter.eq("activityIdKey", activityIdKey);
-			CM_PagingList<MW_Activity_Element> paging = elementDao.pagingList(request.getSession(), filter, -1, 0, null);
+			CM_PagingList<MW_Activity_Element> paging = elementDao.pagingList(request.getSession(), filter);
 			if (paging != null && paging.getList() != null) {
 				for (int ii = 0; ii < paging.getList().size(); ii++) {
 					MW_Activity_Element item = paging.getList().get(ii);
@@ -247,7 +247,7 @@ public class ActivityService extends BaseService<MW_Activity> {
 			}
 			InvoiceDao invoiceDao = new InvoiceDao();
 			PropertyFilter filter = PropertyFilter.eq("activityIdKey", activityIdKey);
-			CM_PagingList<MW_Invoice> paging = invoiceDao.pagingList(request.getSession(), filter, -1, 0, null);
+			CM_PagingList<MW_Invoice> paging = invoiceDao.pagingList(request.getSession(), filter);
 			if (paging != null && paging.getList() != null) {
 				for (int ii = 0; ii < paging.getList().size(); ii++) {
 					MW_Invoice item = paging.getList().get(ii);

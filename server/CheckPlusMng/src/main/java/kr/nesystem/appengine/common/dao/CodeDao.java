@@ -18,7 +18,7 @@ public class CodeDao extends BaseDao<CM_Code> {
 
 	public CM_PagingList<CM_Code> selectCodeByType(HttpSession session, String type) throws Exception {
 		PropertyFilter filter = PropertyFilter.eq("type", type);
-		return super.pagingList(session, filter, -1, 0, null);
+		return super.pagingList(session, filter);
 	}
 
 	public CM_Code selectCodeByTypeNCode(HttpSession session, String type, String code) throws Exception {
