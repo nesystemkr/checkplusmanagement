@@ -19,16 +19,16 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 import kr.co.checkplusmng.dao.ActivityDao;
 import kr.co.checkplusmng.dao.ActivityElementDao;
+import kr.co.checkplusmng.dao.DeviceDao;
 import kr.co.checkplusmng.dao.InvoiceDao;
 import kr.co.checkplusmng.dao.LTEDao;
-import kr.co.checkplusmng.dao.WelderDao;
 import kr.co.checkplusmng.dao.WifiDao;
 import kr.co.checkplusmng.model.MW_Activity;
 import kr.co.checkplusmng.model.MW_Activity_Element;
+import kr.co.checkplusmng.model.MW_Device;
 import kr.co.checkplusmng.model.MW_Invoice;
 import kr.co.checkplusmng.model.MW_LTE;
 import kr.co.checkplusmng.model.MW_Project;
-import kr.co.checkplusmng.model.MW_Welder;
 import kr.co.checkplusmng.model.MW_Wifi;
 import kr.co.checkplusmng.util.CompanyStore;
 import kr.co.checkplusmng.util.ProjectStore;
@@ -182,7 +182,7 @@ public class ActivityService extends BaseService<MW_Activity> {
 			elementDao.insertOrUpdate(paging.getList());
 			WifiDao wifiDao = new WifiDao();
 			LTEDao lteDao = new LTEDao();
-			WelderDao welderDao = new WelderDao();
+			DeviceDao deviceDao = new DeviceDao();
 			for (int ii = 0; ii < paging.getList().size(); ii++) {
 				MW_Activity_Element item = paging.getList().get(ii);
 				if ("2".equals(item.getElementType())) { //WIFI
@@ -198,11 +198,11 @@ public class ActivityService extends BaseService<MW_Activity> {
 					}
 					lteDao.update(tempItem);
 				} else if ("4".equals(item.getElementType())) { //WELDER
-					MW_Welder tempItem = welderDao.select(null, item.getElementIdKey());
+					MW_Device tempItem = deviceDao.select(null, item.getElementIdKey());
 					if (tempItem != null) {
 						tempItem.setCurrentActivityIdKey(item.getActivityIdKey());
 					}
-					welderDao.update(tempItem);
+					deviceDao.update(tempItem);
 				}
 			}
 			return ResponseUtil.getResponse((new ModelHandler<CM_PagingList>(CM_PagingList.class)).convertToJson(paging));

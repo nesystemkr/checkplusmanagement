@@ -604,7 +604,7 @@ function selectWifiElement(idKey) {
 	if (!selected) {
 		return
 	}
-	addNewElement(idKey, "2", "WIFI기기 : " + selected.idString)
+	addNewElement(idKey, "2", "WIFI기기 : " + selected.idString + " / " + selected.modelName)
 	closeWifiPopup()
 }
 
@@ -651,7 +651,7 @@ function selectLTEElement(idKey) {
 	if (!selected) {
 		return
 	}
-	addNewElement(idKey, "3", "LTE기기 : " + selected.idString)
+	addNewElement(idKey, "3", "LTE기기 : " + selected.idString + " / " + selected.modelName)
 	closeLTEPopup()
 }
 
@@ -697,7 +697,7 @@ function selectDeviceElement(idKey) {
 	if (!selected) {
 		return
 	}
-	addNewElement(idKey, "4", "기기 : " + selected.idString)
+	addNewElement(idKey, "4", "기기 : " + selected.idString + " / " + selected.modelName)
 	closeDevicePopup()
 }
 </script>
