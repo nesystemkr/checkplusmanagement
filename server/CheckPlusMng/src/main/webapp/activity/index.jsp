@@ -608,6 +608,31 @@ function selectWifiElement(idKey) {
 	closeWifiPopup()
 }
 
+function selectWifiElements() {
+	if (!__wifiList) {
+		return
+	}
+	var checks = $(".wifilistcheckbox")
+	for (var jj = 0; jj < checks.length; jj++) {
+		var checkbox = $(checks[jj])
+		var idKey
+		var selected
+		if (checkbox.prop("checked")) {
+			idKey = checkbox.val()
+			selected = undefined
+			for (var ii = 0; ii < __wifiList.length; ii++) {
+				if (__wifiList[ii].idKey == idKey) {
+					selected = __wifiList[ii]
+				}
+			}
+			if (selected) {
+				addNewElement(idKey, "2", "WIFI기기 : " + selected.idString + " / " + selected.modelName)
+			}
+		}
+	}
+	closeWifiPopup()
+}
+
 function openLTEPopup() {
 	if ($("#activity_projectIdKey").val().trim() == "") {
 		alert("프로젝트를 선택 해 주세요(3).")
@@ -652,6 +677,31 @@ function selectLTEElement(idKey) {
 		return
 	}
 	addNewElement(idKey, "3", "LTE기기 : " + selected.idString + " / " + selected.modelName)
+	closeLTEPopup()
+}
+
+function selectLTEElements() {
+	if (!__lteList) {
+		return
+	}
+	var checks = $(".ltelistcheckbox")
+	for (var jj = 0; jj < checks.length; jj++) {
+		var checkbox = $(checks[jj])
+		var idKey
+		var selected
+		if (checkbox.prop("checked")) {
+			idKey = checkbox.val()
+			selected = undefined
+			for (var ii = 0; ii < __lteList.length; ii++) {
+				if (__lteList[ii].idKey == idKey) {
+					selected = __lteList[ii]
+				}
+			}
+			if (selected) {
+				addNewElement(idKey, "3", "LTE기기 : " + selected.idString + " / " + selected.modelName)
+			}
+		}
+	}
 	closeLTEPopup()
 }
 
@@ -700,6 +750,32 @@ function selectDeviceElement(idKey) {
 	addNewElement(idKey, "4", "기기 : " + selected.idString + " / " + selected.modelName)
 	closeDevicePopup()
 }
+
+function selectDeviceElements() {
+	if (!__deviceList) {
+		return
+	}
+	var checks = $(".devicelistcheckbox")
+	for (var jj = 0; jj < checks.length; jj++) {
+		var checkbox = $(checks[jj])
+		var idKey
+		var selected
+		if (checkbox.prop("checked")) {
+			idKey = checkbox.val()
+			selected = undefined
+			for (var ii = 0; ii < __deviceList.length; ii++) {
+				if (__deviceList[ii].idKey == idKey) {
+					selected = __deviceList[ii]
+				}
+			}
+			if (selected) {
+				addNewElement(idKey, "4", "기기 : " + selected.idString + " / " + selected.modelName)
+			}
+		}
+	}
+	closeDevicePopup()
+}
+
 </script>
 
 <div class="layer_bg" id="wifiListLayout">
@@ -713,6 +789,7 @@ function selectDeviceElement(idKey) {
 		</div>
 		<div class="pop_foot">
 			<div class="btn_box">
+				<button type="button" class="btn btn-secondary" onClick="selectWifiElements();return false;">확인</button>
 				<button type="button" class="btn btn-secondary" onClick="closeWifiPopup();return false;">취소</button>
 			</div>
 		</div>
@@ -723,6 +800,7 @@ function selectDeviceElement(idKey) {
 <table class="tbsty">
 	<thead>
 		<tr>
+			<th class="p-2" style="width:30px;padding:8px 3px 8px 10px;"></th>
 			<th class="p-2" style="width:110px;">WIFI아이디</th>
 			<th class="p-2">모델명</th>
 			<th class="p-2">메모</th>
@@ -732,6 +810,7 @@ function selectDeviceElement(idKey) {
 	<tbody>
 	{for item in list}
 		<tr class="bg-dark">
+			<td class="p-2" style="vertical-align:middle;padding:8px 3px 8px 10px;"><input type="checkbox" class="wifilistcheckbox" value="{{item.idKey}"></td>
 			<td class="p-2" style="vertical-align:middle;">{{item.idString}</td>
 			<td class="p-2" style="vertical-align:middle;">{{item.modelName}</td>
 			<td class="p-2" style="vertical-align:middle;">{{item.memo}</td>
@@ -757,6 +836,7 @@ function selectDeviceElement(idKey) {
 		</div>
 		<div class="pop_foot">
 			<div class="btn_box">
+				<button type="button" class="btn btn-secondary" onClick="selectLTEElements();return false;">확인</button>
 				<button type="button" class="btn btn-secondary" onClick="closeLTEPopup();return false;">취소</button>
 			</div>
 		</div>
@@ -767,6 +847,7 @@ function selectDeviceElement(idKey) {
 <table class="tbsty">
 	<thead>
 		<tr>
+			<th class="p-2" style="width:30px;padding:8px 3px 8px 10px;"></th>
 			<th class="p-2" style="width:110px;">LTE아이디</th>
 			<th class="p-2">모델명</th>
 			<th class="p-2">메모</th>
@@ -776,6 +857,7 @@ function selectDeviceElement(idKey) {
 	<tbody>
 	{for item in list}
 		<tr class="bg-dark">
+			<td class="p-2" style="vertical-align:middle;padding:8px 3px 8px 10px;"><input type="checkbox" class="ltelistcheckbox" value="{{item.idKey}"></td>
 			<td class="p-2" style="vertical-align:middle;">{{item.idString}</td>
 			<td class="p-2" style="vertical-align:middle;">{{item.modelName}</td>
 			<td class="p-2" style="vertical-align:middle;">{{item.memo}</td>
@@ -801,6 +883,7 @@ function selectDeviceElement(idKey) {
 		</div>
 		<div class="pop_foot">
 			<div class="btn_box">
+				<button type="button" class="btn btn-secondary" onClick="selectDeviceElements();return false;">확인</button>
 				<button type="button" class="btn btn-secondary" onClick="closeDevicePopup();return false;">취소</button>
 			</div>
 		</div>
@@ -811,6 +894,7 @@ function selectDeviceElement(idKey) {
 <table class="tbsty">
 	<thead>
 		<tr>
+			<th class="p-2" style="width:30px;padding:8px 3px 8px 10px;"></th>
 			<th class="p-2" style="width:110px;">기기아이디</th>
 			<th class="p-2">모델명</th>
 			<th class="p-2">메모</th>
@@ -820,6 +904,7 @@ function selectDeviceElement(idKey) {
 	<tbody>
 	{for item in list}
 		<tr class="bg-dark">
+			<td class="p-2" style="vertical-align:middle;padding:8px 3px 8px 10px;"><input type="checkbox" class="devicelistcheckbox" value="{{item.idKey}"></td>
 			<td class="p-2" style="vertical-align:middle;">{{item.idString}</td>
 			<td class="p-2" style="vertical-align:middle;">{{item.modelName}</td>
 			<td class="p-2" style="vertical-align:middle;">{{item.memo}</td>
