@@ -12,6 +12,7 @@ public class MW_Activity_Element extends MW_IDBaseModel {
 	private long elementIdKey;
 	private String elementTitle;
 	private double unitPrice;
+	private long count;
 	private Date startDate;
 	private Date endDate;
 	public long getActivityIdKey() {
@@ -44,6 +45,12 @@ public class MW_Activity_Element extends MW_IDBaseModel {
 	public void setUnitPrice(double unitPrice) {
 		this.unitPrice = unitPrice;
 	}
+	public long getCount() {
+		return count;
+	}
+	public void setCount(long count) {
+		this.count = count;
+	}
 	public Date getStartDate() {
 		return startDate;
 	}
@@ -64,6 +71,7 @@ public class MW_Activity_Element extends MW_IDBaseModel {
 				.set("elementIdKey", elementIdKey)
 				.set("elementTitle",  N2Z(elementTitle))
 				.set("unitPrice", unitPrice)
+				.set("count", count)
 				.set("startDate", D2Z(startDate))
 				.set("endDate", D2Z(endDate))
 				.build();
@@ -76,6 +84,7 @@ public class MW_Activity_Element extends MW_IDBaseModel {
 				.set("elementIdKey", elementIdKey)
 				.set("elementTitle", N2Z(elementTitle))
 				.set("unitPrice", unitPrice)
+				.set("count", count)
 				.set("startDate", D2Z(startDate))
 				.set("endDate", D2Z(endDate))
 				.build();
@@ -88,6 +97,7 @@ public class MW_Activity_Element extends MW_IDBaseModel {
 		setElementIdKey(entity.getLong("elementIdKey"));
 		setElementTitle(entity.getString("elementTitle"));
 		setUnitPrice(entity.getDouble("unitPrice"));
+		setCount(entity.getLong("count"));
 		setStartDate(L2D(entity.getLong("startDate")));
 		setEndDate(L2D(entity.getLong("endDate")));
 		return this;

@@ -55,6 +55,7 @@ startFuncs[startFuncs.length] = function() {
 					{ name: 'idString'     , label: '아이디'  , width: 200, align: 'center',},
 					{ name: 'elementTitle' , label: '설명'    , width: 580, edittype:'text', align: 'center',},
 					{ name: 'unitPrice'    , label: '단가'    , width: 140, edittype:'text', align: 'center', formatter: getGridCommaNumberFormatClosure()},
+					{ name: 'count'        , label: '갯수'    , width: 140, edittype:'text', align: 'center',},
 					{ name: 'startDate'    , label: '시작일자', width: 120, edittype:'text', align: 'center', formatter: getGridDateFormatClosure()},
 					{ name: 'endDate'      , label: '종료일자', width: 120, edittype:'text', align: 'center', formatter: getGridDateFormatClosure()},
 					{ name: 'memo'         , label: '메모'    , width: 440, edittype:'text', align: 'center',},
@@ -372,10 +373,33 @@ function addElementRow() {
 	}
 }
 
+function sumElements() {
+	finalizeEditingGrid($elementGridLayout)
+	var dataIds = $elementGridLayout.getDataIDs()
+	var softwareAmount = 0
+	var hardwareAmount = 0
+	for (var ii = 0; ii < dataIds.length; ii++) {
+		var rowData = $elementGridLayout.getRowData(dataIds[ii])
+		if (rowData.elementType == "1") {
+			softwareAmount = softwareAmount + (rowData.unitPrice.replaceAll(',', '') * rowData.count)
+		} else {
+			hardwareAmount = hardwareAmount + (rowData.unitPrice.replaceAll(',', '') * rowData.count)
+		}
+	}
+	$("#activity_hwTotalAmount").val(hardwareAmount)
+	if ($("#activity_hwActualAmount").val() == '') {
+		$("#activity_hwActualAmount").val(hardwareAmount)
+	}
+	$("#activity_swTotalAmount").val(softwareAmount)
+	if ($("#activity_swActualAmount").val() == '') {
+		$("#activity_swActualAmount").val(softwareAmount)
+	}
+}
+
 function saveElements() {
 	finalizeEditingGrid($elementGridLayout)
 	var touchedList = getGridTouchedList($elementGridLayout)
-	for (var ii=0; ii<touchedList.length; ii++) {
+	for (var ii = 0; ii < touchedList.length; ii++) {
 		if (!touchedList[ii].elementType || touchedList[ii].elementType.trim() == "") {
 			touchedList.splice(ii, 1)
 			ii--
@@ -444,7 +468,7 @@ function addInvoiceRow() {
 function saveInvoices() {
 	finalizeEditingGrid($invoiceGridLayout)
 	var touchedList = getGridTouchedList($invoiceGridLayout)
-	for (var ii=0; ii<touchedList.length; ii++) {
+	for (var ii = 0; ii < touchedList.length; ii++) {
 // 		if (!touchedList[ii].type || touchedList[ii].type.trim() == "") {
 //			touchedList.splice(ii, 1)
 //			ii--
@@ -525,6 +549,7 @@ function addNewElement(elementIdKey, elementType, elementTitle) {
 	element.elementTitle = elementTitle
 	element.elementIdKey = elementIdKey
 	element.idString = ""
+	element.count = 1
 	$elementGridLayout.addRowData(undefined, element, "last")
 }
 
@@ -821,6 +846,7 @@ function openPopupForElement(rowId, rowData) {
 	} else {
 		$("#element_unitPrice").val(rowData.unitPrice)
 	}
+	$("#element_count").val(rowData.count)
 	$("#element_startDate").datepicker('setDate', rowData.startDate)
 	$("#element_endDate").datepicker('setDate', rowData.endDate)
 	$("#element_memo").val(rowData.memo)
@@ -835,6 +861,7 @@ function resetElement() {
 	$("#element_idString").val('')
 	$("#element_title").val('')
 	$("#element_unitPrice").val('')
+	$("#element_count").val('1')
 	$("#element_startDate").val('')
 	$("#element_endDate").val('')
 	$("#element_memo").val('')
@@ -853,6 +880,7 @@ function saveElement() {
 	__elementRowData.elemntIdKey  = $("#element_idKey").val().trim()
 	__elementRowData.elementTitle = $("#element_title").val().trim()
 	__elementRowData.unitPrice    = $("#element_unitPrice").val().trim()
+	__elementRowData.count        = $("#element_count").val().trim()
 	__elementRowData.startDate    = $("#element_startDate").datepicker('getDate')
 	__elementRowData.endDate      = $("#element_endDate").datepicker('getDate')
 	__elementRowData.memo         = $("#element_memo").val().trim()
@@ -887,6 +915,10 @@ function saveElement() {
 				<tr>
 					<th>단가</th>
 					<td><input type="text" name="element_unitPrice" id="element_unitPrice" style="width:90%"></td>
+				</tr>
+				<tr>
+					<th>갯수</th>
+					<td><input type="text" name="element_count" id="element_count" style="width:90%"></td>
 				</tr>
 				<tr>
 					<th>시작일</th>

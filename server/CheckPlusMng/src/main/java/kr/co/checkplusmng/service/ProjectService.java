@@ -3,6 +3,7 @@ package kr.co.checkplusmng.service;
 import jakarta.ws.rs.Path;
 import kr.co.checkplusmng.dao.ProjectDao;
 import kr.co.checkplusmng.model.MW_Project;
+import kr.co.checkplusmng.util.CompanyStore;
 import kr.co.checkplusmng.util.ProjectStore;
 
 @Path("/{version}/project")
@@ -24,7 +25,7 @@ public class ProjectService extends BaseService<MW_Project> {
 	
 	@Override
 	protected void fillupSubData(MW_Project item) {
-		item.setCustomerName(ProjectStore.getName(item.getCustomerIdKey()));
-		item.setBrokerName(ProjectStore.getName(item.getBrokerIdKey()));
+		item.setCustomerName(CompanyStore.getName(item.getCustomerIdKey()));
+		item.setBrokerName(CompanyStore.getName(item.getBrokerIdKey()));
 	}
 }
