@@ -175,7 +175,7 @@ function getDefaultList() {
 	<button class="btn_type small" style="float:left;margin-left:5px;" onclick="addNewServiceRow()" >설치용역추가  </button>
 	<button class="btn_type small" style="float:left;margin-left:5px;" onclick="openWifiPopup()"    >WIFI추가      </button>
 	<button class="btn_type small" style="float:left;margin-left:5px;" onclick="openLTEPopup()"     >LTE추가       </button>
-	<button class="btn_type small" style="float:left;margin-left:5px;" onclick="openWelderPopup()"  >용접기추가    </button>
+	<button class="btn_type small" style="float:left;margin-left:5px;" onclick="openDevicePopup()"  >기기추가      </button>
 	<button class="btn_type small" style="float:left;margin-left:5px;" onclick="addNewSoftwareRow()">소프트웨어추가</button>
 	<button class="btn_type small" onclick="sumElements()">총액재계산</button>
 	&nbsp;&nbsp;
@@ -527,7 +527,7 @@ function deleteInvoice(rowId, rowData) {
 
 var __wifiList
 var __lteList
-var __welderList
+var __deviceList
 var __serviceRowId
 var __serviceRowData
 
@@ -577,7 +577,7 @@ function openWifiPopup() {
 	nesAjax(url,
 			null,
 			function(data) {
-				openPopup('wifiListLayout', 600, 600)
+				openPopup('wifiListLayout', 800, 600)
 				__wifiList = data.list
 				$("#listLayoutForWifi").html(TrimPath.processDOMTemplate("wifilist_jst", data))
 			},
@@ -624,7 +624,7 @@ function openLTEPopup() {
 	nesAjax(url,
 			null,
 			function(data) {
-				openPopup('lteListLayout', 600, 600)
+				openPopup('lteListLayout', 900, 600)
 				__lteList = data.list
 				$("#listLayoutForLTE").html(TrimPath.processDOMTemplate("ltelist_jst", data))
 			},
@@ -655,7 +655,7 @@ function selectLTEElement(idKey) {
 	closeLTEPopup()
 }
 
-function openWelderPopup() {
+function openDevicePopup() {
 	if ($("#activity_projectIdKey").val().trim() == "") {
 		alert("프로젝트를 선택 해 주세요(3).")
 		$("#projectIdKey").focus()
@@ -665,14 +665,14 @@ function openWelderPopup() {
 		alert("거래내역을 선택 해 주세요(3).")
 		return
 	}
-	var url = "${contextPath}/svc/v1/welder/list/0?q=" + getAuthToken()
+	var url = "${contextPath}/svc/v1/device/list/0?q=" + getAuthToken()
 	var method = "GET"
 	nesAjax(url,
 			null,
 			function(data) {
-				openPopup('welderListLayout', 600, 600)
-				__welderList = data.list
-				$("#listLayoutForWelder").html(TrimPath.processDOMTemplate("welderlist_jst", data))
+				openPopup('deviceListLayout', 800, 600)
+				__deviceList = data.list
+				$("#listLayoutForDevice").html(TrimPath.processDOMTemplate("devicelist_jst", data))
 			},
 			function(data) {
 				alert("조회에 실패했습니다.")
@@ -680,25 +680,25 @@ function openWelderPopup() {
 			method)
 }
 
-function closeWelderPopup() {
-	closePopup('welderListLayout')
+function closeDevicePopup() {
+	closePopup('deviceListLayout')
 }
 
-function selectWelderElement(idKey) {
-	if (!__welderList) {
+function selectDeviceElement(idKey) {
+	if (!__deviceList) {
 		return
 	}
 	var selected
-	for (var ii = 0; ii < __welderList.length; ii++) {
-		if (__welderList[ii].idKey == idKey) {
-			selected = __welderList[ii]
+	for (var ii = 0; ii < __deviceList.length; ii++) {
+		if (__deviceList[ii].idKey == idKey) {
+			selected = __deviceList[ii]
 		}
 	}
 	if (!selected) {
 		return
 	}
-	addNewElement(idKey, "4", "용접기 : " + selected.idString)
-	closeWelderPopup()
+	addNewElement(idKey, "4", "기기 : " + selected.idString)
+	closeDevicePopup()
 }
 </script>
 
@@ -724,6 +724,7 @@ function selectWelderElement(idKey) {
 	<thead>
 		<tr>
 			<th class="p-2" style="width:110px;">WIFI아이디</th>
+			<th class="p-2">모델명</th>
 			<th class="p-2">메모</th>
 			<th class="p-2" style="width:60px;">Action</th>
 		</tr>
@@ -732,6 +733,7 @@ function selectWelderElement(idKey) {
 	{for item in list}
 		<tr class="bg-dark">
 			<td class="p-2" style="vertical-align:middle;">{{item.idString}</td>
+			<td class="p-2" style="vertical-align:middle;">{{item.modelName}</td>
 			<td class="p-2" style="vertical-align:middle;">{{item.memo}</td>
 			<td class="p-2">
 				<button type="button" class="btn btn-secondary" onclick="selectWifiElement({{item.idKey})">선택</button>
@@ -766,6 +768,7 @@ function selectWelderElement(idKey) {
 	<thead>
 		<tr>
 			<th class="p-2" style="width:110px;">LTE아이디</th>
+			<th class="p-2">모델명</th>
 			<th class="p-2">메모</th>
 			<th class="p-2" style="width:60px;">Action</th>
 		</tr>
@@ -774,6 +777,7 @@ function selectWelderElement(idKey) {
 	{for item in list}
 		<tr class="bg-dark">
 			<td class="p-2" style="vertical-align:middle;">{{item.idString}</td>
+			<td class="p-2" style="vertical-align:middle;">{{item.modelName}</td>
 			<td class="p-2" style="vertical-align:middle;">{{item.memo}</td>
 			<td class="p-2">
 				<button type="button" class="btn btn-secondary" onclick="selectLTEElement({{item.idKey})">선택</button>
@@ -786,28 +790,29 @@ function selectWelderElement(idKey) {
 </table>
 </script>
 
-<div class="layer_bg" id="welderListLayout">
+<div class="layer_bg" id="deviceListLayout">
 	<div class="layerpop">
 		<div class="pop_head">
-			<span class="title">용접기 선택</span>
-			<a href="#none" class="pop_close white" onClick="closeWelderPopup();return false;"><span>닫기</span></a>
+			<span class="title">기기 선택</span>
+			<a href="#none" class="pop_close white" onClick="closeDevicePopup();return false;"><span>닫기</span></a>
 		</div>
 		<div class="pop_body">
-			<div id="listLayoutForWelder"></div>
+			<div id="listLayoutForDevice"></div>
 		</div>
 		<div class="pop_foot">
 			<div class="btn_box">
-				<button type="button" class="btn btn-secondary" onClick="closeWelderPopup();return false;">취소</button>
+				<button type="button" class="btn btn-secondary" onClick="closeDevicePopup();return false;">취소</button>
 			</div>
 		</div>
 	</div>
 </div>
 
-<script type="text/template" id="welderlist_jst">
+<script type="text/template" id="devicelist_jst">
 <table class="tbsty">
 	<thead>
 		<tr>
-			<th class="p-2" style="width:110px;">용접기아이디</th>
+			<th class="p-2" style="width:110px;">기기아이디</th>
+			<th class="p-2">모델명</th>
 			<th class="p-2">메모</th>
 			<th class="p-2" style="width:60px;">Action</th>
 		</tr>
@@ -816,9 +821,10 @@ function selectWelderElement(idKey) {
 	{for item in list}
 		<tr class="bg-dark">
 			<td class="p-2" style="vertical-align:middle;">{{item.idString}</td>
+			<td class="p-2" style="vertical-align:middle;">{{item.modelName}</td>
 			<td class="p-2" style="vertical-align:middle;">{{item.memo}</td>
 			<td class="p-2">
-				<button type="button" class="btn btn-secondary" onclick="selectWelderElement({{item.idKey})">선택</button>
+				<button type="button" class="btn btn-secondary" onclick="selectDeviceElement({{item.idKey})">선택</button>
 			</td>
 		</tr>
 	{forelse}
